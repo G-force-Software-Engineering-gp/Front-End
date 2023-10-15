@@ -2,16 +2,15 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { Button } from '../../components/ui/button';
-import { ScrollArea } from '../../components/ui/scroll-area';
-import { Playlist } from '../../data/playlists';
+// import { Playlist } from '../../data/playlists';
 
-interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
-  playlists: Playlist[];
-}
+// interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
+//   playlists: Playlist[];
+// }
 
-export function HomeSideBar({ className, playlists }: SidebarProps) {
+export function HomeSideBar() {
   return (
-    <div className={cn('pb-12', className)}>
+    <div className={cn('pb-12', "hidden lg:block")}>
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           {/* <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
