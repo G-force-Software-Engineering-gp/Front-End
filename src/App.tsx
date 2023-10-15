@@ -6,6 +6,7 @@ import Header from './components/Header';
 import MyTest from './mytest';
 import Home from './pages/HomePage/Home';
 
+
 const queryClient = new QueryClient();
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         {/* <ModeToggle /> */}
         {/* <MyTest /> */}
         <Home />
+        
       </QueryClientProvider>
     </ThemeProvider>
   );

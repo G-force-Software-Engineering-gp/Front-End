@@ -12,6 +12,7 @@ import { BellDot, HelpCircle, User2 } from 'lucide-react';
 import React from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
+import { ModeToggle } from './ui/mode-toggle';
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -213,9 +214,10 @@ const Header = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Input type="text" placeholder="Search" />
-                <BellDot />
-                <HelpCircle />
-                <User2 />
+                <ModeToggle/>
+                <BellDot className='w-9 h-9'/>
+                <HelpCircle className='w-9 h-9'/>
+                <User2 className='w-9 h-9'/>
               </div>
             </div>
           </div>
