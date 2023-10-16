@@ -2,7 +2,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { ModeToggle } from '@/components/ui/mode-toggle';
 import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import MyTest from './mytest';
+import Board from './pages/Board';
 
 const queryClient = new QueryClient();
 
@@ -12,7 +12,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <ModeToggle />
-        <MyTest />
+        <Board />
       </QueryClientProvider>
     </ThemeProvider>
   );
