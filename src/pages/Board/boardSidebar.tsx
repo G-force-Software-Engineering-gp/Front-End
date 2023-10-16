@@ -56,7 +56,7 @@ import { Trash2 } from 'lucide-react';
 export function BoardSidebar({ className }: any) {
   return (
     <div className={cn("pb-12", className)}>
-      <div className="space-y-4 py-4 max-w-[300px]">
+      <div className="space-y-4 py-4 ">
         <div className="px-3 py-2">
           <div className="mb-2 flex items-center">
             <Avatar className="rounded-sm h-9 w-9 ">
@@ -76,14 +76,14 @@ export function BoardSidebar({ className }: any) {
               <Trello className="mr-2 h-4 w-4" />
               Boards
             </Button>
-            <Button variant="ghost" className="pr-2 w-full justify-between">
+            <Button variant="ghost" className="group pr-2 w-full justify-between">
               <div className="flex justify-start">
                 <Users2 className="mr-2 h-4 w-4" />
                 Members
               </div>
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button variant="ghost" className="hover: dark:hover: h-7 w-7 p-0">
+                  <Button variant="secondary" className="hidden group-hover:flex  h-7 w-7 p-0">
                     <Plus className="w-5 h-5" />
                   </Button>
                 </DialogTrigger>
@@ -108,8 +108,8 @@ export function BoardSidebar({ className }: any) {
             </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="w-full justify-between pr-3">
-                  <div className="flex justify-start">
+                <Button variant="ghost" className="w-full h-fit justify-between pr-3">
+                  <div className="flex justify-start items-center">
                     <Settings className="mr-2 h-4 w-4" />
                     Workspace Settings
                   </div>
@@ -142,7 +142,7 @@ export function BoardSidebar({ className }: any) {
                   width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="mr-2 h-4 w-4 lucide lucide-table-properties"><path d="M15 3v18" /><rect width="18" height="18" x="3" y="3" rx="2" /><path d="M21 9H3" /><path d="M21 15H3" /></svg>
                 <span className="italic">Table</span>
               </div>
-              <Button variant="ghost" className="hover: dark:hover: h-7 w-7 p-0">
+              <Button variant="secondary" className="hidden group-hover:flex h-7 w-7 p-0">
                 <Trash2 className="h-4 w-4 hidden group-hover:block" />
               </Button>
             </Button>
@@ -151,7 +151,7 @@ export function BoardSidebar({ className }: any) {
                 <CalendarDays className="mr-2 h-4 w-4" />
                 <span className="italic">Calendar</span>
               </div>
-              <Button variant="ghost" className="hover: dark:hover: h-7 w-7 p-0">
+              <Button variant="secondary" className="hidden group-hover:flex  h-7 w-7 p-0">
                 <Trash2 className="h-4 w-4 hidden group-hover:block" />
               </Button>
             </Button>
