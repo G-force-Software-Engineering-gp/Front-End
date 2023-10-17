@@ -35,7 +35,7 @@ const HomePageDetails = () => {
           </svg>
           <h2>Starred Workspaces</h2>
         </div>
-        <div className="mb-8 mt-4 grid grid-cols-2 gap-2">
+        <div className="mb-8 mt-4 grid auto-rows-fr grid-cols-2 gap-2">
           <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
             <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
               <div className="flex justify-between">
@@ -87,7 +87,7 @@ const HomePageDetails = () => {
           </svg>
           <h2>Recently viewed</h2>
         </div>
-        <div className="mb-8 mt-4 grid grid-cols-2 gap-2">
+        <div className="mb-8 mt-4 grid auto-rows-fr grid-cols-2  gap-2">
           <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
             <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
               <div className="flex justify-between">
@@ -101,7 +101,19 @@ const HomePageDetails = () => {
               </div>
             </CardHeader>
           </Card>
-
+          <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
+            <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
+              <div className="flex justify-between">
+                <div className="space-y-1">
+                  <CardTitle>Board 1</CardTitle>
+                  <CardDescription>Description</CardDescription>
+                </div>
+                <Button variant="ghost">
+                  <StarIcon className="h-6 w-6" />
+                </Button>
+              </div>
+            </CardHeader>
+          </Card>
           <Card className=" cursor-pointer bg-slate-300 dark:bg-slate-800">
             <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
               <div className="flex justify-between">
@@ -251,7 +263,7 @@ const HomePageDetails = () => {
               </Button>
             </div>
           </div>
-          <div className="mb-8 mt-4 grid grid-cols-2 gap-2">
+          <div className="mb-8 mt-4 grid auto-rows-fr grid-cols-2 gap-2">
             <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
               <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
                 <div className="flex justify-between">
@@ -280,6 +292,26 @@ const HomePageDetails = () => {
                   </Button>
                 </div>
               </CardHeader>
+            </Card>
+            {/* <Card className=" cursor-pointer bg-slate-300 dark:bg-slate-800">
+              <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
+                <div className="flex justify-between">
+                  <div className="space-y-1">
+                    <CardTitle>Board 2</CardTitle>
+                    <CardDescription>
+                      Beautifully designed components built with Radix UI and Tailwind CSS.
+                    </CardDescription>
+                  </div>
+                  <Button variant="ghost">
+                    <StarIcon className="h-6 w-6" />
+                  </Button>
+                </div>
+              </CardHeader>
+            </Card> */}
+            <Card className=" cursor-pointer bg-slate-300 dark:bg-slate-800">
+              <div className=" gap-4 space-y-0 flex py-9 px-20">
+                <label className=' text-xl font-semibold'>Create a new Board</label>
+              </div>
             </Card>
           </div>
         </div>
