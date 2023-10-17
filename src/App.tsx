@@ -3,9 +3,9 @@ import { ModeToggle } from '@/components/ui/mode-toggle';
 import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import myTest from './mytest';
-import { BrowserRouter , Route , Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Routers from './pages/Router';
-
+import Board from './pages/Board';
 
 
 const queryClient = new QueryClient();
@@ -15,7 +15,7 @@ function App() {
     title: "Task Title",
     description: "This is the description of the task.",
   };
-  
+
   const listInfo = {
     title: "To-Do List",
   };
@@ -24,9 +24,9 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <BrowserRouter>
-        <ModeToggle />
-        {/* <MyTest /> */}
-        <Routers />
+          <ModeToggle />
+          <Board />
+          <Routers />
         </BrowserRouter>
       </QueryClientProvider>
     </ThemeProvider>
