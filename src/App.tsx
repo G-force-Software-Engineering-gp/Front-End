@@ -1,11 +1,13 @@
 import { ThemeProvider } from '@/components/theme-provider';
-import { ModeToggle } from '@/components/ui/mode-toggle';
-import { QueryClient, QueryClientProvider, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import myTest from './mytest';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Routers from './pages/Router';
 import Board from './pages/Board';
+import Header from './components/Header';
+import Home from './pages/HomePage/Home';
+import { ModeToggle } from './components/ui/mode-toggle';
 
 
 const queryClient = new QueryClient();
@@ -24,7 +26,8 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools initialIsOpen={false} />
         <BrowserRouter>
-          <ModeToggle />
+          {/* <ModeToggle /> */}
+          <Header/>
           <Board />
           <Routers />
         </BrowserRouter>

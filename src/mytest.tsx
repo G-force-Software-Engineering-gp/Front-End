@@ -583,7 +583,9 @@ function MyTest() {
             </MenubarContent>
           </MenubarMenu>
         </Menubar> */}
-        {/* <NavigationMenu>
+
+
+        <NavigationMenu>
   <NavigationMenuList>
     <NavigationMenuItem>
       <NavigationMenuTrigger>Item One</NavigationMenuTrigger>
@@ -592,9 +594,9 @@ function MyTest() {
       </NavigationMenuContent>
     </NavigationMenuItem>
   </NavigationMenuList>
-</NavigationMenu> */}
+</NavigationMenu>
 
-        {/* <NavigationMenu>
+        <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
           <NavigationMenuTrigger>Getting started</NavigationMenuTrigger>
@@ -653,7 +655,7 @@ function MyTest() {
           </a>
         </NavigationMenuItem>
       </NavigationMenuList>
-    </NavigationMenu> */}
+    </NavigationMenu>
 
         {/* <Popover>
       <PopoverTrigger asChild>
