@@ -6,7 +6,7 @@ import myTest from './mytest';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Routers from './pages/Router';
 import Board from './pages/Board';
-
+import Settings from './pages/settingsPage';
 
 const queryClient = new QueryClient();
 
@@ -25,7 +25,8 @@ function App() {
         <ReactQueryDevtools initialIsOpen={false} />
         <BrowserRouter>
           <ModeToggle />
-          <Board />
+          {/* <Board /> */}
+          <Settings />
           <Routers />
         </BrowserRouter>
       </QueryClientProvider>
