@@ -35,7 +35,7 @@ const HomePageDetails = () => {
           </svg>
           <h2>Starred Workspaces</h2>
         </div>
-        <div className="mb-8 mt-4 grid auto-rows-fr grid-cols-2 gap-2">
+        <div className="mb-8 mt-4 grid auto-rows-fr sm:grid-cols-2 gap-2">
           <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
             <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
               <div className="flex justify-between">
@@ -87,7 +87,7 @@ const HomePageDetails = () => {
           </svg>
           <h2>Recently viewed</h2>
         </div>
-        <div className="mb-8 mt-4 grid auto-rows-fr grid-cols-2  gap-2">
+        <div className="mb-8 mt-4 grid auto-rows-fr sm:grid-cols-2  gap-2">
           <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
             <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
               <div className="flex justify-between">
@@ -263,7 +263,7 @@ const HomePageDetails = () => {
               </Button>
             </div>
           </div>
-          <div className="mb-8 mt-4 grid auto-rows-fr grid-cols-2 gap-2">
+          <div className="mb-8 mt-4 grid auto-rows-fr sm:grid-cols-2 gap-2">
             <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
               <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
                 <div className="flex justify-between">
@@ -426,7 +426,7 @@ const HomePageDetails = () => {
               </Button>
             </div>
           </div>
-          <div className="mb-8 mt-4 grid grid-cols-2 gap-2">
+          <div className="mb-8 mt-4 grid sm:grid-cols-2 auto-rows-fr gap-2">
             <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
               <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
                 <div className="flex justify-between">
