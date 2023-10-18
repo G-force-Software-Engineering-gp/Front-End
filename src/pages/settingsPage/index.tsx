@@ -2,7 +2,7 @@ import React from 'react'
 import { Separator } from "@/components/ui/separator"
 import { SettingsNav } from './settingsSidebar'
 import { Route, Routes } from 'react-router-dom'
-import profile from './profile'
+import Profile from './profile'
 import appearance from './cards'
 import advanced from './advanced'
 
@@ -40,7 +40,7 @@ const Settings = () => {
         </aside>
         <div className="flex-1 lg:max-w-2xl">
           <Routes>
-            <Route path='/settings/profile' Component={profile} />
+            <Route path='/settings/profile' Component={Profile} />
             <Route path='/settings/cards' Component={appearance} />
             <Route path='/settings/advanced' Component={advanced} />
           </Routes>
