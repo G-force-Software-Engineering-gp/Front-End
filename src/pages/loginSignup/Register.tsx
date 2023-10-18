@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,22 +8,27 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-dropdown-menu';
 import { Link } from 'react-router-dom';
 import { UserCircle , Mail , Lock , UserSquare } from 'lucide-react';
-
+import AuthContext , { AuthContextType } from '@/contexts/AuthContext';
 
 const registrationSchema = z.object({
   firstName: z.string().min(1, 'First Name is required'),
   lastName: z.string().min(1, 'Last Name is required'),
   email: z.string().email('Invalid email format').min(1, 'Email is required'),
+  username: z.string().min(1, 'Username is required'),
   password: z.string()
     .min(8, 'Password must be at least 8 characters long')
     .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
     .regex(/[A-Z]/, 'Password must contain at least one uppercase letter'),
-  username: z.string().min(1, 'Username is required'),
 });
 
 type RegistrationFormValues = z.input<typeof registrationSchema>;
 
 const Register: React.FC = () => {
+  const authContext = useContext<AuthContextType |null >(AuthContext);
+  if (!authContext) {
+    throw new Error("AuthContext is not provided properly.");
+  }
+  const { registerUser } = authContext;
   const { register, handleSubmit, formState: { errors , isSubmitting } } = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
   });
@@ -34,7 +39,7 @@ const Register: React.FC = () => {
       console.log('Form data:', data);
 
       // Simulate an async operation (e.g., API call)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await registerUser(data);
 
       console.log('Registration complete!');
     } catch (error) {

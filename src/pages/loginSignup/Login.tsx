@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Card} from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -6,9 +6,10 @@ import { Button } from '@/components/ui/button';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-dropdown-menu';
-import {Link} from 'react-router-dom';
-import { Mail } from 'lucide-react';
-import { Lock } from 'lucide-react';
+import {Link } from 'react-router-dom';
+import { Mail , Lock } from 'lucide-react';
+import AuthContext , { AuthContextType } from '@/contexts/AuthContext';
+
 
 
 const loginSchema = z.object({
@@ -21,10 +22,16 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.input<typeof loginSchema>;
 
+
 const Login: React.FC = () => {
-  const { register, handleSubmit, formState: { errors , isSubmitting } } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema),
-  });
+  const authContext = useContext<AuthContextType |null >(AuthContext);
+  if (!authContext) {
+    throw new Error("AuthContext is not provided properly.");
+  }
+  const { loginUser } = authContext;
+    const { register, handleSubmit, formState: { errors , isSubmitting } } = useForm<LoginFormValues>({
+      resolver: zodResolver(loginSchema),
+    });
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     try {
@@ -32,7 +39,7 @@ const Login: React.FC = () => {
       console.log('Form data:', data);
 
       // Simulate an async operation (e.g., API call)
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      await loginUser(data);
 
       console.log('Registration complete!');
     } catch (error) {

@@ -3,18 +3,21 @@ import Login from "./loginSignup/Login"
 import Home from "./HomePage/Home";
 import Board from "./Board";
 import Register from "./loginSignup/Register";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 
 
 const Router = () => {
   return (
     <div>
+      <AuthProvider>
         <Routes>
             <Route path="/login" element={<Login/>}/>
             <Route path="/register" element={<Register/>}/>
             <Route path="/home" element={<Home/>}/>
             <Route path="/board" element={<Board/>}/>
         </Routes>
+      </AuthProvider>
       
     </div>
   )
