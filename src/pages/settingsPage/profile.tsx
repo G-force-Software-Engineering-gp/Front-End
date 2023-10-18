@@ -1,5 +1,5 @@
 import { Separator } from '@radix-ui/react-dropdown-menu'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/avatar"
 import { ClipboardList, Mail, UserCircle2 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge"
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 
 
 const MAX_FILE_SIZE = 500000;
@@ -89,25 +89,55 @@ const Profile = () => {
   })
 
 
+
+  interface RootObject {
+    id: number;
+    occupations: string;
+    bio?: any;
+    profimage: string;
+    birthdate?: any;
+    user: User;
+  }
+
+  interface User {
+    first_name: string;
+    last_name: string;
+    email: string;
+    username: string;
+  }
+
   function onSubmit(data: ProfileFormValues) {
 
   }
 
+  const [id, setID] = useState()
+
   const fetchProfileData = async () => {
-    const response = await fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/profile/4',
+    const response = await fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/profile/',
       {
         method: "GET",
         headers: {
-          Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3NzE3NTMzLCJpYXQiOjE2OTc2MzExMzMsImp0aSI6IjFkNjViY2YzYzdlMjQ0Zjk4MWFiMDc4ZTkyNTRiODZkIiwidXNlcl9pZCI6Nn0.K8CuI_0b0WdFiBP5ct0KWGq4og0ySNHOa5CbqMJj9mw`
+          Authorization: `JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3NzIyMzg4LCJpYXQiOjE2OTc2MzU5ODgsImp0aSI6ImRiOWU0M2NlMTJhNjQxN2NiYjU1N2EwMGQ4ODYyNWIwIiwidXNlcl9pZCI6Nn0.AuuwH-yCE8dda2bLMiTEy6S4M61iQMYbeWlfVCaUwCM`
         }
       });
     const data = await response.json();
-    console.log(response)
-    return data
+    setID(data[0].id)
+    return data[0]
   };
 
-  const { data: profileData, isLoading, isError, error } = useQuery(['profileData'], fetchProfileData)
+  const editProfileData = async (profileInfo: any) => {
+    const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/profile/${id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3NzIyMzg4LCJpYXQiOjE2OTc2MzU5ODgsImp0aSI6ImRiOWU0M2NlMTJhNjQxN2NiYjU1N2EwMGQ4ODYyNWIwIiwidXNlcl9pZCI6Nn0.AuuwH-yCE8dda2bLMiTEy6S4M61iQMYbeWlfVCaUwCM`
+        , 'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(profileInfo)
+    });
 
+  }
+
+  const { data: profileData, isLoading, isError, error } = useQuery<RootObject, Error>({ queryKey: ['profileData'], queryFn: fetchProfileData })
 
   return (
     <div className="space-y-6">
@@ -123,31 +153,31 @@ const Profile = () => {
           <CardTitle className='flex flex-row items-center justify-between'>
             <div className='flex flex-row'>
               <Avatar className="rounded-full h-12 w-12 mr-3">
-                <AvatarImage className="rounded-full" alt="Avatar" />
-                <AvatarFallback className="rounded-full">{profileData["user"]["first_name"]}</AvatarFallback>
+                <AvatarImage className="rounded-full" alt="Avatar" src={profileData?.profimage} />
+                <AvatarFallback className="rounded-full">{profileData ? profileData.user.first_name[0] : "shit"}</AvatarFallback>
               </Avatar>
               <div className='flex flex-col'>
-                <span className='text-xl'>name</span>
-                <span className='text-sm font-thin'>username</span>
+                <span className='text-xl'>{profileData?.user.first_name}</span>
+                <span className='text-sm font-thin'>{profileData?.user.username}</span>
               </div>
             </div>
-            <Badge className='mr-3'>Student</Badge>
+            {profileData?.occupations === "" ? null : <Badge className='mr-3'>{profileData?.occupations}</Badge>}
           </CardTitle>
         </CardHeader>
         <CardTitle className='mx-9'>
           <div className='flex flex-col mb-2'>
             <div className='flex items-center mb-1'>
               <Mail className='h-4 w-4 mr-2' />
-              <span className='text-base'>email</span>
+              <span className='text-base'>Email</span>
             </div>
-            <p className='pl-2 font-thin outline outline-1 p-1 rounded text-sm'>ehsan.ahmadpoor2002@gmail.com</p>
+            <p className='pl-2 font-thin outline outline-1 p-1 rounded text-sm'>{profileData?.user.email}</p>
           </div>
           <div className='flex flex-col mb-2'>
             <div className='flex items-center mb-1'>
               <ClipboardList className='h-4 w-4 mr-2' />
               <span className='text-base'>bio</span>
             </div>
-            <Textarea className='outline resize-none' disabled value="fuck this shit" />
+            <Textarea className='outline resize-none' disabled value={profileData?.bio} />
           </div>
         </CardTitle>
         <CardFooter className='flex justify-between m-3'>
