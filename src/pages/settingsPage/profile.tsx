@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { toast } from "@/components/ui/use-toast"
+import { useToast } from "@/components/ui/use-toast"
 import { useFieldArray, useForm } from "react-hook-form"
 import * as z from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -39,7 +39,7 @@ import {
 } from "@/components/ui/avatar"
 import { ClipboardList, Mail, UserCircle2 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge"
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 
 const MAX_FILE_SIZE = 500000;
@@ -56,11 +56,6 @@ const profileFormSchema = z.object({
     .max(10, {
       message: "Username must not be longer than 10 characters.",
     }),
-  email: z
-    .string({
-      required_error: "Please enter your email.",
-    })
-    .email(),
   bio: z.string().max(160).min(4),
   name: z.string({
     required_error: "Please enter your name"
@@ -76,19 +71,8 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
 const Profile = () => {
-
+  const { toast } = useToast();
   const [EditProfile, setEditProfile] = useState(false);
-  const defaultValues: Partial<ProfileFormValues> = {
-
-  }
-
-  const form = useForm<ProfileFormValues>({
-    resolver: zodResolver(profileFormSchema),
-    defaultValues,
-    mode: "onChange",
-  })
-
-
 
   interface RootObject {
     id: number;
@@ -106,8 +90,29 @@ const Profile = () => {
     username: string;
   }
 
-  function onSubmit(data: ProfileFormValues) {
+  const queryClient = useQueryClient();
+  const editProfileMutation = useMutation((profileInfo: any) => editProfileData(profileInfo));
 
+  function onSubmit(values: z.infer<typeof profileFormSchema>) {
+    const UpdateValues = {
+      occupations: values.role,
+      bio: values.bio,
+      user: {
+        first_name: values.name,
+        last_name: profileData?.user.last_name,
+        username: values.username
+      },
+    }
+    editProfileMutation.mutate(UpdateValues, {
+      onSuccess: () => {
+        toast({ description: "Profile Updated!" });
+        setEditProfile(false);
+        queryClient.invalidateQueries(['profileData'])
+      },
+      onError: (error) => {
+        toast({ variant: "destructive", description: "Update Profile Failed! Try again later." });
+      },
+    });
   }
 
   const [id, setID] = useState()
@@ -117,19 +122,25 @@ const Profile = () => {
       {
         method: "GET",
         headers: {
-          Authorization: `JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3NzIyMzg4LCJpYXQiOjE2OTc2MzU5ODgsImp0aSI6ImRiOWU0M2NlMTJhNjQxN2NiYjU1N2EwMGQ4ODYyNWIwIiwidXNlcl9pZCI6Nn0.AuuwH-yCE8dda2bLMiTEy6S4M61iQMYbeWlfVCaUwCM`
+          Authorization: `JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3ODA0MTM1LCJpYXQiOjE2OTc3MTc3MzUsImp0aSI6IjYzMjE1ZDJiNDU5NzRhYWU5ZjUzYmFiYWQ0OWM3MzIyIiwidXNlcl9pZCI6Nn0.b_pNQ5Jb_o0GV22AJTegVZQSiBAMrZmctXn7lExkwt4`
         }
       });
     const data = await response.json();
     setID(data[0].id)
+    setDefaultValues({
+      username: profileData?.user.username,
+      bio: profileData?.bio,
+      name: profileData?.user.first_name,
+      role: profileData?.occupations
+    })
     return data[0]
   };
 
   const editProfileData = async (profileInfo: any) => {
-    const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/profile/${id}`, {
+    const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/profile/${id}/`, {
       method: "PUT",
       headers: {
-        Authorization: `JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3NzIyMzg4LCJpYXQiOjE2OTc2MzU5ODgsImp0aSI6ImRiOWU0M2NlMTJhNjQxN2NiYjU1N2EwMGQ4ODYyNWIwIiwidXNlcl9pZCI6Nn0.AuuwH-yCE8dda2bLMiTEy6S4M61iQMYbeWlfVCaUwCM`
+        Authorization: `JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3ODA0MTM1LCJpYXQiOjE2OTc3MTc3MzUsImp0aSI6IjYzMjE1ZDJiNDU5NzRhYWU5ZjUzYmFiYWQ0OWM3MzIyIiwidXNlcl9pZCI6Nn0.b_pNQ5Jb_o0GV22AJTegVZQSiBAMrZmctXn7lExkwt4`
         , 'Content-Type': 'application/json'
       },
       body: JSON.stringify(profileInfo)
@@ -137,7 +148,20 @@ const Profile = () => {
 
   }
 
-  const { data: profileData, isLoading, isError, error } = useQuery<RootObject, Error>({ queryKey: ['profileData'], queryFn: fetchProfileData })
+  const { data: profileData } = useQuery<RootObject, Error>({ queryKey: ['profileData'], queryFn: fetchProfileData })
+
+  const [defaultFormValues, setDefaultValues] = useState<Partial<ProfileFormValues>>({
+    username: profileData?.user.username,
+    bio: profileData?.bio,
+    name: profileData?.user.first_name,
+    role: profileData?.occupations === "" ? "role" : profileData?.occupations
+  })
+
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: defaultFormValues,
+    mode: "onChange",
+  })
 
   return (
     <div className="space-y-6">
@@ -154,7 +178,7 @@ const Profile = () => {
             <div className='flex flex-row'>
               <Avatar className="rounded-full h-12 w-12 mr-3">
                 <AvatarImage className="rounded-full" alt="Avatar" src={profileData?.profimage} />
-                <AvatarFallback className="rounded-full">{profileData ? profileData.user.first_name[0] : "shit"}</AvatarFallback>
+                <AvatarFallback className="rounded-full">{profileData ? profileData.user.first_name[0] : ""}</AvatarFallback>
               </Avatar>
               <div className='flex flex-col'>
                 <span className='text-xl'>{profileData?.user.first_name}</span>
@@ -269,8 +293,8 @@ const Profile = () => {
                   )}
                 />
                 <div className='flex flex-row justify-between'>
-                  <Button onClick={() => { form.reset(); setEditProfile(false); }} variant="secondary">Cancel</Button>
-                  <Button type="submit">Update profile</Button>
+                  <Button disabled={editProfileMutation.isLoading} onClick={() => { form.reset(); setEditProfile(false); }} variant="secondary">Cancel</Button>
+                  <Button disabled={editProfileMutation.isLoading} type="submit">Update profile</Button>
                 </div>
               </form>
             </Form>
