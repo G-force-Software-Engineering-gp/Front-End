@@ -26,6 +26,7 @@ function App() {
           {/* <ModeToggle /> */}
           <Header/>
           {/* <Board /> */}
+          {/* <CardDetail /> */}
           <Routers />
         </BrowserRouter>
       </QueryClientProvider>
