@@ -11,7 +11,7 @@ export const useCard = (cardId: number) => {
       const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/card/${cardId}`, {
         method: 'GET',
         headers: {
-          Authorization: `JWT ` + authTokens,
+          Authorization: `JWT ` + authTokens.access,
         },
       });
       const data = await response.json();
