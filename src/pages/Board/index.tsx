@@ -1,14 +1,12 @@
+import Header from '@/components/Header';
 import React from 'react';
 import BoardHeader from './boardHeader';
 import { BoardSidebar } from './boardSidebar';
 import { KanbanBoard } from './components/KanbanBoard';
-import Header from '@/components/Header';
+
 // import React from 'react';
 // import BoardHeader from './boardHeader';
 // import { BoardSidebar } from './boardSidebar';
-
-
-
 
 const Board = () => {
   return (

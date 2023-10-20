@@ -18,8 +18,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Calendar, ListIcon, MoreHorizontal, MoreVertical, Plus, Tags, Trash, User } from 'lucide-react';
-import React, { useContext } from 'react';
+import { Calendar, ListIcon, MoreHorizontal, MoreVertical, Pencil, Plus, Tags, Trash, User } from 'lucide-react';
+import React, { useContext, useState } from 'react';
+import { CardDetail } from '../cardDetail';
 import { useBoard } from '../hooks/useBoard';
 import { useCard } from '../hooks/useCard';
 import { useList } from '../hooks/useList';
@@ -139,7 +140,8 @@ interface CardProps {
 
 export const ListCard = ({ cardId, columns, listId }: CardProps) => {
   const { data, isLoading } = useCard(cardId);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const queryClient = useQueryClient();
   let authTokens = useContext(AuthContext)?.authTokens;
@@ -179,6 +181,15 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
               <DropdownMenuContent align="end" className="w-[200px]">
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuGroup>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setOpen(false);
+                      setModalOpen(true);
+                    }}
+                  >
+                    <Pencil className="mr-2 h-4 w-4" />
+                    Edit
+                  </DropdownMenuItem>
                   <DropdownMenuItem>
                     <User className="mr-2 h-4 w-4" />
                     Assign to...
@@ -321,6 +332,7 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
           </div>
         </CardFooter> */}
       </Card>
+      {data !== undefined && <CardDetail setModalOpen={setModalOpen} modalOpen={modalOpen} data={data} />}
     </>
   );
 };

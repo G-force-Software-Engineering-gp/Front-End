@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { BellDot, HelpCircle, User2 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ModeToggle } from './ui/mode-toggle';
@@ -40,6 +41,7 @@ const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWit
 ListItem.displayName = 'ListItem';
 
 const Header = () => {
+  const navigate = useNavigate();
   const components: { title: string; href: string; description: string }[] = [
     {
       title: 'Alert Dialog',
@@ -230,7 +232,7 @@ const Header = () => {
                 <ModeToggle />
                 <BellDot className="h-9 w-9" />
                 <HelpCircle className="h-9 w-9" />
-                <User2 className="h-9 w-9" />
+                <User2 className="h-9 w-9" onClick={() => navigate('/settings')} />
               </div>
             </div>
           </div>
