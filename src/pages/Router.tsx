@@ -4,6 +4,7 @@ import Home from "./HomePage/Home";
 import Board from "./Board";
 import Register from "./loginSignup/Register";
 import { AuthProvider } from "@/contexts/AuthContext";
+import PrivateRoute from "./PrivateRoute";
 
 
 
@@ -14,8 +15,10 @@ const Router = () => {
         <Routes>
             <Route path="/login" element={<Login/>}/>
             <Route path="/register" element={<Register/>}/>
+        <Route element={<PrivateRoute />}>
             <Route path="/home" element={<Home/>}/>
             <Route path="/board" element={<Board/>}/>
+          </Route>
         </Routes>
       </AuthProvider>
       
