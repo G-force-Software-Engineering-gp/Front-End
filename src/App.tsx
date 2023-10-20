@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Routers from './pages/Router';
 import Header from './components/Header';
 
-
+import Settings from './pages/settingsPage';
 
 const queryClient = new QueryClient();
 
@@ -24,9 +24,10 @@ function App() {
         <ReactQueryDevtools initialIsOpen={false} />
         <BrowserRouter>
           {/* <ModeToggle /> */}
-          <Header/>
-          {/* <Board /> */}
+          {/* <Header/> */}
+          {/* {/* <Board /> */}
           {/* <CardDetail /> */}
+          {/* <Settings /> */}
           <Routers />
         </BrowserRouter>
       </QueryClientProvider>
