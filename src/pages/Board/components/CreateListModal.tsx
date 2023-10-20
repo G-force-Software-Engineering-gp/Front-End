@@ -10,13 +10,13 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import AuthContext from '@/contexts/AuthContext';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { new_token } from '../hooks/useBoard';
 import { List } from '../types';
 
 const schema = z.object({
@@ -42,14 +42,14 @@ function CreateListModal({ boardId }: ListModalProps) {
     // },
     resolver: zodResolver(schema),
   });
-
+  let authTokens = useContext(AuthContext)?.authTokens;
   const createTask = useMutation({
     mutationFn: (formData: ListFormData) => {
       return fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/crlist/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `JWT ` + new_token,
+          Authorization: `JWT ` + authTokens,
         },
         body: JSON.stringify(formData),
       });
