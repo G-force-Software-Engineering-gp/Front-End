@@ -16,10 +16,11 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Calendar, ListIcon, MoreHorizontal, MoreVertical, Plus, Tags, Trash, User } from 'lucide-react';
-import React from 'react';
-import { new_token, useBoard } from '../hooks/useBoard';
+import React, { useContext } from 'react';
+import { useBoard } from '../hooks/useBoard';
 import { useCard } from '../hooks/useCard';
 import { useList } from '../hooks/useList';
 import { List } from '../types';
@@ -33,13 +34,14 @@ interface Props {
 export const BoardList = ({ listId, columns, boardId }: Props) => {
   const [open, setOpen] = React.useState(false);
   const queryClient = useQueryClient();
+  let authTokens = useContext(AuthContext)?.authTokens;
   const deleteList = useMutation({
     mutationFn: () => {
       return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/list/${listId}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `JWT ` + new_token,
+          Authorization: `JWT ` + authTokens,
         },
       });
     },
@@ -140,13 +142,14 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
   const [open, setOpen] = React.useState(false);
 
   const queryClient = useQueryClient();
+  let authTokens = useContext(AuthContext)?.authTokens;
   const deleteTask = useMutation({
     mutationFn: () => {
       return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/card/${cardId}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `JWT ` + new_token,
+          Authorization: `JWT ` + authTokens,
         },
       });
     },
