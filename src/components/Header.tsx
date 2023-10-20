@@ -12,6 +12,7 @@ import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { BellDot, HelpCircle, User2 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ModeToggle } from './ui/mode-toggle';
@@ -91,6 +92,7 @@ const Header = () => {
   useEffect(() => {
     gettingData();
   }, []);
+  const navigate = useNavigate();
   return (
     <div>
       <>
@@ -103,7 +105,12 @@ const Header = () => {
                     <NavigationMenuList>
                       <NavigationMenuItem>
                         <span className="cursor-pointer">
-                          <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                          <NavigationMenuLink
+                            className={navigationMenuTriggerStyle()}
+                            onClick={() => {
+                              navigate('/home');
+                            }}
+                          >
                             Logo and Name
                           </NavigationMenuLink>
                         </span>
