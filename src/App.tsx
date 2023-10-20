@@ -24,7 +24,7 @@ function App() {
         <ReactQueryDevtools initialIsOpen={false} />
         <BrowserRouter>
           {/* <ModeToggle /> */}
-          <Header/>
+          {/* <Header/> */}
           {/* <Board /> */}
           {/* <CardDetail /> */}
           <Routers />

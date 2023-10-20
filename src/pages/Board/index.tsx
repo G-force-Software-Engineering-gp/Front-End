@@ -1,10 +1,12 @@
-import React from 'react'
-import { BoardSidebar } from './boardSidebar'
-import BoardHeader from './boardHeader'
+import Header from '@/components/Header';
+import React from 'react';
+import BoardHeader from './boardHeader';
+import { BoardSidebar } from './boardSidebar';
 
 const Board = () => {
   return (
     <div>
+      <Header />
       <BoardHeader />
       <div className="grid grid-flow-col grid-cols-4 justify-center justify-items-center ">
         <div className=" col-span-1">
@@ -15,7 +17,7 @@ const Board = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Board
+export default Board;
