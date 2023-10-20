@@ -158,9 +158,14 @@ const Header = () => {
                                 </a>
                               </NavigationMenuLink>
                             </li>
-                            {workspaces
-                              ? workspaces.map((item) => <ListItem title={item.name}>{item.description}</ListItem>)
-                              : ''}
+                            <li>
+                              {workspaces
+                                ? workspaces.map((item) => <ListItem title={item.name}>{item.description}</ListItem>)
+                                : ''}
+                              {workspaces
+                                ? workspaces.map((item) => <ListItem title={item.name}>{item.description}</ListItem>)
+                                : ''}
+                            </li>
                           </ul>
                         </NavigationMenuContent>
                       </NavigationMenuItem>
