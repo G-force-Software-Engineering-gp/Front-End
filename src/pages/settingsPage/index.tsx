@@ -1,7 +1,7 @@
 import React from 'react'
 import { Separator } from "@/components/ui/separator"
 import { SettingsNav } from './settingsSidebar'
-import { Route, Routes } from 'react-router-dom'
+import { Outlet, Route, Routes } from 'react-router-dom'
 import Profile from './profile'
 import appearance from './cards'
 import advanced from './advanced'
@@ -39,11 +39,7 @@ const Settings = () => {
           <SettingsNav items={sidebarNavItems} />
         </aside>
         <div className="flex-1 lg:max-w-2xl">
-          <Routes>
-            <Route path='/settings/profile' Component={Profile} />
-            <Route path='/settings/cards' Component={appearance} />
-            <Route path='/settings/advanced' Component={advanced} />
-          </Routes>
+          <Outlet />
         </div>
       </div>
     </div>

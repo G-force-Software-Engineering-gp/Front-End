@@ -1,6 +1,6 @@
 import React from 'react'
 
-const advanced = () => {
+const Advanced = () => {
   return (
     <div>
       advanced
@@ -8,4 +8,4 @@ const advanced = () => {
   )
 }
 
-export default advanced
+export default Advanced

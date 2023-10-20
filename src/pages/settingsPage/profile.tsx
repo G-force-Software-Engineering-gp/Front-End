@@ -1,5 +1,5 @@
 import { Separator } from '@radix-ui/react-dropdown-menu'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -40,6 +40,7 @@ import {
 import { ClipboardList, Mail, UserCircle2 } from 'lucide-react';
 import { Badge } from "@/components/ui/badge"
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import AuthContext from '@/contexts/AuthContext';
 
 
 const MAX_FILE_SIZE = 500000;
@@ -53,7 +54,7 @@ const profileFormSchema = z.object({
     .min(2, {
       message: "Username must be at least 2 characters.",
     })
-    .max(10, {
+    .max(20, {
       message: "Username must not be longer than 10 characters.",
     }),
   bio: z.string().max(160).min(4),
@@ -71,6 +72,7 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
 const Profile = () => {
+  let authTokens = useContext(AuthContext)?.authTokens;
   const { toast } = useToast();
   const [EditProfile, setEditProfile] = useState(false);
 
@@ -122,7 +124,7 @@ const Profile = () => {
       {
         method: "GET",
         headers: {
-          Authorization: `JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3ODA0MTM1LCJpYXQiOjE2OTc3MTc3MzUsImp0aSI6IjYzMjE1ZDJiNDU5NzRhYWU5ZjUzYmFiYWQ0OWM3MzIyIiwidXNlcl9pZCI6Nn0.b_pNQ5Jb_o0GV22AJTegVZQSiBAMrZmctXn7lExkwt4`
+          Authorization: `JWT ${authTokens.access}`
         }
       });
     const data = await response.json();
@@ -140,7 +142,7 @@ const Profile = () => {
     const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/profile/${id}/`, {
       method: "PUT",
       headers: {
-        Authorization: `JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjk3ODA0MTM1LCJpYXQiOjE2OTc3MTc3MzUsImp0aSI6IjYzMjE1ZDJiNDU5NzRhYWU5ZjUzYmFiYWQ0OWM3MzIyIiwidXNlcl9pZCI6Nn0.b_pNQ5Jb_o0GV22AJTegVZQSiBAMrZmctXn7lExkwt4`
+        Authorization: `JWT ${authTokens.access}`
         , 'Content-Type': 'application/json'
       },
       body: JSON.stringify(profileInfo)
@@ -172,7 +174,7 @@ const Profile = () => {
         </p>
       </div>
       <Separator />
-      <Card className='max-w-[350px]'>
+      <Card className='w-fit'>
         <CardHeader>
           <CardTitle className='flex flex-row items-center justify-between'>
             <div className='flex flex-row'>
@@ -185,7 +187,7 @@ const Profile = () => {
                 <span className='text-sm font-thin'>{profileData?.user.username}</span>
               </div>
             </div>
-            {profileData?.occupations === "" ? null : <Badge className='mr-3'>{profileData?.occupations}</Badge>}
+            {profileData?.occupations === "" ? null : <Badge className='mr-3 ml-3'>{profileData?.occupations}</Badge>}
           </CardTitle>
         </CardHeader>
         <CardTitle className='mx-9'>
@@ -293,7 +295,7 @@ const Profile = () => {
                   )}
                 />
                 <div className='flex flex-row justify-between'>
-                  <Button disabled={editProfileMutation.isLoading} onClick={() => { form.reset(); setEditProfile(false); }} variant="secondary">Cancel</Button>
+                  <Button disabled={editProfileMutation.isLoading} onClick={() => { setEditProfile(false); }} variant="secondary">Cancel</Button>
                   <Button disabled={editProfileMutation.isLoading} type="submit">Update profile</Button>
                 </div>
               </form>
