@@ -11,7 +11,7 @@ export const useBoard = (boardId: number) => {
       const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board/${boardId}`, {
         method: 'GET',
         headers: {
-          Authorization: `JWT ` + authTokens,
+          Authorization: `JWT ` + authTokens.access,
         },
       });
       const data = await response.json();

@@ -49,7 +49,7 @@ function CreateListModal({ boardId }: ListModalProps) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `JWT ` + authTokens,
+          Authorization: `JWT ` + authTokens.access,
         },
         body: JSON.stringify(formData),
       });

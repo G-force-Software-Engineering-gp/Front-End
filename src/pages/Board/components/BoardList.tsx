@@ -41,7 +41,7 @@ export const BoardList = ({ listId, columns, boardId }: Props) => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `JWT ` + authTokens,
+          Authorization: `JWT ` + authTokens.access,
         },
       });
     },
@@ -149,7 +149,7 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `JWT ` + authTokens,
+          Authorization: `JWT ` + authTokens.access,
         },
       });
     },
