@@ -93,6 +93,7 @@ const Header = () => {
   useEffect(() => {
     gettingData();
   }, []);
+  const navigate = useNavigate();
   return (
     <div>
       <>
@@ -105,7 +106,12 @@ const Header = () => {
                     <NavigationMenuList>
                       <NavigationMenuItem>
                         <span className="cursor-pointer">
-                          <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                          <NavigationMenuLink
+                            className={navigationMenuTriggerStyle()}
+                            onClick={() => {
+                              navigate('/home');
+                            }}
+                          >
                             Logo and Name
                           </NavigationMenuLink>
                         </span>
@@ -153,9 +159,12 @@ const Header = () => {
                                 </a>
                               </NavigationMenuLink>
                             </li>
-                            {workspaces
-                              ? workspaces.map((item) => <ListItem title={item.name}>{item.description}</ListItem>)
-                              : ''}
+                            <li>
+                              {workspaces
+                                ? workspaces.map((item) => <ListItem title={item.name}>{item.description}</ListItem>)
+                                : ''}
+                           
+                            </li>
                           </ul>
                         </NavigationMenuContent>
                       </NavigationMenuItem>
