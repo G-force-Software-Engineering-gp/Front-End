@@ -7,14 +7,14 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
+import AuthContext from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import axios from 'axios';
 import { BellDot, HelpCircle, User2 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ModeToggle } from './ui/mode-toggle';
-import axios from 'axios';
-import AuthContext from '@/contexts/AuthContext';
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -74,23 +74,23 @@ const Header = () => {
         'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.',
     },
   ];
-  // let authTokens = useContext(AuthContext)?.authTokens;
-  // console.log(authTokens)
-  // const [workspaces, setworkspaces] = useState<any[]>([]);
-  // const gettingData = async () => {
-  //   const { data } = await axios
-  //     .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
-  //       headers: {
-  //         Authorization: `JWT ${authTokens.access}`,
-  //       },
-  //     })
-  //     .then((response) => response);
-  //   console.log(data);
-  //   setworkspaces(data);
-  // };
-  // useEffect(() => {
-  //   gettingData();
-  // }, []);
+  let authTokens = useContext(AuthContext)?.authTokens;
+  // console.log(authTokens.access)
+  const [workspaces, setworkspaces] = useState<any[]>([]);
+  const gettingData = async () => {
+    const { data } = await axios
+      .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
+        headers: {
+          Authorization: `JWT ${authTokens.access}`,
+        },
+      })
+      .then((response) => response);
+    console.log(data);
+    setworkspaces(data);
+  };
+  useEffect(() => {
+    gettingData();
+  }, []);
   return (
     <div>
       <>
@@ -151,15 +151,9 @@ const Header = () => {
                                 </a>
                               </NavigationMenuLink>
                             </li>
-                            <ListItem href="/docs" title="Workspace 1">
-                              a bit information about the workspace
-                            </ListItem>
-                            <ListItem href="/docs" title="Workspace 1">
-                              a bit information about the workspace
-                            </ListItem>
-                            <ListItem href="/docs" title="Workspace 1">
-                              a bit information about the workspace
-                            </ListItem>
+                            {workspaces
+                              ? workspaces.map((item) => <ListItem title={item.name}>{item.description}</ListItem>)
+                              : ''}
                           </ul>
                         </NavigationMenuContent>
                       </NavigationMenuItem>
@@ -216,7 +210,7 @@ const Header = () => {
                       <NavigationMenuItem>
                         <NavigationMenuTrigger>Templates</NavigationMenuTrigger>
                         <NavigationMenuContent>
-                          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] cursor-pointer ">
+                          <ul className="grid w-[400px] cursor-pointer gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
                             {components.map((component) => (
                               <ListItem key={component.title} title={component.title}>
                                 {component.description}
@@ -233,10 +227,10 @@ const Header = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Input type="text" placeholder="Search" />
-                <ModeToggle/>
-                <BellDot className='w-9 h-9'/>
-                <HelpCircle className='w-9 h-9'/>
-                <User2 className='w-9 h-9'/>
+                <ModeToggle />
+                <BellDot className="h-9 w-9" />
+                <HelpCircle className="h-9 w-9" />
+                <User2 className="h-9 w-9" />
               </div>
             </div>
           </div>
