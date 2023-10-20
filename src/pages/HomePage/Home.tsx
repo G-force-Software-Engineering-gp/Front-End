@@ -1,10 +1,12 @@
 import React from 'react';
 import HomePageDetails from './HomePageDetails';
 import { HomeSideBar } from './HomeSideBar';
+import Header from "@/components/Header"
 
 const Home = () => {
   return (
     <div>
+      <Header/>
       <div className="grid grid-flow-col grid-cols-4 justify-center sm:px-52">
         <div className=" hidden sm:block sm:col-span-1">
           <HomeSideBar />

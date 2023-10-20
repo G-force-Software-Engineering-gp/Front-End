@@ -26,6 +26,7 @@ function App() {
           {/* <ModeToggle /> */}
           {/* <Header/> */}
           {/* {/* <Board /> */}
+          {/* <Board /> */}
           {/* <CardDetail /> */}
           {/* <Settings /> */}
           <Routers />

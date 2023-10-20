@@ -9,10 +9,12 @@ import {
 } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
 import { BellDot, HelpCircle, User2 } from 'lucide-react';
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ModeToggle } from './ui/mode-toggle';
+import axios from 'axios';
+import AuthContext from '@/contexts/AuthContext';
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -72,6 +74,23 @@ const Header = () => {
         'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.',
     },
   ];
+  // let authTokens = useContext(AuthContext)?.authTokens;
+  // console.log(authTokens)
+  // const [workspaces, setworkspaces] = useState<any[]>([]);
+  // const gettingData = async () => {
+  //   const { data } = await axios
+  //     .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
+  //       headers: {
+  //         Authorization: `JWT ${authTokens.access}`,
+  //       },
+  //     })
+  //     .then((response) => response);
+  //   console.log(data);
+  //   setworkspaces(data);
+  // };
+  // useEffect(() => {
+  //   gettingData();
+  // }, []);
   return (
     <div>
       <>
@@ -197,9 +216,9 @@ const Header = () => {
                       <NavigationMenuItem>
                         <NavigationMenuTrigger>Templates</NavigationMenuTrigger>
                         <NavigationMenuContent>
-                          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
+                          <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] cursor-pointer ">
                             {components.map((component) => (
-                              <ListItem key={component.title} title={component.title} href={component.href}>
+                              <ListItem key={component.title} title={component.title}>
                                 {component.description}
                               </ListItem>
                             ))}
