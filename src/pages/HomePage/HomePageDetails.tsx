@@ -5,8 +5,10 @@ import AuthContext from '@/contexts/AuthContext';
 import axios from 'axios';
 import { StarIcon } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const HomePageDetails = () => {
+  const navigate = useNavigate();
   let authTokens = useContext(AuthContext)?.authTokens;
   // console.log(authTokens.access);
   const [workspaces, setworkspaces] = useState<any[]>([]);
@@ -277,8 +279,8 @@ const HomePageDetails = () => {
                 </div>
 
                 <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2">
-                  {item?.boards.map((item1 : { id: number, title: string }) => (
-                    <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
+                  {item?.boards.map((item1: { id: number; title: string }) => (
+                    <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900" onClick={()=>navigate(`/board/${item1.id}`)}>
                       <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
                         <div className="flex justify-between">
                           <div className="space-y-1">

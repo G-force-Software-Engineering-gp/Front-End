@@ -18,6 +18,7 @@ const Router = () => {
         <Route element={<PrivateRoute />}>
             <Route path="/home" element={<Home/>}/>
             <Route path="/board" element={<Board/>}/>
+            <Route path="/board/:boardId" element={<Board/>}/>
           </Route>
         </Routes>
       </AuthProvider>
