@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import AuthContext from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import AddWorkSapceHeader from '@/pages/HomePage/components/AddWorkSapceHeader';
 import axios from 'axios';
 import { BellDot, HelpCircle, User2 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
@@ -162,7 +163,6 @@ const Header = () => {
                               {workspaces
                                 ? workspaces.map((item) => <ListItem title={item.name}>{item.description}</ListItem>)
                                 : ''}
-                           
                             </li>
                           </ul>
                         </NavigationMenuContent>
@@ -230,7 +230,8 @@ const Header = () => {
                         </NavigationMenuContent>
                       </NavigationMenuItem>
 
-                      <Button className="!bg-blue-500">Create</Button>
+                      
+                      <AddWorkSapceHeader />
                     </NavigationMenuList>
                   </NavigationMenu>
                 </>

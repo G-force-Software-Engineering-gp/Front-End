@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { Button } from '../../components/ui/button';
+import AddWorkSpace from './components/AddWorkSpace';
 
 // import { Playlist } from '../../data/playlists';
 
@@ -101,21 +102,7 @@ export function HomeSideBar() {
         <div className="px-3 py-2">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="px-4 text-lg font-semibold tracking-tight">Workspaces</h2>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              className="lucide lucide-plus cursor-pointer"
-            >
-              <path d="M5 12h14" />
-              <path d="M12 5v14" />
-            </svg>
+            <AddWorkSpace />
           </div>
           <div className="space-y-1">
             <Accordion type="single" collapsible className="w-full">
@@ -233,8 +220,6 @@ export function HomeSideBar() {
                     </AccordionItem>
                   ))
                 : ''}
-
-              
             </Accordion>
           </div>
         </div>
