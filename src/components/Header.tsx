@@ -93,7 +93,6 @@ const Header = () => {
   useEffect(() => {
     gettingData();
   }, []);
-  const navigate = useNavigate();
   return (
     <div>
       <>
