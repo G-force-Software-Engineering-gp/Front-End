@@ -1,3 +1,17 @@
+import { AlertDialogHeader } from '@/components/ui/alert-dialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { ModeToggle } from '@/components/ui/mode-toggle';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -7,22 +21,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import { cn } from '@/lib/utils';
-import { BellDot, HelpCircle, User2 } from 'lucide-react';
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { ModeToggle } from '@/components/ui/mode-toggle';
-import { Eye } from 'lucide-react';
-import { Trello } from 'lucide-react';
-import { ChevronDown } from 'lucide-react';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { Star } from 'lucide-react';
-import { MoreHorizontal } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Sheet,
   SheetClose,
@@ -32,15 +31,26 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import { UserPlus2 } from 'lucide-react';
+} from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
+import { DialogClose } from '@radix-ui/react-dialog';
+import { Label } from '@radix-ui/react-select';
 import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar"
-import { ListFilter } from 'lucide-react';
-
+  BellDot,
+  ChevronDown,
+  Copy,
+  Eye,
+  HelpCircle,
+  ImagePlus,
+  ListFilter,
+  MoreHorizontal,
+  Star,
+  Trello,
+  User2,
+  UserPlus2,
+} from 'lucide-react';
+import React from 'react';
+import AddImage from './components/AddImage';
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -101,29 +111,29 @@ const BoardHeader = () => {
     },
   ];
   return (
-    <div className='backdrop-blur'>
+    <div className="backdrop-blur">
       <>
-        <div className="flex flex-col md:flex-row border-b-2 flex-1 p-2 px-5 md:items-center md:justify-between">
+        <div className="flex flex-1 flex-col border-b-2 p-2 px-5 md:flex-row md:items-center md:justify-between">
           <div className="pb-2 md:pb-0">
             <div className="text-2xl font-bold">
               <>
                 <span></span>
-                <span className='m-2'>G-Force</span>
-                <Button variant="secondary" className="h-8 w-8 p-0 m-1">
+                <span className="m-2">G-Force</span>
+                <Button variant="secondary" className="m-1 h-8 w-8 p-0">
                   <Eye className="h-4 w-4 " />
                 </Button>
-                <Button variant="secondary" className="h-8 w-8 p-0 m-1">
+                <Button variant="secondary" className="m-1 h-8 w-8 p-0">
                   <Star className="h-4 w-4 " />
                 </Button>
                 <Popover>
                   <PopoverTrigger>
-                    <Button variant="secondary" className="w-fit px-2 h-8 ml-1">
+                    <Button variant="secondary" className="ml-1 h-8 w-fit px-2">
                       <Trello className="mr-2 h-4 w-4" />
                       <span className="mr-1">Board</span>
                       <ChevronDown className="h-4 w-4 " />
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className='w-100'>
+                  <PopoverContent className="w-100">
                     <div className="grid gap-4">
                       <div className="flex justify-center">
                         <h4 className="font-medium leading-none">Upgrade For Views</h4>
@@ -131,38 +141,27 @@ const BoardHeader = () => {
                       <div className="grid gap-2">
                         <h3 className="font-medium leading-none">See your work in new ways</h3>
                         <div className="grid grid-cols-3 items-center gap-4">
-                          <Input
-                            id="maxWidth"
-                            defaultValue="300px"
-                            className="col-span-2 h-8"
-                          />
+                          <Input id="maxWidth" defaultValue="300px" className="col-span-2 h-8" />
                         </div>
                         <div className="grid grid-cols-3 items-center gap-4">
-                          <Input
-                            id="height"
-                            defaultValue="25px"
-                            className="col-span-2 h-8"
-                          />
+                          <Input id="height" defaultValue="25px" className="col-span-2 h-8" />
                         </div>
                         <div className="grid grid-cols-3 items-center gap-4">
-                          <Input
-                            id="maxHeight"
-                            defaultValue="none"
-                            className="col-span-2 h-8"
-                          />
+                          <Input id="maxHeight" defaultValue="none" className="col-span-2 h-8" />
                         </div>
                       </div>
                     </div>
                   </PopoverContent>
                 </Popover>
+                <AddImage />
               </>
             </div>
           </div>
-          <div className="flex items-center space-x-2 justify-end">
-            <Button variant="secondary" className='h-8 w-8 p-0'>
-              <ListFilter className='w-4 h-4' />
+          <div className="flex items-center justify-end space-x-2">
+            <Button variant="secondary" className="h-8 w-8 p-0">
+              <ListFilter className="h-4 w-4" />
             </Button>
-            <div className='flex -space-x-2 overflow-hidden'>
+            <div className="flex -space-x-2 overflow-hidden">
               <Avatar>
                 <AvatarImage />
                 <AvatarFallback>EA</AvatarFallback>
@@ -180,24 +179,20 @@ const BoardHeader = () => {
                 <AvatarFallback>+4</AvatarFallback>
               </Avatar>
             </div>
-            <Button className='h-8 w-20 p-0'>
-              <UserPlus2 className='w-4 h-4 mr-1' />
-              <span >Share</span>
+            <Button className="h-8 w-20 p-0">
+              <UserPlus2 className="mr-1 h-4 w-4" />
+              <span>Share</span>
             </Button>
             <Sheet>
               <SheetTrigger asChild>
-                <Button variant="secondary" className="h-8 w-8 p-0 m-1">
+                <Button variant="secondary" className="m-1 h-8 w-8 p-0">
                   <MoreHorizontal className="h-4 w-4 " />
                 </Button>
               </SheetTrigger>
               <SheetContent>
                 <SheetHeader>
-                  <SheetTitle>
-                    WTF is this
-                  </SheetTitle>
-                  <SheetDescription>
-                    saturday through sunday. monday, monday through sunday yo
-                  </SheetDescription>
+                  <SheetTitle>WTF is this</SheetTitle>
+                  <SheetDescription>saturday through sunday. monday, monday through sunday yo</SheetDescription>
                 </SheetHeader>
               </SheetContent>
             </Sheet>
