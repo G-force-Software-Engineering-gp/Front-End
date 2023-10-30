@@ -23,8 +23,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { ToastAction } from '@/components/ui/toast';
 import { useToast } from '@/components/ui/use-toast';
 import AuthContext from '@/contexts/AuthContext';
+import { DialogClose } from '@radix-ui/react-dialog';
 import axios from 'axios';
 import React, { useContext, useRef, useState } from 'react';
+import Swal from 'sweetalert2';
 
 const AddWorkSpace = () => {
   const [name, setname] = useState('');
@@ -38,11 +40,12 @@ const AddWorkSpace = () => {
   const [desError, setdesError] = useState(false);
   const [selError, setselError] = useState(false);
   // console.log(selectedValue);
-  const { toast } = useToast()
+  const { toast } = useToast();
 
   let authTokens = useContext(AuthContext)?.authTokens;
   // console.log(authTokens);
   // console.log(authTokens.access)
+
   const CreateWorkspace = async () => {
     const data = await fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/crworkspace/', {
       method: 'POST',
@@ -58,17 +61,25 @@ const AddWorkSpace = () => {
     }).then((response) => response);
     console.log(data.ok);
     if (data.ok) {
-      toast({
+      Swal.fire({
+        icon: 'success',
         title: 'Successful',
-        description: 'Workspace created successfully',
-        // action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
+        text: 'Workspace created successfully',
+        timer: 3000,
       });
+      setname('');
+      setdescription('');
+      setSelectedValue(null);
     } else {
-      toast({
+      Swal.fire({
+        icon: 'error',
         title: 'Error',
-        description: 'Failed to create the workspace',
-        // action: <ToastAction altText="Goto schedule to undo">Undo</ToastAction>,
+        text: 'Something went wrong!',
+        timer: 3000,
       });
+      setname('');
+      setdescription('');
+      setSelectedValue(null);
     }
   };
 
@@ -175,7 +186,9 @@ const AddWorkSpace = () => {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={() => submitFn()}>Make The Workspace</Button>
+          <DialogClose>
+            <Button onClick={() => submitFn()}>Make The Workspace</Button>
+          </DialogClose>
         </DialogFooter>
         {/* </form> */}
       </DialogContent>
