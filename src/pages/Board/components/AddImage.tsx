@@ -12,8 +12,13 @@ import { Input } from '@/components/ui/input';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { ImagePlus } from 'lucide-react';
 import React from 'react';
+import { useParams } from 'react-router-dom';
 
 const AddImage = () => {
+  const { boardId } = useParams();
+  console.log(boardId);
+
+  
   return (
     <>
       <Dialog>
@@ -29,7 +34,12 @@ const AddImage = () => {
             <DialogDescription>You can select only .jpg and .png files</DialogDescription>
           </DialogHeader>
           <div className="grid w-full max-w-sm items-center gap-1.5">
-            <Input id="picture" type="file" className=" cursor-pointer placeholder:text-white" accept=".jpg, .jpeg, .png"/>
+            <Input
+              id="picture"
+              type="file"
+              className=" cursor-pointer placeholder:text-white"
+              accept=".jpg, .jpeg, .png"
+            />
           </div>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
