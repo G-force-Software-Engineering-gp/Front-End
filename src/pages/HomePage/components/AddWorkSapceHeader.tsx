@@ -26,6 +26,7 @@ import AuthContext from '@/contexts/AuthContext';
 import { DialogClose } from '@radix-ui/react-dialog';
 import axios from 'axios';
 import React, { useContext, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const AddWorkSapceHeader = () => {
@@ -45,7 +46,7 @@ const AddWorkSapceHeader = () => {
   let authTokens = useContext(AuthContext)?.authTokens;
   // console.log(authTokens);
   // console.log(authTokens.access)
-
+  const navigate = useNavigate();
   const CreateWorkspace = async () => {
     const data = await fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/crworkspace/', {
       method: 'POST',
@@ -70,6 +71,9 @@ const AddWorkSapceHeader = () => {
       setname('');
       setdescription('');
       setSelectedValue(null);
+      setInterval(() => {
+        navigate(0);
+      }, 2000);
     } else {
       Swal.fire({
         icon: 'error',
@@ -80,6 +84,9 @@ const AddWorkSapceHeader = () => {
       setname('');
       setdescription('');
       setSelectedValue(null);
+      setInterval(() => {
+        navigate(0);
+      }, 2000);
     }
   };
 
