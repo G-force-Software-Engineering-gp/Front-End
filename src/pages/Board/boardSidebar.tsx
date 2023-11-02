@@ -82,7 +82,7 @@ interface Member {
 export function BoardSidebar({ className }: any) {
 
   const { boardId } = useParams()
-
+  const [addMemberButtonLoading, setAddMemberButtonLoading] = useState(false);
   function inviteMembers() {
     const fetches = selectedUsers.map(item => {
       return { member: item.id, board: boardId }
@@ -97,9 +97,24 @@ export function BoardSidebar({ className }: any) {
       })
     })
     Promise.allSettled(fetches).then(results => results.forEach(item => {
-      console.log(item)
+      setOpen(false)
+      setSelectedUsers([])
     }))
   }
+
+  // function inviteMembers() {
+  //   setAddMemberButtonLoading(true);
+  //   fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/invite/`, {
+  //     method: "POST",
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: "JWT " + authTokens.access,
+  //     },
+  //     body: JSON.stringify({ member: selectedUsers.map(item => item.id), board: boardId })
+  //   }).then(res => {
+  //     setAddMemberButtonLoading(false);
+  //   })
+  // }
 
   let authTokens = useContext(AuthContext)?.authTokens;
   const [query, setQuery] = useState('');
@@ -124,7 +139,7 @@ export function BoardSidebar({ className }: any) {
     // console.log("out: " + deferredQuery)
     if (deferredQuery !== "") {
       // console.log("in: " + deferredQuery)
-      axios.get(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/user-search/?search=${deferredQuery}`, {
+      axios.get(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/user-search/?board=${boardId}&search=${deferredQuery}`, {
         headers: {
           Authorization: `JWT ${authTokens.access}`
         }
@@ -147,6 +162,7 @@ export function BoardSidebar({ className }: any) {
     }
   }, [deferredQuery, selectedUsers])
 
+  const [open, setOpen] = useState(false)
   return (
     <div className={cn("pb-12", className)}>
       <div className="space-y-4 py-4 ">
@@ -174,7 +190,7 @@ export function BoardSidebar({ className }: any) {
                 <Users2 className="mr-2 h-4 w-4" />
                 Members
               </div>
-              <Dialog>
+              <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" className="hidden group-hover:flex  h-7 w-7 p-0">
                     <Plus className="w-5 h-5" />
@@ -268,12 +284,14 @@ export function BoardSidebar({ className }: any) {
                       </p>
                     )}
                     <Button
-                      disabled={selectedUsers.length < 1}
+                      disabled={selectedUsers.length < 1 || addMemberButtonLoading}
                       onClick={() => {
-                        inviteMembers()
+                        inviteMembers();
                       }}
+
                     >
-                      Add Members
+                      {addMemberButtonLoading && (<p>Loading...</p>)}
+                      {!addMemberButtonLoading && (<p>Add Members</p>)}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
