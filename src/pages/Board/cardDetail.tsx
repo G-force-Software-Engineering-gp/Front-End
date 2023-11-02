@@ -28,14 +28,22 @@ import {
   User,
 } from 'lucide-react';
 import { Card } from './types';
-
+import { DatePickerModal } from './components/datePickerModal';
+import React, { useState } from 'react';
+import { DateRange } from "react-day-picker"
 interface Props {
   modalOpen: boolean;
   setModalOpen: any;
   data: Card;
 }
 
+
 export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
+  const [mainDate, setMainDate] = useState<DateRange | undefined>({
+    from: new Date(), // Provide an appropriate initial start date.
+    to: new Date(),   // Provide an appropriate initial end date.
+  });
+  const [selectedValue, setSelectedValue] = React.useState('None'); 
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       {/* <DialogTrigger asChild>
@@ -136,14 +144,17 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   <CheckSquare className="mb-1 mr-1 h-4 w-4" />
                   Checklist
                 </Button>
-                <Button
+                {/* <Button
                   size="sm"
                   variant="secondary"
                   className="col-span-3 mx-4 mb-2 flex cursor-pointer justify-start rounded-sm px-4  text-sm md:col-span-6"
-                >
-                  <Clock7 className="mb-1 mr-1 h-4 w-4" />
-                  Dates
-                </Button>
+                  onClick={() => setDateOpen(true)}
+                > */}
+                  <DatePickerModal mainDate={mainDate}  setMainDate={setMainDate} selectedValue={selectedValue} setSelectedValue={setSelectedValue}/>
+                  {/* <Clock7 className="mb-1 mr-1 h-4 w-4" />
+                  Dates */}
+                {/* </Button> */}
+                
                 <Button
                   size="sm"
                   variant="secondary"
