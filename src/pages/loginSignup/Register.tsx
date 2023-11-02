@@ -9,6 +9,7 @@ import { Label } from '@radix-ui/react-dropdown-menu';
 import { Link } from 'react-router-dom';
 import { UserCircle , Mail , Lock , UserSquare } from 'lucide-react';
 import AuthContext , { AuthContextType } from '@/contexts/AuthContext';
+import { useTheme } from '@/components/theme-provider';
 
 const registrationSchema = z.object({
   firstName: z.string().min(1, 'First Name is required'),
@@ -46,8 +47,11 @@ const Register: React.FC = () => {
       console.error('Error:', error);
     }
   };
-
+  const { theme} = useTheme();
   return (
+    <div className="flex items-center justify-center gap-5">
+            {theme === 'dark' ? <img className='border-4 h-[620px] w-1/2 hidden md:block  ' src={require("../../pics/signupDark.png")} alt="" />
+      : <img className='border-4 h-[620px] w-1/2 hidden md:block  ' src={require("../../pics/signupLight.png")} alt="" /> }
     <div className="flex justify-center flex-col items-center h-screen">
       <Label className="text-2xl font-semibold mb-12 text-center">Logo</Label>
       <Label className="text-2xl font-semibold mb-9">Register</Label>
@@ -133,6 +137,7 @@ const Register: React.FC = () => {
           </Link>
         </div>
       </Card>
+    </div>
     </div>
   );
 };

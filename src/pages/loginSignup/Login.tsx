@@ -9,6 +9,7 @@ import { Label } from '@radix-ui/react-dropdown-menu';
 import {Link } from 'react-router-dom';
 import { Mail , Lock } from 'lucide-react';
 import AuthContext , { AuthContextType } from '@/contexts/AuthContext';
+import { useTheme } from '@/components/theme-provider';
 
 
 
@@ -46,8 +47,12 @@ const Login: React.FC = () => {
       console.error('Error:', error);
     }
   };
+  const { theme} = useTheme();
 
   return (
+    <div className="flex items-center justify-center gap-5">
+      {theme === 'dark' ? <img className='border-4 h-[450px] w-1/2 hidden md:block  ' src={require("../../pics/loginDark.png")} alt="" />
+      : <img className='border-4 h-[450px] w-1/2 hidden md:block  ' src={require("../../pics/loginLight.png")} alt="" /> }
     <div className="flex justify-center flex-col items-center h-screen">
               <Label className="text-2xl font-semibold mb-12 text-center">Logo</Label>
       <Label className="text-2xl font-semibold mb-9">Login</Label>
@@ -92,6 +97,7 @@ const Login: React.FC = () => {
                 </Link>
             </div>
       </Card>
+    </div>
     </div>
   );
 };
