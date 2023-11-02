@@ -14,7 +14,8 @@ import { DialogClose } from '@radix-ui/react-dialog';
 import axios from 'axios';
 import { ImagePlus } from 'lucide-react';
 import React, { useContext, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const AddImage = () => {
   const { boardId } = useParams();
@@ -28,40 +29,50 @@ const AddImage = () => {
     if (file) {
       setSelectedImage(file);
     }
+    // console.log(file);
   };
   // console.log(selectedImage)
   let authTokens = useContext(AuthContext)?.authTokens;
+  // console.log(authTokens);
+  const navigate = useNavigate();
   const handleUpload = async () => {
     if (selectedImage) {
       const formData = new FormData();
-      formData.append('image', selectedImage);
-      console.log(formData)
-      const { data } = await axios
-        .put(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board/${boardId}`, {
-          headers: {
-            Authorization: `JWT ${authTokens.access}`,
-          },
-          body: {
-            backgroundImage: formData,
-          },
-        })
-        .then((response) => response);
-      console.log(data);
+      formData.append('backgroundImage', selectedImage);
 
-      // fetch('your_backend_endpoint', {
-      //   method: 'POST',
-      //   body: formData,
-      // })
-      //   .then((response) => {
-      //     if (response.ok) {
-      //       console.log('Image uploaded successfully.');
-      //     } else {
-      //       console.error('Failed to upload image.');
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     console.error('Error:', error);
-      //   });
+      // formData.append('id', boardId ? boardId : '');
+      // console.log(formData);
+
+      const data = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board-bgimage/${boardId}/`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `JWT ${authTokens.access}`,
+          // 'Content-Type': 'multipart/form-data',
+        },
+        body: formData,
+      }).then((response) => response);
+      // console.log(data);
+      if (data.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'Picture uploaded completely',
+          timer: 3000,
+        });
+        setInterval(() => {
+          navigate(0);
+        }, 2000);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Something went wrong!',
+          timer: 3000,
+        });
+        setInterval(() => {
+          navigate(0);
+        }, 2000);
+      }
     }
   };
 

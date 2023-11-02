@@ -3,6 +3,7 @@ export type Board = {
   title: string;
   workspace: number;
   list: List[];
+  backgroundImage: any;
 };
 
 export type List = {

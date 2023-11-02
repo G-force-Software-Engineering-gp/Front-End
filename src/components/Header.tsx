@@ -109,7 +109,7 @@ const Header = () => {
                           <NavigationMenuLink
                             className={navigationMenuTriggerStyle()}
                             onClick={() => {
-                              navigate('/home');
+                              navigate('/');
                             }}
                           >
                             Logo and Name
