@@ -6,9 +6,9 @@ import Login from './loginSignup/Login';
 import Register from './loginSignup/Register';
 import PrivateRoute from './PrivateRoute';
 import Settings from './settingsPage';
-import Profile from './settingsPage/profile';
-import Cards from './settingsPage/cards';
 import Advanced from './settingsPage/advanced';
+import Cards from './settingsPage/cards';
+import Profile from './settingsPage/profile';
 
 const Router = () => {
   return (
@@ -23,9 +23,9 @@ const Router = () => {
             <Route path="/board/:boardId" element={<Board />} />
             <Route path="/settings" element={<Settings />}>
               <Route index element={<Profile />} />
-              <Route path='profile' element={<Profile />} />
-              <Route path='cards' element={<Cards />} />
-              <Route path='advanced' element={<Advanced />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="cards" element={<Cards />} />
+              <Route path="advanced" element={<Advanced />} />
             </Route>
           </Route>
         </Routes>

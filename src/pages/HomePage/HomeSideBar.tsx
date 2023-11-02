@@ -233,8 +233,6 @@ export function HomeSideBar() {
                     </AccordionItem>
                   ))
                 : ''}
-
-              
             </Accordion>
           </div>
         </div>

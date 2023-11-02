@@ -1,11 +1,7 @@
-import React from 'react'
+import React from 'react';
 
 const Advanced = () => {
-  return (
-    <div>
-      advanced
-    </div>
-  )
-}
+  return <div>advanced</div>;
+};
 
-export default Advanced
+export default Advanced;

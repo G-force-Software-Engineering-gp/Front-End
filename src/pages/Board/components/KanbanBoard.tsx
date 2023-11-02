@@ -7,9 +7,9 @@ import { BoardList } from './BoardList';
 import CreateListModal from './CreateListModal';
 
 export const KanbanBoard = () => {
-  const {boardId} = useParams()
+  const { boardId } = useParams();
   // console.log(boardId)
-  const { data, isLoading, error } = useBoard(parseInt(boardId ? boardId : ""));
+  const { data, isLoading, error } = useBoard(parseInt(boardId ? boardId : ''));
   return (
     <>
       <h2>{data?.title}</h2>
