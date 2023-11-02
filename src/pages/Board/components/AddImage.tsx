@@ -14,7 +14,7 @@ import { DialogClose } from '@radix-ui/react-dialog';
 import axios from 'axios';
 import { ImagePlus } from 'lucide-react';
 import React, { useContext, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 const AddImage = () => {
@@ -34,6 +34,7 @@ const AddImage = () => {
   // console.log(selectedImage)
   let authTokens = useContext(AuthContext)?.authTokens;
   // console.log(authTokens);
+  const navigate = useNavigate();
   const handleUpload = async () => {
     if (selectedImage) {
       const formData = new FormData();
@@ -58,9 +59,9 @@ const AddImage = () => {
           text: 'Picture uploaded completely',
           timer: 3000,
         });
-        // setInterval(() => {
-        //   navigate(0);
-        // }, 2000);
+        setInterval(() => {
+          navigate(0);
+        }, 2000);
       } else {
         Swal.fire({
           icon: 'error',
@@ -68,9 +69,9 @@ const AddImage = () => {
           text: 'Something went wrong!',
           timer: 3000,
         });
-        // setInterval(() => {
-        //   navigate(0);
-        // }, 2000);
+        setInterval(() => {
+          navigate(0);
+        }, 2000);
       }
     }
   };
