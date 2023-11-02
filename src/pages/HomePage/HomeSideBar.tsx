@@ -5,6 +5,7 @@ import { cn } from '@/lib/utils';
 import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { Button } from '../../components/ui/button';
+import { useTheme } from '@/components/theme-provider';
 
 // import { Playlist } from '../../data/playlists';
 
@@ -30,6 +31,8 @@ export function HomeSideBar() {
   useEffect(() => {
     gettingData();
   }, []);
+  // use for getting light or dark mode
+  const { theme} = useTheme();
   return (
     <div className={cn('pb-12', 'hidden lg:block')}>
       <div className="space-y-4 py-4">
@@ -237,6 +240,10 @@ export function HomeSideBar() {
               
             </Accordion>
           </div>
+        </div>
+        <div >
+        {theme === 'dark' ? <img className='my-20 h-[400px]' src={require('../../pics/scheduleDark.png')} alt="" />
+      : <img className='my-20 h-[400px] ' src={require('../../pics/scheduleLight.png')} alt="" /> }
         </div>
         {/* <div className="py-2">
           <h2 className="relative px-7 text-lg font-semibold tracking-tight">Playlists</h2>
