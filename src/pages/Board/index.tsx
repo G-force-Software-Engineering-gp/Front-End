@@ -1,5 +1,7 @@
 import Header from '@/components/Header';
-import React from 'react';
+import AuthContext from '@/contexts/AuthContext';
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import BoardHeader from './boardHeader';
 import { BoardSidebar } from './boardSidebar';
 import { KanbanBoard } from './components/KanbanBoard';
@@ -9,11 +11,40 @@ import { KanbanBoard } from './components/KanbanBoard';
 // import { BoardSidebar } from './boardSidebar';
 
 const Board = () => {
+  const { boardId } = useParams();
+  const [bg, setbg] = useState();
+  let authTokens = useContext(AuthContext)?.authTokens;
+  const gettingData = async () => {
+    const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board/${boardId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `JWT ` + authTokens.access,
+      },
+    });
+    const data = await response.json();
+    setbg(data?.backgroundImage);
+  };
+  useEffect(() => {
+    gettingData();
+  }, []);
+  console.log(bg);
+
   return (
     <div className="h-[calc(100vh-8.5rem)">
       <Header />
       <BoardHeader />
-      <div className="grid  grid-flow-col grid-cols-5 justify-center">
+      <div
+        className="grid  grid-flow-col grid-cols-5 justify-center "
+        style={{
+          backgroundImage: `url(${bg})`,
+          // backgroundColor: 'rgba(255, 255, 255, 0.7)',
+          // opacity: '50%',
+          minHeight: '83.6vh',
+          backgroundSize: 'cover',
+        }}
+      >
+        
+        {/* <div className="absolute inset-0 z-10 bg-opacity-50"></div> */}
         <div className=" col-span-1">
           <BoardSidebar />
         </div>
