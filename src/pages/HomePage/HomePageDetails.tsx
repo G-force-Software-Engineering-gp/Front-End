@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 const HomePageDetails = () => {
   const navigate = useNavigate();
   let authTokens = useContext(AuthContext)?.authTokens;
-  // console.log(authTokens.access);
+  console.log(authTokens?.access);
   const [workspaces, setworkspaces] = useState<any[]>([]);
   const gettingData = async () => {
     const { data } = await axios
@@ -299,7 +299,7 @@ const HomePageDetails = () => {
                     </Card>
                   ))}
 
-                  <Card className=" cursor-pointer bg-slate-300 dark:bg-slate-800">
+                  <Card className=" cursor-pointer bg-slate-300 dark:bg-slate-800" >
                     <div className=" flex gap-4 space-y-0 px-12 py-14 sm:px-6 sm:py-14">
                       <label className=" text-xl font-semibold">Create a new Board</label>
                     </div>
@@ -307,7 +307,7 @@ const HomePageDetails = () => {
                 </div>
               </div>
             ))
-          : ''}
+          : 'No WorkSpace Found'}
       </div>
     </div>
   );
