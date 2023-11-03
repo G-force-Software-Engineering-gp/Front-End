@@ -181,11 +181,11 @@ export function BoardSidebar({ className }: any) {
           </div>
           <hr className="mb-2" />
           <div className="space-y-1">
-            <Button variant="ghost" className="w-full justify-start">
+            <Button data-testid='Boards' variant="ghost" className="w-full justify-start">
               <Trello className="mr-2 h-4 w-4" />
               Boards
             </Button>
-            <Button variant="ghost" className="group pr-2 w-full justify-between">
+            <Button data-testid='Members' variant="ghost" className="group pr-2 w-full justify-between">
               <div className="flex justify-start">
                 <Users2 className="mr-2 h-4 w-4" />
                 Members

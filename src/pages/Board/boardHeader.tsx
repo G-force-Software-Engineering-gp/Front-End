@@ -119,15 +119,15 @@ const BoardHeader = () => {
               <>
                 <span></span>
                 <span className="m-2">G-Force</span>
-                <Button variant="secondary" className="m-1 h-8 w-8 p-0">
+                <Button data-testid='eye' variant="secondary" className="m-1 h-8 w-8 p-0">
                   <Eye className="h-4 w-4 " />
                 </Button>
-                <Button variant="secondary" className="m-1 h-8 w-8 p-0">
+                <Button data-testid='star' variant="secondary" className="m-1 h-8 w-8 p-0">
                   <Star className="h-4 w-4 " />
                 </Button>
                 <Popover>
                   <PopoverTrigger>
-                    <Button variant="secondary" className="ml-1 h-8 w-fit px-2">
+                    <Button data-testid='trello' variant="secondary" className="ml-1 h-8 w-fit px-2">
                       <Trello className="mr-2 h-4 w-4" />
                       <span className="mr-1">Board</span>
                       <ChevronDown className="h-4 w-4 " />
@@ -158,7 +158,7 @@ const BoardHeader = () => {
             </div>
           </div>
           <div className="flex items-center justify-end space-x-2">
-            <Button variant="secondary" className="h-8 w-8 p-0">
+            <Button data-testid='list filter' variant="secondary" className="h-8 w-8 p-0">
               <ListFilter className="h-4 w-4" />
             </Button>
             <div className="flex -space-x-2 overflow-hidden">
