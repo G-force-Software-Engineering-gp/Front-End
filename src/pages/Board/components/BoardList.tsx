@@ -410,9 +410,9 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
           <div className="flex flex-wrap -space-x-1.5">
             {data?.members.length != 0 &&
               data?.members.map((member) => (
-                <Avatar className="h-5 w-5 hover:z-10">
+                <Avatar className="h-6 w-6 hover:z-10 hover:bg-primary">
                   {/* <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" /> */}
-                  <AvatarFallback className="text-sm">
+                  <AvatarFallback className="text-xs hover:bg-primary hover:text-primary-foreground">
                     {member.user.first_name[0]}
                     {member.user.last_name[0]}
                   </AvatarFallback>
