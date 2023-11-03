@@ -19,10 +19,17 @@ export type Card = {
   id: number;
   title: string;
   list?: number;
-  members?: Assignee[];
+  members: Assignee[];
 };
 
-export type Assignee = {
+export type Assignee = Member;
+
+export type Members = {
+  id: number;
+  members: Assignee[];
+};
+
+export type Member = {
   id: number;
   user: User;
 };

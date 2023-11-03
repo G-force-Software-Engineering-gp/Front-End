@@ -3,6 +3,7 @@ import { List, MoreVertical, Plus } from 'lucide-react';
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useBoard } from '../hooks/useBoard';
+import { useMembers } from '../hooks/useMembers';
 import { BoardList } from './BoardList';
 import CreateListModal from './CreateListModal';
 
@@ -10,6 +11,8 @@ export const KanbanBoard = () => {
   const { boardId } = useParams();
   // console.log(boardId)
   const { data, isLoading, error } = useBoard(parseInt(boardId ? boardId : ''));
+  const rs = useMembers(parseInt(boardId ? boardId : ''));
+
   console.log(data);
   const backgroundImageUrl = data?.backgroundImage;
   console.log(backgroundImageUrl);
