@@ -11,6 +11,8 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import AuthContext from '@/contexts/AuthContext';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   AlignJustify,
   AppWindow,
@@ -27,23 +29,64 @@ import {
   Tag,
   User,
 } from 'lucide-react';
-import { Card } from './types';
+import React, { useContext, useEffect, useState } from 'react';
+import { DateRange } from 'react-day-picker';
 import { DatePickerModal } from './components/datePickerModal';
-import React, { useState } from 'react';
-import { DateRange } from "react-day-picker"
+import { Card } from './types';
+
 interface Props {
   modalOpen: boolean;
   setModalOpen: any;
   data: Card;
 }
 
-
 export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   const [mainDate, setMainDate] = useState<DateRange | undefined>({
-    from: new Date(), // Provide an appropriate initial start date.
-    to: new Date(),   // Provide an appropriate initial end date.
+    // from: new Date(), // Provide an appropriate initial start date.
+    // to: new Date(),   // Provide an appropriate initial end date.
+    from: data?.startdate ? new Date(data.startdate) : new Date(),
+    to: data?.duedate ? new Date(data.duedate) : new Date(),
   });
-  const [selectedValue, setSelectedValue] = React.useState('None'); 
+
+  const [selectedValue, setSelectedValue] = React.useState(data?.reminder ? data?.reminder : 'None');
+
+  let authTokens = useContext(AuthContext)?.authTokens;
+  const queryClient = useQueryClient();
+
+  const dateMutation = useMutation({
+    mutationFn: () => {
+      let newCard_data = {
+        id: data.id,
+        title: data.title,
+        list: data.list,
+        startdate: mainDate?.from,
+        duedate: mainDate?.to,
+        reminder: selectedValue,
+      };
+
+      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/${data.id}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ` + authTokens.access,
+        },
+        body: JSON.stringify(newCard_data),
+      });
+    },
+    onError: (error, variables, context) => {
+      // An error happened!
+    },
+    onSuccess: (data, variables, context) => {
+      // on success
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['card', data?.id] });
+    },
+  });
+  useEffect(() => {
+    dateMutation.mutate();
+  }, [mainDate, selectedValue]);
+
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       {/* <DialogTrigger asChild>
@@ -150,11 +193,16 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   className="col-span-3 mx-4 mb-2 flex cursor-pointer justify-start rounded-sm px-4  text-sm md:col-span-6"
                   onClick={() => setDateOpen(true)}
                 > */}
-                  <DatePickerModal mainDate={mainDate}  setMainDate={setMainDate} selectedValue={selectedValue} setSelectedValue={setSelectedValue}/>
-                  {/* <Clock7 className="mb-1 mr-1 h-4 w-4" />
+                <DatePickerModal
+                  mainDate={mainDate}
+                  setMainDate={setMainDate}
+                  selectedValue={selectedValue}
+                  setSelectedValue={setSelectedValue}
+                />
+                {/* <Clock7 className="mb-1 mr-1 h-4 w-4" />
                   Dates */}
                 {/* </Button> */}
-                
+
                 <Button
                   size="sm"
                   variant="secondary"

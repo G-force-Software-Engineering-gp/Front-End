@@ -20,6 +20,9 @@ export type Card = {
   title: string;
   list?: number;
   members?: Assignee[];
+  startdate?: null;
+  duedate?: '2023-10-29T00:00:00Z';
+  reminder?: '1 Day before';
 };
 
 export type Assignee = Member;
