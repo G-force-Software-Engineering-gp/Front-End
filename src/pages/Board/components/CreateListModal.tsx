@@ -77,7 +77,7 @@ function CreateListModal({ boardId }: ListModalProps) {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <Button
-            variant={'outline'}
+            variant={'secondary'}
             className="flex w-full items-center justify-center space-x-2"
             onClick={() => setOpen(true)}
           >
