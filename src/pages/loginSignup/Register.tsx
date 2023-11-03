@@ -1,22 +1,23 @@
-import React, { useContext } from 'react';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useTheme } from '@/components/theme-provider';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { z } from 'zod';
+import AuthContext, { AuthContextType } from '@/contexts/AuthContext';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-dropdown-menu';
+import { Lock, Mail, UserCircle, UserSquare } from 'lucide-react';
+import React, { useContext } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
-import { UserCircle , Mail , Lock , UserSquare } from 'lucide-react';
-import AuthContext , { AuthContextType } from '@/contexts/AuthContext';
-import { useTheme } from '@/components/theme-provider';
+import { z } from 'zod';
 
 const registrationSchema = z.object({
   firstName: z.string().min(1, 'First Name is required'),
   lastName: z.string().min(1, 'Last Name is required'),
   email: z.string().email('Invalid email format').min(1, 'Email is required'),
   username: z.string().min(1, 'Username is required'),
-  password: z.string()
+  password: z
+    .string()
     .min(8, 'Password must be at least 8 characters long')
     .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
     .regex(/[A-Z]/, 'Password must contain at least one uppercase letter'),
@@ -25,12 +26,16 @@ const registrationSchema = z.object({
 type RegistrationFormValues = z.input<typeof registrationSchema>;
 
 const Register: React.FC = () => {
-  const authContext = useContext<AuthContextType |null >(AuthContext);
+  const authContext = useContext<AuthContextType | null>(AuthContext);
   if (!authContext) {
-    throw new Error("AuthContext is not provided properly.");
+    throw new Error('AuthContext is not provided properly.');
   }
   const { registerUser } = authContext;
-  const { register, handleSubmit, formState: { errors , isSubmitting } } = useForm<RegistrationFormValues>({
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<RegistrationFormValues>({
     resolver: zodResolver(registrationSchema),
   });
 
@@ -47,97 +52,100 @@ const Register: React.FC = () => {
       console.error('Error:', error);
     }
   };
-  const { theme} = useTheme();
+  const { theme } = useTheme();
   return (
     <div className="flex items-center justify-center gap-5">
-            {theme === 'dark' ? <img className='border-4 h-[620px] w-1/2 hidden md:block  ' src={require("../../pics/signupDark.png")} alt="" />
-      : <img className='border-4 h-[620px] w-1/2 hidden md:block  ' src={require("../../pics/signupLight.png")} alt="" /> }
-    <div className="flex justify-center flex-col items-center h-screen">
-      <Label className="text-2xl font-semibold mb-12 text-center">Logo</Label>
-      <Label className="text-2xl font-semibold mb-9">Register</Label>
-      <Card className="w-96 py-14 px-12 bg-secondary">
-
-        <form onSubmit={handleSubmit(onSubmit)} className='grid'>
-          <Label className="relative mb-4 flex">
-            <Input
-              type="text"
-              {...register('firstName')}
-              placeholder="First Name"
-              className="ring-2 pl-9 peer bg-transparent"
-              required
-            />
-            <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
-              <UserCircle className='h-4 w-4'/>
+      {theme === 'dark' ? (
+        <img className="hidden h-[620px] w-1/2 border-4 md:block  " src={require('../../pics/signupDark.png')} alt="" />
+      ) : (
+        <img
+          className="hidden h-[620px] w-1/2 border-4 md:block  "
+          src={require('../../pics/signupLight.png')}
+          alt=""
+        />
+      )}
+      <div className="flex h-screen flex-col items-center justify-center">
+        <Label className="mb-12 text-center text-2xl font-semibold">Logo</Label>
+        <Label className="mb-9 text-2xl font-semibold">Register</Label>
+        <Card className="w-96 bg-secondary px-12 py-14">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid">
+            <Label className="relative mb-4 flex">
+              <Input
+                type="text"
+                {...register('firstName')}
+                placeholder="First Name"
+                className="peer bg-transparent pl-9 ring-2"
+                required
+              />
+              <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
+                <UserCircle className="h-4 w-4" />
+              </Label>
             </Label>
-          </Label>
-            {errors.firstName && <Label className="text-red-500 mb-4 text-xs">{errors.firstName.message}</Label>}
-          <Label className="relative mb-4 flex">
-            <Input
-              type="text"
-              {...register('lastName')}
-              placeholder="Last Name"
-              className="ring-2 pl-9 peer bg-transparent"
-              required
-            />
-            <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
-              <UserCircle className='h-4 w-4'/>
+            {errors.firstName && <Label className="mb-4 text-xs text-red-500">{errors.firstName.message}</Label>}
+            <Label className="relative mb-4 flex">
+              <Input
+                type="text"
+                {...register('lastName')}
+                placeholder="Last Name"
+                className="peer bg-transparent pl-9 ring-2"
+                required
+              />
+              <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
+                <UserCircle className="h-4 w-4" />
+              </Label>
             </Label>
-          </Label>
-            {errors.lastName && <Label className="text-red-500 mb-4 text-xs">{errors.lastName.message}</Label>}
-          <Label className="relative mb-4 flex">
-            <Input
-              type="email"
-              {...register('email')}
-              placeholder="Email"
-              className="ring-2 pl-9 peer bg-transparent"
-              required
-            />
-            <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
-              <Mail className='h-4 w-4'/>
+            {errors.lastName && <Label className="mb-4 text-xs text-red-500">{errors.lastName.message}</Label>}
+            <Label className="relative mb-4 flex">
+              <Input
+                type="email"
+                {...register('email')}
+                placeholder="Email"
+                className="peer bg-transparent pl-9 ring-2"
+                required
+              />
+              <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
+                <Mail className="h-4 w-4" />
+              </Label>
             </Label>
-          </Label>
-            {errors.email && <Label className="text-red-500 mb-4 text-xs">{errors.email.message}</Label>}
-          <Label className="relative mb-4 flex">
-            <Input
-              type="text"
-              {...register('username')}
-              placeholder="Username"
-              className="ring-2 pl-9 peer bg-transparent"
-              required
-            />
-            <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
-              <UserSquare className='h-4 w-4'/>
+            {errors.email && <Label className="mb-4 text-xs text-red-500">{errors.email.message}</Label>}
+            <Label className="relative mb-4 flex">
+              <Input
+                type="text"
+                {...register('username')}
+                placeholder="Username"
+                className="peer bg-transparent pl-9 ring-2"
+                required
+              />
+              <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
+                <UserSquare className="h-4 w-4" />
+              </Label>
             </Label>
-          </Label>
-            {errors.username && <Label className="text-red-500 mb-4 text-xs">{errors.username.message}</Label>}
-          <Label className="relative mb-4 flex">
-            <Input
-              type="password"
-              {...register('password')}
-              placeholder="Password"
-              className="ring-2 pl-9 peer bg-transparent"
-              required
-            />
-            <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
-              <Lock className='h-4 w-4'/>
+            {errors.username && <Label className="mb-4 text-xs text-red-500">{errors.username.message}</Label>}
+            <Label className="relative mb-4 flex">
+              <Input
+                type="password"
+                {...register('password')}
+                placeholder="Password"
+                className="peer bg-transparent pl-9 ring-2"
+                required
+              />
+              <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
+                <Lock className="h-4 w-4" />
+              </Label>
             </Label>
-          </Label>
-          {errors.password && <Label className="text-red-500 mb-4 text-xs">{errors.password.message}</Label>}
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-          {isSubmitting ? 'Registering...' : 'Register'}
-          </Button>
-        </form>
-        <div className="mt-4 text-sm flex justify-center gap-2">
-          <Label>Already have an account? </Label>
-          <Link
-            className="hover:text-primary"
-            to={"/login"}
-          >
-            Log In
-          </Link>
-        </div>
-      </Card>
-    </div>
+            {errors.password && <Label className="mb-4 text-xs text-red-500">{errors.password.message}</Label>}
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? 'Registering...' : 'Register'}
+            </Button>
+          </form>
+          <div className="mt-4 flex justify-center gap-2 text-sm">
+            <Label>Already have an account? </Label>
+            <Link className="hover:text-primary" to={'/login'}>
+              Log In
+            </Link>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 };

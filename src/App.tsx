@@ -2,9 +2,8 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { BrowserRouter } from 'react-router-dom';
-import Routers from './pages/Router';
 import Header from './components/Header';
-
+import Routers from './pages/Router';
 import Settings from './pages/settingsPage';
 
 const queryClient = new QueryClient();

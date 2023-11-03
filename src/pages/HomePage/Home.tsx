@@ -1,17 +1,17 @@
+import Header from '@/components/Header';
 import React from 'react';
 import HomePageDetails from './HomePageDetails';
 import { HomeSideBar } from './HomeSideBar';
-import Header from "@/components/Header"
 
 const Home = () => {
   return (
     <div>
-      <Header/>
+      <Header />
       <div className="grid grid-flow-col grid-cols-4 justify-center sm:px-52">
-        <div className=" hidden sm:block sm:col-span-1">
+        <div className=" hidden sm:col-span-1 sm:block">
           <HomeSideBar />
         </div>
-        <div className=" sm:col-span-3 col-span-4 p-5">
+        <div className=" col-span-4 p-5 sm:col-span-3">
           <HomePageDetails />
         </div>
       </div>
