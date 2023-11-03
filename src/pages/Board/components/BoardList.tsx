@@ -408,8 +408,8 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
         </CardContent>
         <CardFooter className="flex items-end justify-between pt-1">
           <div className="flex flex-wrap -space-x-1.5">
-            {data?.members.length != 0 &&
-              data?.members.map((member) => (
+            {data?.members?.length != 0 &&
+              data?.members?.map((member) => (
                 <Avatar className="h-6 w-6 hover:z-10 hover:bg-primary">
                   {/* <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" /> */}
                   <AvatarFallback className="text-xs hover:bg-primary hover:text-primary-foreground">
@@ -609,11 +609,13 @@ export const AssignmentSubmenu = ({
                 key={member.id}
                 className="flex items-center px-2"
                 onSelect={() => {
-                  if (cardData !== undefined) {
-                    if (cardData?.members.filter((item) => item.id === member.id).length > 0) {
-                      deleteAssignee.mutate({ member: member.id, card: cardId });
-                    } else {
-                      createAssignee.mutate({ member: member.id, card: cardId });
+                  if (cardData) {
+                    if (cardData?.members !== undefined) {
+                      if (cardData?.members?.filter((item) => item.id === member.id).length > 0) {
+                        deleteAssignee.mutate({ member: member.id, card: cardId });
+                      } else {
+                        createAssignee.mutate({ member: member.id, card: cardId });
+                      }
                     }
                   }
                   setOpen(false);
@@ -648,10 +650,8 @@ export const AssignmentSubmenu = ({
                   </p>
                   <p className="text-sm text-muted-foreground">{member.user.email}</p>
                 </div>
-                {cardData !== undefined ? (
-                  cardData?.members.filter((item) => item.id === member.id).length > 0 ? (
-                    <Check className="ml-auto flex h-5 w-5 text-primary" />
-                  ) : null
+                {cardData?.members?.filter((item) => item.id === member.id)?.length != 0 ? (
+                  <Check className="ml-auto flex h-5 w-5 text-primary" />
                 ) : null}
               </CommandItem>
             ))}

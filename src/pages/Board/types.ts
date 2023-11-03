@@ -19,7 +19,7 @@ export type Card = {
   id: number;
   title: string;
   list?: number;
-  members: Assignee[];
+  members?: Assignee[];
 };
 
 export type Assignee = Member;
