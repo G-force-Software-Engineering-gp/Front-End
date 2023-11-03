@@ -6,7 +6,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
-import { Trello } from 'lucide-react';
+import { Check, Trello } from 'lucide-react';
 import { Users2 } from 'lucide-react';
 import {
   Accordion,
@@ -50,10 +50,119 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Trash2 } from 'lucide-react';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command"
+import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import axios from "axios";
+import AuthContext from '@/contexts/AuthContext';
+import { useDeferredValue } from "react";
+import _, { difference } from "lodash";
+import { useParams } from "react-router-dom";
 
+interface User {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  member: Member[];
+}
+
+interface Member {
+  profimage: string;
+}
 
 
 export function BoardSidebar({ className }: any) {
+
+  const { boardId } = useParams()
+  const [addMemberButtonLoading, setAddMemberButtonLoading] = useState(false);
+  function inviteMembers() {
+    const fetches = selectedUsers.map(item => {
+      return { member: item.id, board: boardId }
+    }).map(item => {
+      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/invite/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ` + authTokens.access,
+        },
+        body: JSON.stringify(item)
+      })
+    })
+    Promise.allSettled(fetches).then(results => results.forEach(item => {
+      setOpen(false)
+      setSelectedUsers([])
+    }))
+  }
+
+  // function inviteMembers() {
+  //   setAddMemberButtonLoading(true);
+  //   fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/invite/`, {
+  //     method: "POST",
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //       Authorization: "JWT " + authTokens.access,
+  //     },
+  //     body: JSON.stringify({ member: selectedUsers.map(item => item.id), board: boardId })
+  //   }).then(res => {
+  //     setAddMemberButtonLoading(false);
+  //   })
+  // }
+
+  let authTokens = useContext(AuthContext)?.authTokens;
+  const [query, setQuery] = useState('');
+  // const deferredQuery = useDeferredValue(query);
+  const deferredQuery = query;
+
+  const [users, setUsers] = useState<User[] | []>([]);
+
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
+
+  const allUsers = useRef<User[] | []>([]);
+
+
+  // console.log("-------------")
+  // console.log(allUsers.current)
+  // console.log(users)
+  // console.log(JSON.stringify(selectedUsers.map(user => user.email), null, 2))
+  // console.log("type: " + deferredQuery)
+  // console.log(users.length !== 0)
+  useEffect(() => {
+    // console.log("------")
+    // console.log("out: " + deferredQuery)
+    if (deferredQuery !== "") {
+      // console.log("in: " + deferredQuery)
+      axios.get(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/user-search/?board=${boardId}&search=${deferredQuery}`, {
+        headers: {
+          Authorization: `JWT ${authTokens.access}`
+        }
+      })
+        .then(res => {
+          const fetchedUsers: User[] = res.data
+          setUsers(fetchedUsers);
+          allUsers.current = _.unionBy(allUsers.current, fetchedUsers, "id")
+          // console.log("fetched")
+        })
+    }
+    else {
+      setUsers(selectedUsers)
+    }
+  }, [deferredQuery])
+
+  useEffect(() => {
+    if (deferredQuery === "" && selectedUsers.length === 0) {
+      setUsers([])
+    }
+  }, [deferredQuery, selectedUsers])
+
+  const [open, setOpen] = useState(false)
   return (
     <div className={cn("pb-12", className)}>
       <div className="space-y-4 py-4 ">
@@ -81,19 +190,22 @@ export function BoardSidebar({ className }: any) {
                 <Users2 className="mr-2 h-4 w-4" />
                 Members
               </div>
-              <Dialog>
+              <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
-                  <Button variant="secondary" className="hidden group-hover:flex  h-7 w-7 p-0">
+                  <Button variant="outline" className="hidden group-hover:flex  h-7 w-7 p-0">
                     <Plus className="w-5 h-5" />
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="sm:max-w-[500px]">
-                  <DialogHeader>
+                <DialogContent className="gap-0 p-0 outline-none">
+                  <DialogHeader className="px-4 pb-4 pt-5">
                     <DialogTitle>
                       Invite to Workspace
                     </DialogTitle>
+                    <DialogDescription>
+                      Invite a user to this Board.
+                    </DialogDescription>
                   </DialogHeader>
-                  <Input
+                  {/* <Input
                     placeholder="Email address or name"
                   />
                   <div className="mt-3 flex justify-between items-center">
@@ -102,7 +214,86 @@ export function BoardSidebar({ className }: any) {
                       <Link className="w-4 h-4 mr-2" />
                       <span>Create link</span>
                     </Button>
-                  </div>
+                  </div> */}
+                  <Command shouldFilter={false} className="overflow-hidden rounded-t-none border-t">
+                    <CommandInput placeholder="Search user..." value={query} onValueChange={(str) => { setQuery(str) }} />
+                    <CommandList>
+                      <CommandEmpty>No users found.</CommandEmpty>
+                      {users.length !== 0 && <CommandGroup className="p-2">
+                        {users.length !== 0 && users.map((user) => (
+                          <CommandItem
+                            key={user.email}
+                            className="flex items-center px-2"
+                            onSelect={() => {
+                              // if (selectedUsers.includes(user)) {
+                              if (selectedUsers.filter((e: User) => e.email === user.email).length > 0) {
+                                return setSelectedUsers(
+                                  selectedUsers.filter(
+                                    (selectedUser) => selectedUser.email !== user.email
+                                  )
+                                )
+                              }
+
+                              const moteghayer = _.intersectionBy(allUsers.current, [...selectedUsers, user], "id")
+                              // console.log(moteghayer)
+                              return setSelectedUsers(
+                                // [...allUsers.current].filter((u) =>
+                                //   [...selectedUsers, user].filter((item) => u.email == item.email)
+                                // )
+                                moteghayer
+                              )
+                            }}
+                          >
+                            <Avatar>
+                              <AvatarImage src={user.member[0].profimage} alt="Image" />
+                              <AvatarFallback>{user.first_name[0]}{user.last_name[0]}</AvatarFallback>
+                            </Avatar>
+                            <div className="ml-2">
+                              <p className="text-sm font-medium leading-none">
+                                {user.first_name} {user.last_name}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {user.email}
+                              </p>
+                            </div>
+                            {selectedUsers.filter(item => item.email === user.email).length > 0 ? (
+                              <Check className="ml-auto flex h-5 w-5 text-primary" />
+                            ) : null}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>}
+                    </CommandList>
+                  </Command>
+                  <DialogFooter className="flex items-center border-t p-4 sm:justify-between">
+                    {selectedUsers.length > 0 ? (
+                      <div className="flex -space-x-2 overflow-hidden">
+                        {/* <p>{JSON.stringify(selectedUsers.map(user => user.email), null, 2)}</p> */}
+                        {selectedUsers.map((user) => (
+                          <Avatar
+                            key={user.email}
+                            className="inline-block border-2 border-background"
+                          >
+                            <AvatarImage src={user.member[0].profimage} />
+                            <AvatarFallback>{user.first_name[0]}{user.last_name[0]}</AvatarFallback>
+                          </Avatar>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground">
+                        Select users to add to this Board.
+                      </p>
+                    )}
+                    <Button
+                      disabled={selectedUsers.length < 1 || addMemberButtonLoading}
+                      onClick={() => {
+                        inviteMembers();
+                      }}
+
+                    >
+                      {addMemberButtonLoading && (<p>Loading...</p>)}
+                      {!addMemberButtonLoading && (<p>Add Members</p>)}
+                    </Button>
+                  </DialogFooter>
                 </DialogContent>
               </Dialog>
             </Button>
