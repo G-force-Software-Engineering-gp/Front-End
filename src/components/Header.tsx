@@ -84,7 +84,7 @@ const Header = () => {
     const { data } = await axios
       .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
         headers: {
-          Authorization: `JWT ${authTokens.access}`,
+          Authorization: `JWT ${authTokens?.access}`,
         },
       })
       .then((response) => response);
@@ -238,10 +238,10 @@ const Header = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Input type="text" placeholder="Search" />
-                <ModeToggle />
+                <ModeToggle data-testid="mode-toggle11"/>
                 <BellDot className="h-9 w-9" />
                 <HelpCircle className="h-9 w-9" />
-                <User2 className="h-9 w-9" onClick={() => navigate('/settings')} />
+                <User2 data-testid="user-icon" className="h-9 w-9" onClick={() => navigate('/settings')} />
               </div>
             </div>
           </div>
