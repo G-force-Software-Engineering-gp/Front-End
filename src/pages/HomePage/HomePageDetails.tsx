@@ -278,7 +278,7 @@ const HomePageDetails = () => {
                   </div>
                 </div>
 
-                <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2">
+                <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-3">
                   {item?.boards.map((item1: { id: number; title: string; backgroundImage: any }) => (
                     <Card
                       style={{ backgroundImage: `url(${item1?.backgroundImage})`, backgroundSize: 'cover' }}
@@ -300,7 +300,7 @@ const HomePageDetails = () => {
                   ))}
 
                   <Card className=" cursor-pointer bg-slate-300 dark:bg-slate-800">
-                    <div className=" flex gap-4 space-y-0 px-12 py-14 sm:px-20 sm:py-14">
+                    <div className=" flex gap-4 space-y-0 px-12 py-14 sm:px-6 sm:py-14">
                       <label className=" text-xl font-semibold">Create a new Board</label>
                     </div>
                   </Card>
