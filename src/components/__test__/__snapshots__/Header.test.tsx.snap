@@ -2,7 +2,9 @@
 
 exports[`Header Component Header component matches snapshot 1`] = `
 <DocumentFragment>
-  <div>
+  <div
+    data-testid="header"
+  >
     <div
       class="hidden flex-col border-b-2 md:flex"
     >

@@ -95,7 +95,7 @@ const Header = () => {
     gettingData();
   }, []);
   return (
-    <div>
+    <div data-testid="header">
       <>
         <div className="hidden flex-col border-b-2 md:flex">
           <div className="flex-1 p-2 px-5 ">
@@ -230,7 +230,6 @@ const Header = () => {
                         </NavigationMenuContent>
                       </NavigationMenuItem>
 
-                      
                       <AddWorkSapceHeader />
                     </NavigationMenuList>
                   </NavigationMenu>
@@ -238,7 +237,7 @@ const Header = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Input type="text" placeholder="Search" />
-                <ModeToggle data-testid="mode-toggle11"/>
+                <ModeToggle data-testid="mode-toggle11" />
                 <BellDot className="h-9 w-9" />
                 <HelpCircle className="h-9 w-9" />
                 <User2 data-testid="user-icon" className="h-9 w-9" onClick={() => navigate('/settings')} />

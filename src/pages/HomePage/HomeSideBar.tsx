@@ -1,3 +1,4 @@
+import { useTheme } from '@/components/theme-provider';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import AuthContext from '@/contexts/AuthContext';
@@ -6,7 +7,6 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { Button } from '../../components/ui/button';
 import AddWorkSpace from './components/AddWorkSpace';
-import { useTheme } from '@/components/theme-provider';
 
 // import { Playlist } from '../../data/playlists';
 
@@ -22,7 +22,7 @@ export function HomeSideBar() {
     const { data } = await axios
       .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
         headers: {
-          Authorization: `JWT ${authTokens.access}`,
+          Authorization: `JWT ${authTokens?.access}`,
         },
       })
       .then((response) => response);
@@ -33,9 +33,9 @@ export function HomeSideBar() {
     gettingData();
   }, []);
   // use for getting light or dark mode
-  const { theme} = useTheme();
+  const { theme } = useTheme();
   return (
-    <div className={cn('pb-12', 'hidden lg:block')}>
+    <div data-testid="homepageSidebar" className={cn('pb-12', 'hidden lg:block')}>
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           {/* <h2 className="mb-2 px-4 text-lg font-semibold tracking-tight">
@@ -50,9 +50,9 @@ export function HomeSideBar() {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 className="lucide lucide-trello mr-2 h-5 w-5"
               >
                 <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
@@ -70,9 +70,9 @@ export function HomeSideBar() {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 className="lucide lucide-layout-template mr-2 h-5 w-5"
               >
                 <rect width="18" height="7" x="3" y="3" rx="1" />
@@ -90,9 +90,9 @@ export function HomeSideBar() {
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 className="lucide lucide-home mr-2 h-5 w-5"
               >
                 <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -130,9 +130,9 @@ export function HomeSideBar() {
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             className="lucide lucide-trello mr-2 h-5 w-5"
                           >
                             <rect width="18" height="18" x="3" y="3" rx="2" ry="2" />
@@ -150,9 +150,9 @@ export function HomeSideBar() {
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             className="lucide lucide-heart mr-2 h-5 w-5"
                           >
                             <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
@@ -168,9 +168,9 @@ export function HomeSideBar() {
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             className="lucide lucide-layout-dashboard mr-2 h-5 w-5"
                           >
                             <rect width="7" height="9" x="3" y="3" rx="1" />
@@ -189,9 +189,9 @@ export function HomeSideBar() {
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             className="lucide lucide-users-2 mr-2 h-5 w-5"
                           >
                             <path d="M14 19a6 6 0 0 0-12 0" />
@@ -209,9 +209,9 @@ export function HomeSideBar() {
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
                             className="lucide lucide-settings mr-2 h-5 w-5"
                           >
                             <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z" />
@@ -226,9 +226,12 @@ export function HomeSideBar() {
             </Accordion>
           </div>
         </div>
-        <div >
-        {theme === 'dark' ? <img className='my-20 h-[400px]' src={require('../../pics/scheduleDark.png')} alt="" />
-      : <img className='my-20 h-[400px] ' src={require('../../pics/scheduleLight.png')} alt="" /> }
+        <div>
+          {theme === 'dark' ? (
+            <img className="my-20 h-[400px]" src={require('../../pics/scheduleDark.png')} alt="" />
+          ) : (
+            <img className="my-20 h-[400px] " src={require('../../pics/scheduleLight.png')} alt="" />
+          )}
         </div>
         {/* <div className="py-2">
           <h2 className="relative px-7 text-lg font-semibold tracking-tight">Playlists</h2>
