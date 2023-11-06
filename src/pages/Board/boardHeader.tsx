@@ -174,14 +174,14 @@ const BoardHeader = () => {
             </Button>
             <div className=" flex -space-x-2 overflow-hidden">
               {membersData?.members?.slice(0, 3).map((member) => (
-                <HoverCard>
-                  <HoverCardTrigger>
+                <Popover>
+                  <PopoverTrigger>
                     <Avatar>
                       <AvatarImage src={member.profimage} />
                       <AvatarFallback>{member.user.first_name[0]}{member.user.last_name[0]}</AvatarFallback>
                     </Avatar>
-                  </HoverCardTrigger>
-                  <HoverCardContent className='w-fit'>
+                  </PopoverTrigger>
+                  <PopoverContent className='w-fit'>
                     <div className="flex justify-between space-x-4">
                       <Avatar>
                         <AvatarImage src={member.profimage} />
@@ -194,19 +194,21 @@ const BoardHeader = () => {
                         </p>
                       </div>
                     </div>
-                  </HoverCardContent>
-                </HoverCard>
+                  </PopoverContent>
+                </Popover>
               ))}
-              <HoverCard>
-                <HoverCardTrigger className='w-fit'>
+              <Popover>
+                <PopoverTrigger className='w-fit'>
                   <Avatar>
                     <AvatarFallback>+{membersData?.members?.length !== undefined ? membersData.members.length - 3 : 'N/A'}</AvatarFallback>
                   </Avatar>
-                </HoverCardTrigger>
-                <HoverCardContent>
+                </PopoverTrigger>
+                <PopoverContent>
+                  <p className='mb-2'>Members</p>
                   <ScrollArea className='w-fit rounded-md'>
                     {membersData?.members?.slice(3,).map((member) => (
                       <>
+                        <Separator className='my-2' />
                         <div className="flex justify-between space-x-4">
                           <Avatar>
                             <AvatarImage src={member.profimage} />
@@ -219,12 +221,11 @@ const BoardHeader = () => {
                             </p>
                           </div>
                         </div>
-                        <Separator className='my-2' />
                       </>
                     ))}
                   </ScrollArea>
-                </HoverCardContent>
-              </HoverCard>
+                </PopoverContent>
+              </Popover>
             </div>
             <Button className="h-8 w-20 p-0">
               <UserPlus2 className="mr-1 h-4 w-4" />
