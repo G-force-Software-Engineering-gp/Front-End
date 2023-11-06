@@ -19,7 +19,7 @@ export const KanbanBoard = () => {
   return (
     <>
       <div>
-        <h2>{data?.title}</h2>
+        
 
         <div className="duration-[.25s] flex w-full items-start space-x-4 overflow-x-auto overflow-y-hidden px-[var(--margin-x)] transition-all">
           {data?.list.map((list) => (
