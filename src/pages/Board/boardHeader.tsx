@@ -1,6 +1,7 @@
 import { AlertDialogHeader } from '@/components/ui/alert-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { useMembers } from './hooks/useMembers';
 import {
   Dialog,
   DialogContent,
@@ -51,6 +52,14 @@ import {
 } from 'lucide-react';
 import React from 'react';
 import AddImage from './components/AddImage';
+import { useParams } from 'react-router-dom';
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -76,6 +85,8 @@ const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWit
 ListItem.displayName = 'ListItem';
 
 const BoardHeader = () => {
+  const { boardId } = useParams();
+  const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
   const components: { title: string; href: string; description: string }[] = [
     {
       title: 'Alert Dialog',
@@ -161,23 +172,59 @@ const BoardHeader = () => {
             <Button data-testid='list filter' variant="secondary" className="h-8 w-8 p-0">
               <ListFilter className="h-4 w-4" />
             </Button>
-            <div className="flex -space-x-2 overflow-hidden">
-              <Avatar>
-                <AvatarImage />
-                <AvatarFallback>EA</AvatarFallback>
-              </Avatar>
-              <Avatar>
-                <AvatarImage />
-                <AvatarFallback>AS</AvatarFallback>
-              </Avatar>
-              <Avatar>
-                <AvatarImage />
-                <AvatarFallback>SR</AvatarFallback>
-              </Avatar>
-              <Avatar>
-                <AvatarImage />
-                <AvatarFallback>+4</AvatarFallback>
-              </Avatar>
+            <div className=" flex -space-x-2 overflow-hidden">
+              {membersData?.members?.slice(0, 3).map((member) => (
+                <HoverCard>
+                  <HoverCardTrigger>
+                    <Avatar>
+                      <AvatarImage src={member.profimage} />
+                      <AvatarFallback>{member.user.first_name[0]}{member.user.last_name[0]}</AvatarFallback>
+                    </Avatar>
+                  </HoverCardTrigger>
+                  <HoverCardContent className='w-fit'>
+                    <div className="flex justify-between space-x-4">
+                      <Avatar>
+                        <AvatarImage src={member.profimage} />
+                        <AvatarFallback>{member.user.first_name[0]}{member.user.last_name[0]}</AvatarFallback>
+                      </Avatar>
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-semibold">{member.user.first_name} {member.user.last_name}</h4>
+                        <p className="text-sm">
+                          @{member.user.username}
+                        </p>
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
+              ))}
+              <HoverCard>
+                <HoverCardTrigger className='w-fit'>
+                  <Avatar>
+                    <AvatarFallback>+{membersData?.members?.length !== undefined ? membersData.members.length - 3 : 'N/A'}</AvatarFallback>
+                  </Avatar>
+                </HoverCardTrigger>
+                <HoverCardContent>
+                  <ScrollArea className='w-fit rounded-md'>
+                    {membersData?.members?.slice(3,).map((member) => (
+                      <>
+                        <div className="flex justify-between space-x-4">
+                          <Avatar>
+                            <AvatarImage src={member.profimage} />
+                            <AvatarFallback>{member.user.first_name[0]}{member.user.last_name[0]}</AvatarFallback>
+                          </Avatar>
+                          <div className="space-y-1">
+                            <h4 className="text-sm font-semibold">{member.user.first_name} {member.user.last_name}</h4>
+                            <p className="text-sm">
+                              @{member.user.username}
+                            </p>
+                          </div>
+                        </div>
+                        <Separator className='my-2' />
+                      </>
+                    ))}
+                  </ScrollArea>
+                </HoverCardContent>
+              </HoverCard>
             </div>
             <Button className="h-8 w-20 p-0">
               <UserPlus2 className="mr-1 h-4 w-4" />
@@ -199,7 +246,7 @@ const BoardHeader = () => {
           </div>
         </div>
       </>
-    </div>
+    </div >
   );
 };
 

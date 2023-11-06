@@ -35,6 +35,7 @@ export type Members = {
 export type Member = {
   id: number;
   user: User;
+  profimage?: string;
 };
 
 export type User = {
