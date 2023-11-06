@@ -34,7 +34,7 @@ const Board = () => {
       <Header />
       <BoardHeader />
       <div
-        className="flex justify-center "
+        className="flex overflow-x-auto"
         style={{
           backgroundImage: `url(${bg})`,
           // backgroundColor: 'rgba(255, 255, 255, 0.7)',

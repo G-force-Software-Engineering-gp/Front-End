@@ -137,7 +137,7 @@ const BoardHeader = () => {
   return (
     <div className="backdrop-blur">
       <>
-        <div className="flex flex-1 flex-col border-b-2 p-2 px-5 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-1 flex-col border-b-2 p-2 px-5 mt-4 md:mt-0 md:flex-row md:items-center md:justify-between">
           <div className="pb-2 md:pb-0">
             <div className="text-2xl font-bold">
               <>
