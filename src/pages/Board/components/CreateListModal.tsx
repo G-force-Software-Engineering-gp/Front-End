@@ -14,10 +14,9 @@ import AuthContext from '@/contexts/AuthContext';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { List } from '../types';
 
 const schema = z.object({
   title: z.string().min(1, {
@@ -37,9 +36,6 @@ function CreateListModal({ boardId }: ListModalProps) {
   const queryClient = useQueryClient();
 
   const { handleSubmit, control, formState, reset, setError } = useForm<ListFormData>({
-    // defaultValues: {
-    //   title: 'MyNewTask',
-    // },
     resolver: zodResolver(schema),
   });
   let authTokens = useContext(AuthContext)?.authTokens;
@@ -55,10 +51,8 @@ function CreateListModal({ boardId }: ListModalProps) {
       });
     },
     onError: (error, variables, context) => {
-      // An error happened!
     },
     onSuccess: (data, variables, context) => {
-      // on success
     },
     onSettled: (data, error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['board', boardId], exact: true });

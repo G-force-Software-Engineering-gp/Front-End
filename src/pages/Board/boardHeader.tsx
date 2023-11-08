@@ -1,71 +1,37 @@
-import { AlertDialogHeader } from '@/components/ui/alert-dialog';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useMembers } from './hooks/useMembers';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { ModeToggle } from '@/components/ui/mode-toggle';
 import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
+  NavigationMenuLink
 } from '@/components/ui/navigation-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetDescription,
-  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import { DialogClose } from '@radix-ui/react-dialog';
-import { Label } from '@radix-ui/react-select';
 import {
-  BellDot,
-  Check,
   ChevronDown,
-  Copy,
   Eye,
-  HelpCircle,
-  ImagePlus,
   ListFilter,
   MoreHorizontal,
-  Plus,
   Star,
   Trello,
-  User2,
   UserPlus2,
-  Users2,
 } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import AddImage from './components/AddImage';
 import { useParams } from 'react-router-dom';
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Menu } from 'lucide-react';
 import { useBoard } from './hooks/useBoard';
-import _, { difference } from "lodash";
+import _ from "lodash";
 import { BoardSidebar } from './boardSidebar';
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
@@ -109,47 +75,8 @@ interface Member {
 const BoardHeader = () => {
   const { boardId } = useParams();
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
-  const [addMemberButtonLoading, setAddMemberButtonLoading] = useState(false);
-  const [users, setUsers] = useState<User[] | []>([]);
-  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
-  const allUsers = useRef<User[] | []>([]);
-  const [query, setQuery] = useState('');
-  const [open, setOpen] = useState(false)
-  const { data: boardData, isLoading, error } = useBoard(parseInt(boardId ? boardId : ''));
-  const components: { title: string; href: string; description: string }[] = [
-    {
-      title: 'Alert Dialog',
-      href: '/docs/primitives/alert-dialog',
-      description: 'A modal dialog that interrupts the user with important content and expects a response.',
-    },
-    {
-      title: 'Hover Card',
-      href: '/docs/primitives/hover-card',
-      description: 'For sighted users to preview content available behind a link.',
-    },
-    {
-      title: 'Progress',
-      href: '/docs/primitives/progress',
-      description:
-        'Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.',
-    },
-    {
-      title: 'Scroll-area',
-      href: '/docs/primitives/scroll-area',
-      description: 'Visually or semantically separates content.',
-    },
-    {
-      title: 'Tabs',
-      href: '/docs/primitives/tabs',
-      description: 'A set of layered sections of content—known as tab panels—that are displayed one at a time.',
-    },
-    {
-      title: 'Tooltip',
-      href: '/docs/primitives/tooltip',
-      description:
-        'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.',
-    },
-  ];
+  const { data: boardData } = useBoard(parseInt(boardId ? boardId : ''));
+
   return (
     <div className="backdrop-blur">
       <>

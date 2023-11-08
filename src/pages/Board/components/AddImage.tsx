@@ -11,7 +11,6 @@ import {
 import { Input } from '@/components/ui/input';
 import AuthContext from '@/contexts/AuthContext';
 import { DialogClose } from '@radix-ui/react-dialog';
-import axios from 'axios';
 import { ImagePlus } from 'lucide-react';
 import React, { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -19,39 +18,29 @@ import Swal from 'sweetalert2';
 
 const AddImage = () => {
   const { boardId } = useParams();
-  // console.log(boardId);
 
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // console.log(event)
     const file = event.target.files?.[0];
     if (file) {
       setSelectedImage(file);
     }
-    // console.log(file);
   };
-  // console.log(selectedImage)
   let authTokens = useContext(AuthContext)?.authTokens;
-  // console.log(authTokens);
   const navigate = useNavigate();
   const handleUpload = async () => {
     if (selectedImage) {
       const formData = new FormData();
       formData.append('backgroundImage', selectedImage);
 
-      // formData.append('id', boardId ? boardId : '');
-      // console.log(formData);
-
       const data = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board-bgimage/${boardId}/`, {
         method: 'PUT',
         headers: {
           Authorization: `JWT ${authTokens.access}`,
-          // 'Content-Type': 'multipart/form-data',
         },
         body: formData,
       }).then((response) => response);
-      // console.log(data);
       if (data.ok) {
         Swal.fire({
           icon: 'success',

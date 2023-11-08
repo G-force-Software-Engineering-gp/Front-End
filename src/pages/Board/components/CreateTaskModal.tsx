@@ -14,10 +14,9 @@ import AuthContext from '@/contexts/AuthContext';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { List } from '../types';
 
 const schema = z.object({
   title: z.string().min(1, {
@@ -37,15 +36,11 @@ function CreateTaskModal({ listId }: TaskModalProps) {
   const queryClient = useQueryClient();
 
   const { handleSubmit, control, formState, reset, setError } = useForm<TaskFormData>({
-    // defaultValues: {
-    //   title: 'MyNewTask',
-    // },
     resolver: zodResolver(schema),
   });
   let authTokens = useContext(AuthContext)?.authTokens;
   const createTask = useMutation({
     mutationFn: (formData: TaskFormData) => {
-      console.log(formData);
       return fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/', {
         method: 'POST',
         headers: {
@@ -56,17 +51,14 @@ function CreateTaskModal({ listId }: TaskModalProps) {
       });
     },
     onError: (error, variables, context) => {
-      // An error happened!
     },
     onSuccess: (data, variables, context) => {
-      // on success
     },
     onSettled: (data, error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['list', listId], exact: true });
     },
   });
   const onSubmit = (data: TaskFormData) => {
-    console.log(data);
     createTask.mutate({ ...data, list: listId });
     setOpen(false);
   };

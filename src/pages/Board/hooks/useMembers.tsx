@@ -1,7 +1,7 @@
 import AuthContext from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
-import React, { useContext } from 'react';
-import { Member, Members, User } from '../types';
+import { useContext } from 'react';
+import { Members } from '../types';
 
 export const useMembers = (boardId: number) => {
   let authTokens = useContext(AuthContext)?.authTokens;

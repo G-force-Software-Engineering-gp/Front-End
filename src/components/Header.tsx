@@ -14,7 +14,6 @@ import axios from 'axios';
 import { BellDot, HelpCircle, User2 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ModeToggle } from './ui/mode-toggle';
 
@@ -78,7 +77,6 @@ const Header = () => {
     },
   ];
   let authTokens = useContext(AuthContext)?.authTokens;
-  // console.log(authTokens.access)
   const [workspaces, setworkspaces] = useState<any[]>([]);
   const gettingData = async () => {
     const { data } = await axios
@@ -88,7 +86,6 @@ const Header = () => {
         },
       })
       .then((response) => response);
-    console.log(data);
     setworkspaces(data);
   };
   useEffect(() => {

@@ -1,6 +1,5 @@
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { ScrollArea } from "@/components/ui/scroll-area"
 import {
   Avatar,
   AvatarFallback,
@@ -9,23 +8,10 @@ import {
 import { Check, Trello } from 'lucide-react';
 import { Users2 } from 'lucide-react';
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuPortal,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Settings } from 'lucide-react';
@@ -39,16 +25,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Plus } from 'lucide-react';
-import { Link } from 'lucide-react';
 import { ChevronRight } from 'lucide-react';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import { Trash2 } from 'lucide-react';
 import {
   Command,
@@ -58,11 +36,10 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import { useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import AuthContext from '@/contexts/AuthContext';
-import { useDeferredValue } from "react";
-import _, { difference } from "lodash";
+import _ from "lodash";
 import { useParams } from "react-router-dom";
 import { useBoard } from "./hooks/useBoard";
 
@@ -83,7 +60,6 @@ interface Member {
 export function BoardSidebar({ className }: any) {
 
   const { boardId } = useParams()
-  const { data: boardData, isLoading, error } = useBoard(parseInt(boardId ? boardId : ''));
   const [addMemberButtonLoading, setAddMemberButtonLoading] = useState(false);
   function inviteMembers() {
     const fetches = selectedUsers.map(item => {
@@ -103,24 +79,8 @@ export function BoardSidebar({ className }: any) {
       setSelectedUsers([])
     }))
   }
-
-  // function inviteMembers() {
-  //   setAddMemberButtonLoading(true);
-  //   fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/invite/`, {
-  //     method: "POST",
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //       Authorization: "JWT " + authTokens.access,
-  //     },
-  //     body: JSON.stringify({ member: selectedUsers.map(item => item.id), board: boardId })
-  //   }).then(res => {
-  //     setAddMemberButtonLoading(false);
-  //   })
-  // }
-
   let authTokens = useContext(AuthContext)?.authTokens;
   const [query, setQuery] = useState('');
-  // const deferredQuery = useDeferredValue(query);
   const deferredQuery = query;
 
   const [users, setUsers] = useState<User[] | []>([]);
@@ -129,18 +89,8 @@ export function BoardSidebar({ className }: any) {
 
   const allUsers = useRef<User[] | []>([]);
 
-
-  // console.log("-------------")
-  // console.log(allUsers.current)
-  // console.log(users)
-  // console.log(JSON.stringify(selectedUsers.map(user => user.email), null, 2))
-  // console.log("type: " + deferredQuery)
-  // console.log(users.length !== 0)
   useEffect(() => {
-    // console.log("------")
-    // console.log("out: " + deferredQuery)
     if (deferredQuery !== "") {
-      // console.log("in: " + deferredQuery)
       axios.get(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/user-search/?board=${boardId}&search=${deferredQuery}`, {
         headers: {
           Authorization: `JWT ${authTokens.access}`
@@ -150,7 +100,6 @@ export function BoardSidebar({ className }: any) {
           const fetchedUsers: User[] = res.data
           setUsers(fetchedUsers);
           allUsers.current = _.unionBy(allUsers.current, fetchedUsers, "id")
-          // console.log("fetched")
         })
     }
     else {
@@ -194,16 +143,6 @@ export function BoardSidebar({ className }: any) {
                       Invite a user to this Board.
                     </DialogDescription>
                   </DialogHeader>
-                  {/* <Input
-                    placeholder="Email address or name"
-                  />
-                  <div className="mt-3 flex justify-between items-center">
-                    <span>Invite someone to this Workspace with a link:</span>
-                    <Button variant="secondary" className="flex justify-start">
-                      <Link className="w-4 h-4 mr-2" />
-                      <span>Create link</span>
-                    </Button>
-                  </div> */}
                   <Command shouldFilter={false} className="overflow-hidden rounded-t-none border-t">
                     <CommandInput placeholder="Search user..." value={query} onValueChange={(str) => { setQuery(str) }} />
                     <CommandList>
@@ -214,7 +153,6 @@ export function BoardSidebar({ className }: any) {
                             key={user.email}
                             className="flex items-center px-2"
                             onSelect={() => {
-                              // if (selectedUsers.includes(user)) {
                               if (selectedUsers.filter((e: User) => e.email === user.email).length > 0) {
                                 return setSelectedUsers(
                                   selectedUsers.filter(
@@ -224,11 +162,7 @@ export function BoardSidebar({ className }: any) {
                               }
 
                               const moteghayer = _.intersectionBy(allUsers.current, [...selectedUsers, user], "id")
-                              // console.log(moteghayer)
                               return setSelectedUsers(
-                                // [...allUsers.current].filter((u) =>
-                                //   [...selectedUsers, user].filter((item) => u.email == item.email)
-                                // )
                                 moteghayer
                               )
                             }}
@@ -256,7 +190,6 @@ export function BoardSidebar({ className }: any) {
                   <DialogFooter className="flex items-center border-t p-4 sm:justify-between">
                     {selectedUsers.length > 0 ? (
                       <div className="flex -space-x-2 overflow-hidden">
-                        {/* <p>{JSON.stringify(selectedUsers.map(user => user.email), null, 2)}</p> */}
                         {selectedUsers.map((user) => (
                           <Avatar
                             key={user.email}

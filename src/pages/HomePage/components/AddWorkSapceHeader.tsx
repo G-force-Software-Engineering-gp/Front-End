@@ -20,12 +20,9 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { ToastAction } from '@/components/ui/toast';
-import { useToast } from '@/components/ui/use-toast';
 import AuthContext from '@/contexts/AuthContext';
 import { DialogClose } from '@radix-ui/react-dialog';
-import axios from 'axios';
-import React, { useContext, useRef, useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
@@ -40,12 +37,8 @@ const AddWorkSapceHeader = () => {
   const [nameError, setnameError] = useState(false);
   const [desError, setdesError] = useState(false);
   const [selError, setselError] = useState(false);
-  // console.log(selectedValue);
-  const { toast } = useToast();
 
   let authTokens = useContext(AuthContext)?.authTokens;
-  // console.log(authTokens);
-  // console.log(authTokens.access)
   const navigate = useNavigate();
   const CreateWorkspace = async () => {
     const data = await fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/crworkspace/', {
@@ -60,7 +53,6 @@ const AddWorkSapceHeader = () => {
         description: description,
       }),
     }).then((response) => response);
-    console.log(data.ok);
     if (data.ok) {
       Swal.fire({
         icon: 'success',
@@ -112,7 +104,6 @@ const AddWorkSapceHeader = () => {
           <DialogTitle>Add Workspace</DialogTitle>
           <DialogDescription>Enter the required information to add your workspace</DialogDescription>
         </DialogHeader>
-        {/* <form> */}
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-baseline gap-4">
             <Label htmlFor="name" className="text-right">
@@ -128,7 +119,6 @@ const AddWorkSapceHeader = () => {
             <Label htmlFor="description" className="text-right">
               Description
             </Label>
-            {/* <Input id="description" defaultValue="@peduarte"  /> */}
             <Textarea
               placeholder="Type your message here."
               className={`col-span-3 h-20 ${desError && description.length === 0 ? 'border-red-500' : ''}`}
@@ -139,7 +129,6 @@ const AddWorkSapceHeader = () => {
             <Label htmlFor="description" className="text-right">
               Type
             </Label>
-            {/* <Input id="description" defaultValue="@peduarte" className="col-span-3" /> */}
             <Select onValueChange={(e) => handleSelectChange(e)}>
               <SelectTrigger className={`col-span-3 ${selError && selectedValue === null ? 'border-red-500' : ''}`}>
                 <SelectValue placeholder="Select The Type" />
@@ -181,7 +170,6 @@ const AddWorkSapceHeader = () => {
             <Button onClick={() => submitFn()}>Make The Workspace</Button>
           </DialogClose>
         </DialogFooter>
-        {/* </form> */}
       </DialogContent>
     </Dialog>
   );

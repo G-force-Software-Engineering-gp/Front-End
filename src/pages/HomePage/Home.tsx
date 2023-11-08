@@ -1,5 +1,4 @@
 import Header from '@/components/Header';
-import React from 'react';
 import HomePageDetails from './HomePageDetails';
 import { HomeSideBar } from './HomeSideBar';
 

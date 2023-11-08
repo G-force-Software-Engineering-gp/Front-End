@@ -1,9 +1,5 @@
 import { Separator } from '@/components/ui/separator';
-import React from 'react';
-import { Outlet, Route, Routes } from 'react-router-dom';
-import advanced from './advanced';
-import appearance from './cards';
-import Profile from './profile';
+import { Outlet } from 'react-router-dom';
 import { SettingsNav } from './settingsSidebar';
 
 const sidebarNavItems = [

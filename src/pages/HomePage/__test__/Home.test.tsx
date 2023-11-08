@@ -1,6 +1,5 @@
 import { AuthProvider } from '@/contexts/AuthContext';
 import { render, screen } from '@testing-library/react';
-import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import Home from '../Home';
 

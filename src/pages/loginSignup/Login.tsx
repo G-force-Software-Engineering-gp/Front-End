@@ -38,13 +38,8 @@ const Login: React.FC = () => {
 
   const onSubmit: SubmitHandler<LoginFormValues> = async (data) => {
     try {
-      // Replace this with your registration logic
-      console.log('Form data:', data);
-
-      // Simulate an async operation (e.g., API call)
       await loginUser(data);
 
-      console.log('Registration complete!');
     } catch (error) {
       console.error('Error:', error);
     }
