@@ -17,11 +17,13 @@ import {
   AppWindow,
   Archive,
   ArrowLeftRight,
+  BookKey,
   CheckSquare,
   Copy,
   LayoutTemplate,
   MenuSquare,
   Paperclip,
+  Pen,
   Rows,
   Share2,
   Tag,
@@ -30,6 +32,7 @@ import {
 import React, { useContext, useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { DatePickerModal } from './components/datePickerModal';
+import { StoryPointComponent } from './components/storyPoint';
 import { Card } from './types';
 
 interface Props {
@@ -45,6 +48,8 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   });
 
   const [selectedValue, setSelectedValue] = React.useState(data?.reminder ? data?.reminder : 'None');
+  // set for story point
+  const [storyPoint, setStoryPoint] = useState('');
 
   let authTokens = useContext(AuthContext)?.authTokens;
   const queryClient = useQueryClient();
@@ -186,6 +191,27 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   Cover
                 </Button>
               </div>
+              <div className="mx-4 mb-2 text-xs font-medium">Power-Ups</div>
+              <div className="grid grid-cols-6 ">
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  className="col-span-3 mx-4 mb-2 flex cursor-pointer justify-start rounded-sm px-4  text-sm md:col-span-6"
+                >
+                  <BookKey className="mb-1 mr-1 h-4 w-4" />
+                  Set Stimate
+                </Button>
+                {/* <Button
+                  size="sm"
+                  variant="secondary"
+                  className="col-span-3 mx-4 mb-2 flex cursor-pointer justify-start rounded-sm px-4  text-sm md:col-span-6"
+                >
+                  <Pen className="mb-1 mr-1 h-4 w-4" />
+                  Story Point
+                </Button> */}
+                <StoryPointComponent storyPoint={storyPoint} setStoryPoint={setStoryPoint} />
+              </div>
+
               <div className="mx-4 mb-2 text-xs font-medium">ACTIONS</div>
               <div className="grid grid-cols-6 ">
                 <Button
