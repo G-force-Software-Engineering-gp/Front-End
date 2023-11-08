@@ -206,12 +206,12 @@ const BoardHeader = () => {
                   </PopoverTrigger>
                 }
                 {membersData?.members?.length !== undefined && membersData?.members?.length > 3 &&
-                  <PopoverContent>
+                  <PopoverContent className='w-fit'>
                     <>
                       <p className='mb-2'>Members</p>
                       <ScrollArea className='w-fit rounded-md h-40'>
                         {membersData?.members?.slice(3,).map((member) => (
-                          <>
+                          <div className='m-3'>
                             <Separator className='my-2' />
                             <div className="flex  space-x-4">
                               <Avatar>
@@ -225,7 +225,7 @@ const BoardHeader = () => {
                                 </p>
                               </div>
                             </div>
-                          </>
+                          </div>
                         ))}
                       </ScrollArea>
                     </>
