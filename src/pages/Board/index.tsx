@@ -34,7 +34,7 @@ const Board = () => {
       <Header />
       <BoardHeader />
       <div
-        className="grid  grid-flow-col grid-cols-5 justify-center "
+        className="flex overflow-x-auto"
         style={{
           backgroundImage: `url(${bg})`,
           // backgroundColor: 'rgba(255, 255, 255, 0.7)',
@@ -43,14 +43,9 @@ const Board = () => {
           backgroundSize: 'cover',
         }}
       >
-        
+
         {/* <div className="absolute inset-0 z-10 bg-opacity-50"></div> */}
-        <div className=" col-span-1">
-          <BoardSidebar />
-        </div>
-        <div className=" col-span-4 flex  flex-grow flex-col pt-2 pt-5">
-          <KanbanBoard />
-        </div>
+        <KanbanBoard />
       </div>
     </div>
   );

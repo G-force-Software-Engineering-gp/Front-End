@@ -38,6 +38,7 @@ import { DialogClose } from '@radix-ui/react-dialog';
 import { Label } from '@radix-ui/react-select';
 import {
   BellDot,
+  Check,
   ChevronDown,
   Copy,
   Eye,
@@ -45,12 +46,14 @@ import {
   ImagePlus,
   ListFilter,
   MoreHorizontal,
+  Plus,
   Star,
   Trello,
   User2,
   UserPlus2,
+  Users2,
 } from 'lucide-react';
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import AddImage from './components/AddImage';
 import { useParams } from 'react-router-dom';
 import {
@@ -60,6 +63,10 @@ import {
 } from "@/components/ui/hover-card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import { Menu } from 'lucide-react';
+import { useBoard } from './hooks/useBoard';
+import _, { difference } from "lodash";
+import { BoardSidebar } from './boardSidebar';
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -84,9 +91,31 @@ const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWit
 );
 ListItem.displayName = 'ListItem';
 
+interface User {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  member: Member[];
+}
+
+interface Member {
+  profimage: string;
+}
+
+
+
 const BoardHeader = () => {
   const { boardId } = useParams();
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
+  const [addMemberButtonLoading, setAddMemberButtonLoading] = useState(false);
+  const [users, setUsers] = useState<User[] | []>([]);
+  const [selectedUsers, setSelectedUsers] = useState<User[]>([])
+  const allUsers = useRef<User[] | []>([]);
+  const [query, setQuery] = useState('');
+  const [open, setOpen] = useState(false)
+  const { data: boardData, isLoading, error } = useBoard(parseInt(boardId ? boardId : ''));
   const components: { title: string; href: string; description: string }[] = [
     {
       title: 'Alert Dialog',
@@ -124,12 +153,34 @@ const BoardHeader = () => {
   return (
     <div className="backdrop-blur">
       <>
-        <div className="flex flex-1 flex-col border-b-2 p-2 px-5 md:flex-row md:items-center md:justify-between">
+        <div className="flex flex-1 flex-col border-b-2 p-2 px-5 mt-4 md:mt-0 md:flex-row md:items-center md:justify-between">
           <div className="pb-2 md:pb-0">
             <div className="text-2xl font-bold">
               <>
-                <span></span>
-                <span className="m-2">G-Force</span>
+                <Sheet key="left">
+                  <SheetTrigger>
+                    <Button variant="secondary" className="m-1 h-8 w-8 p-0">
+                      <Menu className="h-4 w-4 " />
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side='left'>
+                    <SheetHeader>
+                      <SheetTitle>
+                        <div className="mb-2 flex items-center">
+                          <Avatar className="rounded-sm h-12 w-12 ">
+                            <AvatarFallback className="rounded-sm">{boardData?.title[0]}</AvatarFallback>
+                          </Avatar>
+                          <div className="ml-2 h-13 flex flex-col justify-between">
+                            <p className="text-xl font-bold">{boardData?.title}</p>
+                            <p className="text-lg text-muted-foreground">Free</p>
+                          </div>
+                        </div>
+                      </SheetTitle>
+                      <BoardSidebar />
+                    </SheetHeader>
+                  </SheetContent>
+                </Sheet>
+                <span className="m-2">{boardData?.title}</span>
                 <Button data-testid='eye' variant="secondary" className="m-1 h-8 w-8 p-0">
                   <Eye className="h-4 w-4 " />
                 </Button>

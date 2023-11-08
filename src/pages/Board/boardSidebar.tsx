@@ -64,6 +64,7 @@ import AuthContext from '@/contexts/AuthContext';
 import { useDeferredValue } from "react";
 import _, { difference } from "lodash";
 import { useParams } from "react-router-dom";
+import { useBoard } from "./hooks/useBoard";
 
 interface User {
   id: number;
@@ -82,6 +83,7 @@ interface Member {
 export function BoardSidebar({ className }: any) {
 
   const { boardId } = useParams()
+  const { data: boardData, isLoading, error } = useBoard(parseInt(boardId ? boardId : ''));
   const [addMemberButtonLoading, setAddMemberButtonLoading] = useState(false);
   function inviteMembers() {
     const fetches = selectedUsers.map(item => {
@@ -167,19 +169,6 @@ export function BoardSidebar({ className }: any) {
     <div className={cn("pb-12", className)}>
       <div className="space-y-4 py-4 ">
         <div className="px-3 py-2">
-          <div className="mb-2 flex items-center">
-            <Avatar className="rounded-sm h-9 w-9 ">
-              <AvatarImage className="rounded-sm" src="/avatars/01.png" alt="Avatar" />
-              <AvatarFallback className="rounded-sm">G</AvatarFallback>
-            </Avatar>
-            <div className="ml-2 h-9 flex flex-col justify-between ">
-              <p className="text-sm font-medium ">G-Force</p>
-              <p className="text-xs text-muted-foreground">
-                Free
-              </p>
-            </div>
-          </div>
-          <hr className="mb-2" />
           <div className="space-y-1">
             <Button data-testid='Boards' variant="ghost" className="w-full justify-start">
               <Trello className="mr-2 h-4 w-4" />
