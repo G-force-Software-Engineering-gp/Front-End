@@ -198,33 +198,39 @@ const BoardHeader = () => {
                 </Popover>
               ))}
               <Popover>
-                <PopoverTrigger className='w-fit'>
-                  <Avatar>
-                    <AvatarFallback>+{membersData?.members?.length !== undefined ? membersData.members.length - 3 : 'N/A'}</AvatarFallback>
-                  </Avatar>
-                </PopoverTrigger>
-                <PopoverContent>
-                  <p className='mb-2'>Members</p>
-                  <ScrollArea className='w-fit rounded-md'>
-                    {membersData?.members?.slice(3,).map((member) => (
-                      <>
-                        <Separator className='my-2' />
-                        <div className="flex justify-between space-x-4">
-                          <Avatar>
-                            <AvatarImage src={member.profimage} />
-                            <AvatarFallback>{member.user.first_name[0]}{member.user.last_name[0]}</AvatarFallback>
-                          </Avatar>
-                          <div className="space-y-1">
-                            <h4 className="text-sm font-semibold">{member.user.first_name} {member.user.last_name}</h4>
-                            <p className="text-sm">
-                              @{member.user.username}
-                            </p>
-                          </div>
-                        </div>
-                      </>
-                    ))}
-                  </ScrollArea>
-                </PopoverContent>
+                {membersData?.members?.length !== undefined && membersData?.members?.length > 3 &&
+                  <PopoverTrigger className='w-fit'>
+                    <Avatar>
+                      <AvatarFallback>+{membersData?.members?.length !== undefined ? membersData.members.length - 3 : 'N/A'}</AvatarFallback>
+                    </Avatar>
+                  </PopoverTrigger>
+                }
+                {membersData?.members?.length !== undefined && membersData?.members?.length > 3 &&
+                  <PopoverContent>
+                    <>
+                      <p className='mb-2'>Members</p>
+                      <ScrollArea className='w-fit rounded-md h-40'>
+                        {membersData?.members?.slice(3,).map((member) => (
+                          <>
+                            <Separator className='my-2' />
+                            <div className="flex  space-x-4">
+                              <Avatar>
+                                <AvatarImage src={member.profimage} />
+                                <AvatarFallback>{member.user.first_name[0]}{member.user.last_name[0]}</AvatarFallback>
+                              </Avatar>
+                              <div className="space-y-1">
+                                <h4 className="text-sm font-semibold">{member.user.first_name} {member.user.last_name}</h4>
+                                <p className="text-sm">
+                                  @{member.user.username}
+                                </p>
+                              </div>
+                            </div>
+                          </>
+                        ))}
+                      </ScrollArea>
+                    </>
+                  </PopoverContent>
+                }
               </Popover>
             </div>
             <Button className="h-8 w-20 p-0">
