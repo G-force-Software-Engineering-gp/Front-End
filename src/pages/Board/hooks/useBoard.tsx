@@ -1,6 +1,6 @@
 import AuthContext from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Board } from '../types';
 
 export const useBoard = (boardId: number) => {

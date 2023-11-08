@@ -37,6 +37,7 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
+    "@types/lodash": "^4.14.200",
     "@types/node": "^16.18.34",
     "@types/react": "^18.2.7",
     "@types/react-dom": "^18.2.4",
@@ -47,6 +48,7 @@
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "jwt-decode": "^3.1.2",
+    "lodash": "^4.17.21",
     "lucide-react": "^0.221.0",
     "react": "^18.2.0",
     "react-day-picker": "^8.8.2",
@@ -64,7 +66,7 @@
   "scripts": {
     "start": "craco start",
     "build": "craco build",
-    "test": "react-scripts test",
+    "test": "craco test",
     "eject": "react-scripts eject",
     "format": "prettier --write src/**/*.{js,jsx,ts,tsx,json} --config .prettierrc.js"
   },
@@ -95,5 +97,11 @@
     "prettier": "^3.0.3",
     "prettier-plugin-tailwindcss": "^0.5.5",
     "tailwindcss": "^3.3.3"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "axios": "axios/dist/node/axios.cjs"
+    }
   }
 }

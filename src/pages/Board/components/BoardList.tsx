@@ -1,4 +1,4 @@
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,13 +18,23 @@ import {
 } from '@/components/ui/dropdown-menu';
 import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Calendar, ListIcon, MoreHorizontal, MoreVertical, Pencil, Plus, Tags, Trash, User } from 'lucide-react';
-import React, { useContext, useState } from 'react';
+import {
+  Calendar,
+  Check,
+  ListIcon,
+  MoreHorizontal,
+  Pencil,
+  Tags,
+  Trash,
+  User as UserIcon,
+} from 'lucide-react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { CardDetail } from '../cardDetail';
-import { useBoard } from '../hooks/useBoard';
 import { useCard } from '../hooks/useCard';
 import { useList } from '../hooks/useList';
-import { List } from '../types';
+import { useMembers } from '../hooks/useMembers';
+import { Card as CardType, List, Members, User } from '../types';
 import CreateTaskModal from './CreateTaskModal';
 
 interface Props {
@@ -47,17 +57,15 @@ export const BoardList = ({ listId, columns, boardId }: Props) => {
       });
     },
     onError: (error, variables, context) => {
-      // An error happened!
     },
     onSuccess: (data, variables, context) => {
-      // on success
     },
     onSettled: (data, error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['board', boardId] });
     },
   });
 
-  const { data, isLoading } = useList(listId);
+  const { data } = useList(listId);
   return (
     <div className="board-draggable relative flex max-h-full w-72 shrink-0 flex-col">
       <div className="board-draggable-handler flex items-center justify-between px-0.5 pb-3">
@@ -77,43 +85,6 @@ export const BoardList = ({ listId, columns, boardId }: Props) => {
             <DropdownMenuContent align="end" className="w-[200px]">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuGroup>
-                {/* <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  Assign to...
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Calendar className="mr-2 h-4 w-4" />
-                  Set due date...
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuSub>
-                  <DropdownMenuSubTrigger>
-                    <Tags className="mr-2 h-4 w-4" />
-                    Move to
-                  </DropdownMenuSubTrigger>
-                  <DropdownMenuSubContent className="p-0">
-                    <Command>
-                      <CommandInput placeholder="Filter label..." autoFocus={true} />
-                      <CommandList>
-                        <CommandEmpty>No label found.</CommandEmpty>
-                        <CommandGroup>
-                          {columns.map((col) => (
-                            <CommandItem
-                              key={col.id}
-                              onSelect={(value) => {
-                                console.log(value);
-                                setOpen(false);
-                              }}
-                            >
-                              {col.title}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </DropdownMenuSubContent>
-                </DropdownMenuSub>
-                <DropdownMenuSeparator /> */}
                 <DropdownMenuItem onClick={() => deleteList.mutate()} className="text-red-600">
                   <Trash className="mr-2 h-4 w-4" />
                   Delete
@@ -132,14 +103,14 @@ export const BoardList = ({ listId, columns, boardId }: Props) => {
   );
 };
 
-interface CardProps {
+type CardProps = {
   cardId: number;
   listId: number;
   columns: List[];
-}
+};
 
 export const ListCard = ({ cardId, columns, listId }: CardProps) => {
-  const { data, isLoading } = useCard(cardId);
+  const { data, isLoading, refetch: cardRefetch } = useCard(cardId);
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -156,15 +127,22 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
       });
     },
     onError: (error, variables, context) => {
-      // An error happened!
     },
     onSuccess: (data, variables, context) => {
-      // on success
     },
     onSettled: (data, error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['list', listId] });
     },
   });
+  if (data !== undefined || isLoading) {
+    <Card className="w-full bg-slate-600">
+      <CardHeader>
+        <CardTitle className="flex items-center justify-between">
+          <p className="  bg-inherit/20 text-lg">{data?.title}</p>
+        </CardTitle>
+      </CardHeader>
+    </Card>;
+  }
   return (
     <>
       <Card className="w-full">
@@ -190,10 +168,22 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
                     <Pencil className="mr-2 h-4 w-4" />
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <User className="mr-2 h-4 w-4" />
-                    Assign to...
-                  </DropdownMenuItem>
+
+                  <DropdownMenuSub>
+                    <DropdownMenuSubTrigger>
+                      <UserIcon className="mr-2 h-4 w-4" />
+                      Assign to...
+                    </DropdownMenuSubTrigger>
+                    <AssignmentSubmenu
+                      columns={columns}
+                      listId={listId}
+                      cardId={cardId}
+                      setOpen={setOpen}
+                      open={open}
+                      cardData={data}
+                      cardRefetch={cardRefetch}
+                    />
+                  </DropdownMenuSub>
                   <DropdownMenuItem>
                     <Calendar className="mr-2 h-4 w-4" />
                     Set due date...
@@ -206,15 +196,12 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
                     </DropdownMenuSubTrigger>
                     <DropdownMenuSubContent className="p-0">
                       <Command>
-                        {/* <CommandInput placeholder="Filter label..." autoFocus={true} /> */}
                         <CommandList>
-                          {/* <CommandEmpty>No label found.</CommandEmpty> */}
                           <CommandGroup>
                             {columns.map((col) => (
                               <CommandItem
                                 key={col.id}
                                 onSelect={(value) => {
-                                  console.log(value);
                                   setOpen(false);
                                 }}
                               >
@@ -236,9 +223,8 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
               </DropdownMenuContent>
             </DropdownMenu>
           </CardTitle>
-          {/* <CardDescription>Deploy your new project in one-click.</CardDescription> */}
         </CardHeader>
-        {/* <CardContent>
+        <CardContent>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">lllhlhhlkhkklj</div>
             <div className="flex flex-col space-y-1.5">
@@ -276,23 +262,18 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
               </div>
             </div>
           </div>
-        </CardContent> */}
-        {/* <CardFooter className="flex items-end justify-between pt-1">
+        </CardContent>
+        <CardFooter className="flex items-end justify-between pt-1">
           <div className="flex flex-wrap -space-x-1.5">
-            <Avatar className="h-5 w-5 hover:z-10">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-
-            <Avatar className="h-5 w-5 hover:z-10">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-
-            <Avatar className="h-5 w-5 hover:z-10">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            {data?.members?.length != 0 &&
+              data?.members?.map((member) => (
+                <Avatar className="h-6 w-6 hover:z-10 hover:bg-primary">
+                  <AvatarFallback className="text-xs hover:bg-primary hover:text-primary-foreground">
+                    {member.user.first_name[0]}
+                    {member.user.last_name[0]}
+                  </AvatarFallback>
+                </Avatar>
+              ))}
           </div>
           <div className="dark:text-navy-300 flex items-center space-x-2 text-xs text-slate-400">
             <div className="flex items-center space-x-0.5">
@@ -330,9 +311,110 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
               <span>1</span>
             </div>
           </div>
-        </CardFooter> */}
+        </CardFooter>
       </Card>
       {data !== undefined && <CardDetail setModalOpen={setModalOpen} modalOpen={modalOpen} data={data} />}
     </>
+  );
+};
+type openState = {
+  open: boolean;
+  setOpen: any;
+  cardData: CardType | undefined;
+  cardRefetch: any;
+};
+type AssignmentSubmenuProps = CardProps & openState;
+export const AssignmentSubmenu = ({
+  cardId,
+  setOpen,
+  cardData,
+  cardRefetch,
+}: AssignmentSubmenuProps) => {
+  const { boardId } = useParams();
+  const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
+  let authTokens = useContext(AuthContext)?.authTokens;
+  const createAssignee = useMutation({
+    mutationFn: (formData: any) => {
+      return fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/assign/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ` + authTokens.access,
+        },
+        body: JSON.stringify(formData),
+      });
+    },
+    onError: (error, variables, context) => {
+    },
+    onSuccess: (data, variables, context) => {
+    },
+    onSettled: (data, error, variables, context) => {
+      cardRefetch();
+    },
+  });
+  const deleteAssignee = useMutation({
+    mutationFn: (formData: any) => {
+      return fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/assign/', {
+        method: 'delete',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ` + authTokens.access,
+        },
+        body: JSON.stringify(formData),
+      });
+    },
+    onError: (error, variables, context) => {
+    },
+    onSuccess: (data, variables, context) => {
+    },
+    onSettled: (data, error, variables, context) => {
+      cardRefetch();
+    },
+  });
+  return (
+    <DropdownMenuSubContent className="p-0">
+      <Command>
+        <CommandInput placeholder="Search for user" autoFocus={true} />
+        <CommandList>
+          <CommandEmpty>No label found.</CommandEmpty>
+          <CommandGroup>
+            {membersData?.members?.map((member) => (
+              <CommandItem
+                key={member.id}
+                className="flex items-center px-2"
+                onSelect={() => {
+                  if (cardData) {
+                    if (cardData?.members !== undefined) {
+                      if (cardData?.members?.filter((item) => item.id === member.id).length > 0) {
+                        deleteAssignee.mutate({ member: member.id, card: cardId });
+                      } else {
+                        createAssignee.mutate({ member: member.id, card: cardId });
+                      }
+                    }
+                  }
+                  setOpen(false);
+                }}
+              >
+                <Avatar>
+                  <AvatarFallback>
+                    {member.user.first_name[0]}
+                    {member.user.last_name[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="ml-2 mr-3">
+                  <p className="text-sm font-medium leading-none">
+                    {member.user.first_name} {member.user.last_name}
+                  </p>
+                  <p className="text-sm text-muted-foreground">{member.user.email}</p>
+                </div>
+                {cardData?.members?.filter((item) => item.id === member.id)?.length != 0 ? (
+                  <Check className="ml-auto flex h-5 w-5 text-primary" />
+                ) : null}
+              </CommandItem>
+            ))}
+          </CommandGroup>
+        </CommandList>
+      </Command>
+    </DropdownMenuSubContent>
   );
 };

@@ -1,6 +1,6 @@
 import AuthContext from '@/contexts/AuthContext';
 import { useQuery } from '@tanstack/react-query';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import { Card } from '../types';
 
 export const useCard = (cardId: number) => {

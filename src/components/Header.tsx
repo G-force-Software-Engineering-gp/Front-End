@@ -14,7 +14,6 @@ import axios from 'axios';
 import { BellDot, HelpCircle, User2 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { ModeToggle } from './ui/mode-toggle';
 
@@ -78,24 +77,22 @@ const Header = () => {
     },
   ];
   let authTokens = useContext(AuthContext)?.authTokens;
-  // console.log(authTokens.access)
   const [workspaces, setworkspaces] = useState<any[]>([]);
   const gettingData = async () => {
     const { data } = await axios
       .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
         headers: {
-          Authorization: `JWT ${authTokens.access}`,
+          Authorization: `JWT ${authTokens?.access}`,
         },
       })
       .then((response) => response);
-    console.log(data);
     setworkspaces(data);
   };
   useEffect(() => {
     gettingData();
   }, []);
   return (
-    <div>
+    <div data-testid="header">
       <>
         <div className="hidden flex-col border-b-2 md:flex">
           <div className="flex-1 p-2 px-5 ">
@@ -109,7 +106,7 @@ const Header = () => {
                           <NavigationMenuLink
                             className={navigationMenuTriggerStyle()}
                             onClick={() => {
-                              navigate('/home');
+                              navigate('/');
                             }}
                           >
                             Logo and Name
@@ -230,7 +227,6 @@ const Header = () => {
                         </NavigationMenuContent>
                       </NavigationMenuItem>
 
-                      
                       <AddWorkSapceHeader />
                     </NavigationMenuList>
                   </NavigationMenu>
@@ -238,10 +234,10 @@ const Header = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Input type="text" placeholder="Search" />
-                <ModeToggle />
+                <ModeToggle data-testid="mode-toggle11" />
                 <BellDot className="h-9 w-9" />
                 <HelpCircle className="h-9 w-9" />
-                <User2 className="h-9 w-9" onClick={() => navigate('/settings')} />
+                <User2 data-testid="user-icon" className="h-9 w-9" onClick={() => navigate('/settings')} />
               </div>
             </div>
           </div>
