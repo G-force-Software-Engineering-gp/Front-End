@@ -46,7 +46,7 @@ const HomePageDetails = () => {
           </svg>
           <h2>Starred Workspaces</h2>
         </div>
-        <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2">
+        <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
           <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
             <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
               <div className="flex justify-between">
@@ -98,7 +98,7 @@ const HomePageDetails = () => {
           </svg>
           <h2>Recently viewed</h2>
         </div>
-        <div className="mb-8 mt-4 grid auto-rows-fr gap-2  sm:grid-cols-2">
+        <div className="mb-8 mt-4 grid auto-rows-fr gap-2  sm:grid-cols-2 md:grid-cols-3">
           <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
             <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
               <div className="flex justify-between">
@@ -276,7 +276,7 @@ const HomePageDetails = () => {
                   </div>
                 </div>
 
-                <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-3">
+                <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
                   {item?.boards.map((item1: { id: number; title: string; backgroundImage: any }) => (
                     <Card
                       style={{ backgroundImage: `url(${item1?.backgroundImage})`, backgroundSize: 'cover' }}

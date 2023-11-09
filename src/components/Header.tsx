@@ -94,7 +94,7 @@ const Header = () => {
   return (
     <div data-testid="header">
       <>
-        <div className="hidden flex-col border-b-2 md:flex">
+        <div className="hidden flex-col border-b-2 lg:flex">
           <div className="flex-1 p-2 px-5 ">
             <div className="flex items-center justify-between">
               <div className="text-2xl font-bold">

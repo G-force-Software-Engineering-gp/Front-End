@@ -78,8 +78,11 @@ const AddBoard: React.FC<AddBoardProps> = ({ workspaceId }) => {
       <Dialog>
         <DialogTrigger asChild>
           <Card className=" cursor-pointer bg-slate-300 dark:bg-slate-800">
-            <div className=" flex cursor-pointer gap-4 space-y-0 px-12 py-14 sm:px-6 sm:py-14">
+            {/* <div className=" flex cursor-pointer gap-4 space-y-0 px-12 py-14 sm:px-0 sm:py-14 md:px-10 md:py-10 lg:px-2 lg:py-14 xl:px-8">
               <label className=" cursor-pointer text-xl font-semibold">Create a new Board</label>
+            </div> */}
+            <div className="grid cursor-pointer place-items-center py-14 md:py-14">
+              <h1 className="text-xl font-semibold">Create a new Board</h1>
             </div>
           </Card>
         </DialogTrigger>
