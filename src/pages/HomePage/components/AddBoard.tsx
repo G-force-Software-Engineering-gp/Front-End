@@ -48,9 +48,9 @@ const AddBoard: React.FC<AddBoardProps> = ({ workspaceId }) => {
         timer: 3000,
       });
       setname('');
-        setInterval(() => {
-          navigate(0);
-        }, 2000);
+      setInterval(() => {
+        navigate(0);
+      }, 2000);
     } else {
       Swal.fire({
         icon: 'error',
@@ -59,9 +59,9 @@ const AddBoard: React.FC<AddBoardProps> = ({ workspaceId }) => {
         timer: 3000,
       });
       setname('');
-        setInterval(() => {
-          navigate(0);
-        }, 2000);
+      setInterval(() => {
+        navigate(0);
+      }, 2000);
     }
   };
 
@@ -78,8 +78,8 @@ const AddBoard: React.FC<AddBoardProps> = ({ workspaceId }) => {
       <Dialog>
         <DialogTrigger asChild>
           <Card className=" cursor-pointer bg-slate-300 dark:bg-slate-800">
-            <div className=" flex gap-4 space-y-0 px-12 py-14 sm:px-6 sm:py-14">
-              <label className=" text-xl font-semibold">Create a new Board</label>
+            <div className=" flex cursor-pointer gap-4 space-y-0 px-12 py-14 sm:px-6 sm:py-14">
+              <label className=" cursor-pointer text-xl font-semibold">Create a new Board</label>
             </div>
           </Card>
         </DialogTrigger>
