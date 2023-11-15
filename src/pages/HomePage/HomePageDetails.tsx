@@ -14,6 +14,7 @@ const HomePageDetails = () => {
   let authTokens = useContext(AuthContext)?.authTokens;
   const [workspaces, setworkspaces] = useState<any[]>([]);
   const [recentlyBoards, setrecentlyBoards] = useState<any[]>([]);
+  const [starred, setstarred] = useState<any[]>([]);
   const gettingData = async () => {
     const { data } = await axios
       .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
@@ -26,7 +27,7 @@ const HomePageDetails = () => {
   };
   const gettingRecentlyViewed = async () => {
     const { data } = await axios
-      .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/recentlyviewd/', {
+      .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/recentlyviewed/', {
         headers: {
           Authorization: `JWT ${authTokens?.access}`,
         },
@@ -34,10 +35,23 @@ const HomePageDetails = () => {
       .then((response) => response);
     setrecentlyBoards(data);
   };
-  console.log(recentlyBoards);
+  const gettingStarred = async () => {
+    const { data } = await axios
+      .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/starred-boards/', {
+        headers: {
+          Authorization: `JWT ${authTokens?.access}`,
+        },
+      })
+      .then((response) => response);
+    setstarred(data);
+  };
+  // console.log(recentlyBoards);
+  // console.log(workspaces);
+  // console.log(starred);
   useEffect(() => {
     gettingData();
     gettingRecentlyViewed();
+    gettingStarred();
   }, []);
 
   return (
@@ -62,12 +76,13 @@ const HomePageDetails = () => {
           <h2>Recently viewed</h2>
         </div>
         <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
-          {recentlyBoards?.map((item: { id: number; title: string; backgroundImage: any }) => (
+          {recentlyBoards?.map((item: { id: number; title: string; backgroundImage: any; has_star: boolean }) => (
             <BoardCard
               key={item.id} // Make sure to include a key prop if the list is dynamic
               id={item.id}
               title={item.title}
               backgroundImage={item.backgroundImage}
+              has_star={item.has_star}
             />
           ))}
         </div>
@@ -92,47 +107,15 @@ const HomePageDetails = () => {
           <h2>Starred Workspaces</h2>
         </div>
         <div className="mb-8 mt-4 grid auto-rows-fr gap-2  sm:grid-cols-2 md:grid-cols-3">
-          <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
-            <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
-              <div className="flex justify-between">
-                <div className="space-y-1">
-                  <CardTitle>Board 1</CardTitle>
-                  <CardDescription>Description</CardDescription>
-                </div>
-                <Button variant="ghost">
-                  <StarIcon className="h-6 w-6" />
-                </Button>
-              </div>
-            </CardHeader>
-          </Card>
-          <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
-            <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
-              <div className="flex justify-between">
-                <div className="space-y-1">
-                  <CardTitle>Board 1</CardTitle>
-                  <CardDescription>Description</CardDescription>
-                </div>
-                <Button variant="ghost">
-                  <StarIcon className="h-6 w-6" />
-                </Button>
-              </div>
-            </CardHeader>
-          </Card>
-          <Card className=" cursor-pointer bg-slate-300 dark:bg-slate-800">
-            <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
-              <div className="flex justify-between">
-                <div className="space-y-1">
-                  <CardTitle>Board 2</CardTitle>
-                  <CardDescription>
-                    Beautifully designed components built with Radix UI and Tailwind CSS.
-                  </CardDescription>
-                </div>
-                <Button variant="ghost">
-                  <StarIcon className="h-6 w-6" />
-                </Button>
-              </div>
-            </CardHeader>
-          </Card>
+          {starred?.map((item: { id: number; title: string; backgroundImage: any; has_star: boolean }) => (
+            <BoardCard
+              key={item.id} // Make sure to include a key prop if the list is dynamic
+              id={item.id}
+              title={item.title}
+              backgroundImage={item.backgroundImage}
+              has_star={item.has_star}
+            />
+          ))}
         </div>
       </div>
 
@@ -270,12 +253,13 @@ const HomePageDetails = () => {
                 </div>
 
                 <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
-                  {item?.boards.map((item1: { id: number; title: string; backgroundImage: any }) => (
+                  {item?.boards.map((item1: { id: number; title: string; backgroundImage: any; has_star: boolean }) => (
                     <BoardCard
                       key={item1.id} // Make sure to include a key prop if the list is dynamic
                       id={item1.id}
                       title={item1.title}
                       backgroundImage={item1.backgroundImage}
+                      has_star={item1.has_star}
                     />
                   ))}
 
