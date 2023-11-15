@@ -12,6 +12,7 @@ const HomePageDetails = () => {
   const navigate = useNavigate();
   let authTokens = useContext(AuthContext)?.authTokens;
   const [workspaces, setworkspaces] = useState<any[]>([]);
+  const [recentlyBoards, setrecentlyBoards] = useState<any[]>([]);
   const gettingData = async () => {
     const { data } = await axios
       .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
@@ -22,63 +23,24 @@ const HomePageDetails = () => {
       .then((response) => response);
     setworkspaces(data);
   };
+  const gettingRecentlyViewed = async () => {
+    const { data } = await axios
+      .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/recentlyviewd/', {
+        headers: {
+          Authorization: `JWT ${authTokens?.access}`,
+        },
+      })
+      .then((response) => response);
+    setrecentlyBoards(data);
+  };
+  console.log(recentlyBoards);
   useEffect(() => {
     gettingData();
+    gettingRecentlyViewed();
   }, []);
 
   return (
     <div className=" px-6 pt-3" data-testid="homepageDetails">
-      <div>
-        <div className="flex">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-star mr-2"
-          >
-            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-          </svg>
-          <h2>Starred Workspaces</h2>
-        </div>
-        <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
-          <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
-            <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
-              <div className="flex justify-between">
-                <div className="space-y-1">
-                  <CardTitle>Board 1</CardTitle>
-                  <CardDescription>Description</CardDescription>
-                </div>
-                <Button variant="ghost">
-                  <StarIcon className="h-6 w-6" />
-                </Button>
-              </div>
-            </CardHeader>
-          </Card>
-
-          <Card className=" cursor-pointer bg-slate-300 dark:bg-slate-800">
-            <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
-              <div className="flex justify-between">
-                <div className="space-y-1">
-                  <CardTitle>Board 2</CardTitle>
-                  <CardDescription>
-                    Beautifully designed components built with Radix UI and Tailwind CSS.
-                  </CardDescription>
-                </div>
-                <Button variant="ghost">
-                  <StarIcon className="h-6 w-6" />
-                </Button>
-              </div>
-            </CardHeader>
-          </Card>
-        </div>
-      </div>
-
       <div>
         <div className="flex">
           <svg
@@ -97,6 +59,46 @@ const HomePageDetails = () => {
             <polyline points="12 6 12 12 8 10" />
           </svg>
           <h2>Recently viewed</h2>
+        </div>
+        <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
+          {recentlyBoards?.map((item: { id: number; title: string; backgroundImage: any }) => (
+            <Card
+              style={{ backgroundImage: `url(${item?.backgroundImage})`, backgroundSize: 'cover' }}
+              className=" h-36 cursor-pointer bg-slate-200 dark:bg-slate-900"
+              onClick={() => navigate(`/board/${item.id}`)}
+            >
+              <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
+                <div className="flex justify-between">
+                  <div className="space-y-1">
+                    <CardTitle>{item.title}</CardTitle>
+                  </div>
+                  <Button variant="ghost">
+                    <StarIcon className="h-6 w-6" />
+                  </Button>
+                </div>
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      <div>
+        <div className="flex">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-star mr-2"
+          >
+            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+          </svg>
+          <h2>Starred Workspaces</h2>
         </div>
         <div className="mb-8 mt-4 grid auto-rows-fr gap-2  sm:grid-cols-2 md:grid-cols-3">
           <Card className=" cursor-pointer bg-slate-200 dark:bg-slate-900">
