@@ -44,3 +44,21 @@ export type User = {
   email: string;
   username: string;
 };
+
+
+export type CheckLists  = {
+  card: number;
+  checkLists: CheckList[];
+}
+
+export type CheckList = {
+  id: number;
+  title: string;
+  options: CheckListOption[];
+}
+
+export type CheckListOption  = {
+  id: number;
+  label: string;
+  checked: boolean;
+}

@@ -18,7 +18,6 @@ import {
   Archive,
   ArrowLeftRight,
   BookKey,
-  CheckSquare,
   Copy,
   LayoutTemplate,
   MenuSquare,
@@ -31,6 +30,8 @@ import {
 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
+import { CheckListSection } from './components/checkListModal';
+import { CheckListPopover } from './components/checkListPopover';
 import { DatePickerModal } from './components/datePickerModal';
 import { StoryPointComponent } from './components/storyPoint';
 import { Card } from './types';
@@ -74,10 +75,8 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
         body: JSON.stringify(newCard_data),
       });
     },
-    onError: (error, variables, context) => {
-    },
-    onSuccess: (data, variables, context) => {
-    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['card', data?.id] });
     },
@@ -107,6 +106,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                 <Textarea placeholder="Add a more detailed description..." className="bg-secondary" />
               </div>
 
+              <CheckListSection />
               <div className="mt-6 flex items-center justify-between">
                 <div className="flex items-center">
                   <MenuSquare className="mb-1 mr-4 h-7 w-7" />
@@ -159,14 +159,15 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   <Tag className="mb-1 mr-1 h-4 w-4" />
                   Labels
                 </Button>
-                <Button
+                {/* <Button
                   size="sm"
                   variant="secondary"
                   className="col-span-3 mx-4 mb-2 flex cursor-pointer justify-start rounded-sm px-4  text-sm md:col-span-6"
                 >
                   <CheckSquare className="mb-1 mr-1 h-4 w-4" />
                   Checklist
-                </Button>
+                </Button> */}
+                <CheckListPopover />
                 <DatePickerModal
                   mainDate={mainDate}
                   setMainDate={setMainDate}
