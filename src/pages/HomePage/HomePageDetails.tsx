@@ -7,6 +7,7 @@ import { StarIcon } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AddBoard from './components/AddBoard';
+import BoardCard from './components/BoardCard';
 
 const HomePageDetails = () => {
   const navigate = useNavigate();
@@ -62,22 +63,12 @@ const HomePageDetails = () => {
         </div>
         <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
           {recentlyBoards?.map((item: { id: number; title: string; backgroundImage: any }) => (
-            <Card
-              style={{ backgroundImage: `url(${item?.backgroundImage})`, backgroundSize: 'cover' }}
-              className=" h-36 cursor-pointer bg-slate-200 dark:bg-slate-900"
-              onClick={() => navigate(`/board/${item.id}`)}
-            >
-              <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
-                <div className="flex justify-between">
-                  <div className="space-y-1">
-                    <CardTitle>{item.title}</CardTitle>
-                  </div>
-                  <Button variant="ghost">
-                    <StarIcon className="h-6 w-6" />
-                  </Button>
-                </div>
-              </CardHeader>
-            </Card>
+            <BoardCard
+              key={item.id} // Make sure to include a key prop if the list is dynamic
+              id={item.id}
+              title={item.title}
+              backgroundImage={item.backgroundImage}
+            />
           ))}
         </div>
       </div>
@@ -280,22 +271,12 @@ const HomePageDetails = () => {
 
                 <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
                   {item?.boards.map((item1: { id: number; title: string; backgroundImage: any }) => (
-                    <Card
-                      style={{ backgroundImage: `url(${item1?.backgroundImage})`, backgroundSize: 'cover' }}
-                      className=" h-36 cursor-pointer bg-slate-200 dark:bg-slate-900"
-                      onClick={() => navigate(`/board/${item1.id}`)}
-                    >
-                      <CardHeader className="flex justify-between gap-4 space-y-0 p-4">
-                        <div className="flex justify-between">
-                          <div className="space-y-1">
-                            <CardTitle>{item1.title}</CardTitle>
-                          </div>
-                          <Button variant="ghost">
-                            <StarIcon className="h-6 w-6" />
-                          </Button>
-                        </div>
-                      </CardHeader>
-                    </Card>
+                    <BoardCard
+                      key={item1.id} // Make sure to include a key prop if the list is dynamic
+                      id={item1.id}
+                      title={item1.title}
+                      backgroundImage={item1.backgroundImage}
+                    />
                   ))}
 
                   <AddBoard workspaceId={item.id} />
