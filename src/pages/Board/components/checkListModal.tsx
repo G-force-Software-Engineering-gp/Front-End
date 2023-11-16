@@ -3,8 +3,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@radix-ui/react-label';
-import { CloudFog, MenuSquare } from 'lucide-react';
-import { useCallback, useEffect, useState } from 'react';
+import { CheckSquare } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   CheckListOption as CheckListOptionType,
@@ -113,7 +113,7 @@ const CheckListOptions = ({ checkListOptions }: CheckListOptionsProps) => {
             className="block w-full resize-none rounded-md bg-secondary p-2"
             placeholder="Add an item"
           />
-          <Button type="submit" className="mt-4">
+          <Button type="submit" className="mr-2 mt-4">
             Submit
           </Button>
           <Button variant="ghost" onClick={() => setToggleButton(!toggleButton)} className="mt-4">
@@ -135,8 +135,8 @@ interface CheckListProps {
 export function CheckListPart({ checklist }: CheckListProps) {
   return (
     <>
-      <div className="flex items-center">
-        <MenuSquare className="mb-1 mr-4 h-7 w-7" />
+      <div className="ml-3 flex items-center">
+        <CheckSquare className="mb-1 mr-2 h-4 w-4" />
         <Label className="text-md font-semibold">{checklist.title}</Label>
       </div>
       <CheckListOptions checkListOptions={checklist.options} />
@@ -149,7 +149,7 @@ export function CheckListSection() {
     <>
       <div className="mt-6 flex items-center justify-between">
         <div className="flex items-center">
-          <MenuSquare className="mb-1 mr-4 h-7 w-7" />
+          <CheckSquare className="mb-1 mr-4 h-7 w-7" />
           <Label className="text-md font-semibold">All CheckLists</Label>
         </div>
         <Button size="sm" variant="secondary" className="cursor-pointer rounded-sm px-2 text-sm">
@@ -209,7 +209,7 @@ export const CheckListItem = ({ item, checklist, setChecklist }: checkListItemPr
             className="hidden  w-full resize-none rounded-md bg-secondary p-2"
             defaultValue={item.id}
           />
-          <Button type="submit" className="mt-4">
+          <Button type="submit" className="mr-2 mt-4">
             Submit
           </Button>
           <Button variant="ghost" onClick={() => setToggleButton(!toggleButton)} className="mt-4">
