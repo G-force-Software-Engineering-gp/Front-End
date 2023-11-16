@@ -72,5 +72,28 @@ describe('Header Component', () => {
     );
     expect(screen.queryByText('User2')).toBeNull();
   });
+  test('Displays workspaces correctly', async () => {
+    const mockWorkspaces = [
+      { name: 'Workspace1', description: 'Description1' },
+      { name: 'Workspace2', description: 'Description2' },
+    ];
 
+    jest.mock('axios', () => ({
+      get: () => ({ data: mockWorkspaces }),
+    }));
+
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <Header />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+    waitFor(() => {
+      mockWorkspaces.forEach((workspace) => {
+        expect(screen.getByText(workspace.name)).toBeInTheDocument();
+        expect(screen.getByText(workspace.description)).toBeInTheDocument();
+      });
+    });
+  });
 });
