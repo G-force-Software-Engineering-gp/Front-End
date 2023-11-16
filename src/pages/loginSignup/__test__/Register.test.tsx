@@ -26,7 +26,7 @@ describe('Register', () => {
     expect(screen.getByText('Log In')).toBeInTheDocument();
   });
 
-  test('submits the form with valid data', async () => {
+  test('submits the form with valid data', () => {
     render(
       <MemoryRouter>
         <AuthProvider>
@@ -35,20 +35,27 @@ describe('Register', () => {
       </MemoryRouter>
     );
 
-    const firstNameInput = screen.getByPlaceholderText('First Name');
+    const firstNameInput = screen.getByPlaceholderText(/First Name/i);
     const lastNameInput = screen.getByPlaceholderText('Last Name');
     const emailInput = screen.getByPlaceholderText('Email');
     const usernameInput = screen.getByPlaceholderText('Username');
     const passwordInput = screen.getByPlaceholderText('Password');
 
     fireEvent.change(firstNameInput, { target: { value: 'John' } });
-    fireEvent.change(lastNameInput, { target: { value: 'Doe' } });
-    fireEvent.change(emailInput, { target: { value: 'john@example.com' } });
+    fireEvent.change(lastNameInput, { target: { value: '' } });
+    fireEvent.change(emailInput, { target: { value: 'john_mamad.com' } });
     fireEvent.change(usernameInput, { target: { value: 'johndoe' } });
     fireEvent.change(passwordInput, { target: { value: 'strongPassword' } });
 
-    const registerLabels = screen.getAllByText('Register');
+    // const registerLabels = screen.getAllByText('Register');
+    const registerButton = screen.getByRole('button', { name: 'Register' });
+    fireEvent.click(registerButton);
     // expect(registerLabels[0]).toBeInTheDocument();
-    fireEvent.click(registerLabels[0]);
+    fireEvent.click(registerButton);
+    waitFor(() => screen.getByText(/Invalid email forma/i)).then((errorMessage) => {
+      expect(errorMessage).toBeInTheDocument();
+      // console.log(errorMessage);
+    });
+    expect(emailInput).toHaveValue('john_mamad.com');
   });
 });
