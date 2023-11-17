@@ -86,6 +86,7 @@ const AddImage = () => {
               className=" cursor-pointer placeholder:text-white"
               accept=".jpg, .jpeg, .png"
               onChange={handleFileChange}
+              placeholder="Image"
             />
           </div>
           <DialogFooter className="sm:justify-start">

@@ -1,5 +1,5 @@
 import { AuthProvider } from '@/contexts/AuthContext';
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import HomePageDetails from '../HomePageDetails';
 
@@ -128,7 +128,6 @@ describe('HomePageDetails Component', () => {
       get: async () => ({ data: mockWorkspaces }),
     }));
 
-    // Check if board titles are displayed
     waitFor(() => {
       expect(screen.getByText('Board 1')).toBeInTheDocument();
     });
@@ -138,7 +137,6 @@ describe('HomePageDetails Component', () => {
   });
 
   test('navigates to the correct board when a board is clicked', () => {
-    // Mock data for a single workspace and board
     const mockWorkspaces = [
       {
         name: 'Workspace1',
@@ -148,8 +146,6 @@ describe('HomePageDetails Component', () => {
     jest.mock('axios', () => ({
       get: async () => ({ data: mockWorkspaces }),
     }));
-
-    // Mock navigate function from react-router-dom
     const mockNavigate = jest.fn();
     jest.mock('react-router-dom', () => ({
       useNavigate: () => mockNavigate,
@@ -163,7 +159,6 @@ describe('HomePageDetails Component', () => {
       </MemoryRouter>
     );
 
-    // Click on the board
     waitFor(() => {
       const boardElement = screen.getByText('Board 1');
       fireEvent.click(boardElement);
