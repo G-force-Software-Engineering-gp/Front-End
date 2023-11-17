@@ -10,7 +10,7 @@ export const KanbanBoard = () => {
   return (
     <>
       <div>
-        <div className="duration-[.25s] flex w-full items-start space-x-4 overflow-x-auto overflow-y-hidden px-[var(--margin-x)] transition-all">
+        <div className="duration-[.25s] flex w-full items-start space-x-4 overflow-x-auto overflow-y-hidden p-5 transition-all ">
           {data?.list.map((list) => (
             <>
               <BoardList listId={list.id} columns={data.list} boardId={data.id} />

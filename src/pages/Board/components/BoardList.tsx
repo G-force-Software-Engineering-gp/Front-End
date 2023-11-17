@@ -18,16 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  Calendar,
-  Check,
-  ListIcon,
-  MoreHorizontal,
-  Pencil,
-  Tags,
-  Trash,
-  User as UserIcon,
-} from 'lucide-react';
+import { Calendar, Check, ListIcon, MoreHorizontal, Pencil, Tags, Trash, User as UserIcon } from 'lucide-react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CardDetail } from '../cardDetail';
@@ -56,10 +47,8 @@ export const BoardList = ({ listId, columns, boardId }: Props) => {
         },
       });
     },
-    onError: (error, variables, context) => {
-    },
-    onSuccess: (data, variables, context) => {
-    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
     onSettled: (data, error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['board', boardId] });
     },
@@ -116,9 +105,11 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
 
   const queryClient = useQueryClient();
   let authTokens = useContext(AuthContext)?.authTokens;
+  const { boardId } = useParams();
+  const parsedBoardId = parseInt(boardId ? boardId : '');
   const deleteTask = useMutation({
     mutationFn: () => {
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/card/${cardId}/`, {
+      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/card/${cardId}/?board=${parsedBoardId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -126,10 +117,8 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
         },
       });
     },
-    onError: (error, variables, context) => {
-    },
-    onSuccess: (data, variables, context) => {
-    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
     onSettled: (data, error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['list', listId] });
     },
@@ -324,12 +313,7 @@ type openState = {
   cardRefetch: any;
 };
 type AssignmentSubmenuProps = CardProps & openState;
-export const AssignmentSubmenu = ({
-  cardId,
-  setOpen,
-  cardData,
-  cardRefetch,
-}: AssignmentSubmenuProps) => {
+export const AssignmentSubmenu = ({ cardId, setOpen, cardData, cardRefetch }: AssignmentSubmenuProps) => {
   const { boardId } = useParams();
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
   let authTokens = useContext(AuthContext)?.authTokens;
@@ -344,17 +328,18 @@ export const AssignmentSubmenu = ({
         body: JSON.stringify(formData),
       });
     },
-    onError: (error, variables, context) => {
-    },
-    onSuccess: (data, variables, context) => {
-    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
     onSettled: (data, error, variables, context) => {
       cardRefetch();
     },
   });
   const deleteAssignee = useMutation({
     mutationFn: (formData: any) => {
-      return fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/assign/', {
+      const roleId = formData.role;
+      delete formData.role;
+
+      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/assign/${roleId}`, {
         method: 'delete',
         headers: {
           'Content-Type': 'application/json',
@@ -363,10 +348,8 @@ export const AssignmentSubmenu = ({
         body: JSON.stringify(formData),
       });
     },
-    onError: (error, variables, context) => {
-    },
-    onSuccess: (data, variables, context) => {
-    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
     onSettled: (data, error, variables, context) => {
       cardRefetch();
     },
@@ -378,7 +361,7 @@ export const AssignmentSubmenu = ({
         <CommandList>
           <CommandEmpty>No label found.</CommandEmpty>
           <CommandGroup>
-            {membersData?.members?.map((member) => (
+            {membersData?.members?.map((member, index) => (
               <CommandItem
                 key={member.id}
                 className="flex items-center px-2"
@@ -386,7 +369,7 @@ export const AssignmentSubmenu = ({
                   if (cardData) {
                     if (cardData?.members !== undefined) {
                       if (cardData?.members?.filter((item) => item.id === member.id).length > 0) {
-                        deleteAssignee.mutate({ member: member.id, card: cardId });
+                        deleteAssignee.mutate({ member: member.id, card: cardId, role: cardData.role?.at(index)?.id });
                       } else {
                         createAssignee.mutate({ member: member.id, card: cardId });
                       }

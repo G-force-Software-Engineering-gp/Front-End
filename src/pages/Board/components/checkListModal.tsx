@@ -194,7 +194,7 @@ export function CheckListSection({ checkLists }: CheckListSectionProps) {
           Hide Details
         </Button>
       </div>
-      {checkLists?.checklists.map((checkListArrary) => {
+      {checkLists?.checklists?.map((checkListArrary) => {
         return <CheckListPart checklist={checkListArrary} />;
       })}
       <div className="ml-10 cursor-pointer"></div>
