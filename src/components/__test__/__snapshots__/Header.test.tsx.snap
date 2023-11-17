@@ -6,7 +6,7 @@ exports[`Header Component Header component matches snapshot 1`] = `
     data-testid="header"
   >
     <div
-      class="hidden flex-col border-b-2 md:flex"
+      class="hidden flex-col border-b-2 lg:flex"
     >
       <div
         class="flex-1 p-2 px-5 "
@@ -136,6 +136,7 @@ exports[`Header Component Header component matches snapshot 1`] = `
                     aria-haspopup="dialog"
                     class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 !bg-blue-500"
                     data-state="closed"
+                    data-testid="clicking"
                     type="button"
                   >
                     Create
