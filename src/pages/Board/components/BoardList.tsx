@@ -17,24 +17,19 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import AuthContext from '@/contexts/AuthContext';
+import type { UniqueIdentifier } from '@dnd-kit/core';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  Calendar,
-  Check,
-  ListIcon,
-  MoreHorizontal,
-  Pencil,
-  Tags,
-  Trash,
-  User as UserIcon,
-} from 'lucide-react';
+import { cva } from 'class-variance-authority';
+import { Calendar, Check, ListIcon, MoreHorizontal, Pencil, Tags, Trash, User as UserIcon } from 'lucide-react';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CardDetail } from '../cardDetail';
 import { useCard } from '../hooks/useCard';
 import { useList } from '../hooks/useList';
 import { useMembers } from '../hooks/useMembers';
-import { Card as CardType, List, Members, User } from '../types';
+import { CardDragData, Card as CardType, List, Members, User } from '../types';
 import CreateTaskModal from './CreateTaskModal';
 
 interface Props {
@@ -56,10 +51,8 @@ export const BoardList = ({ listId, columns, boardId }: Props) => {
         },
       });
     },
-    onError: (error, variables, context) => {
-    },
-    onSuccess: (data, variables, context) => {
-    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
     onSettled: (data, error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['board', boardId] });
     },
@@ -107,10 +100,36 @@ type CardProps = {
   cardId: number;
   listId: number;
   columns: List[];
+  isOverlay?: boolean;
 };
 
-export const ListCard = ({ cardId, columns, listId }: CardProps) => {
+export const ListCard = ({ cardId, columns, listId, isOverlay }: CardProps) => {
   const { data, isLoading, refetch: cardRefetch } = useCard(cardId);
+
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
+    id: cardId,
+    data: {
+      type: 'Task',
+      card: data ? data : columns[cardId],
+    } satisfies CardDragData,
+    attributes: {
+      roleDescription: 'Task',
+    },
+  });
+
+  const style = {
+    transition,
+    transform: CSS.Translate.toString(transform),
+  };
+
+  const variants = cva('', {
+    variants: {
+      dragging: {
+        over: 'w-full opacity-30  ring-2',
+        overlay: 'w-full ring-2  ring-primary',
+      },
+    },
+  });
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -126,27 +145,23 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
         },
       });
     },
-    onError: (error, variables, context) => {
-    },
-    onSuccess: (data, variables, context) => {
-    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
     onSettled: (data, error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['list', listId] });
     },
   });
-  if (data !== undefined || isLoading) {
-    <Card className="w-full bg-slate-600">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <p className="  bg-inherit/20 text-lg">{data?.title}</p>
-        </CardTitle>
-      </CardHeader>
-    </Card>;
-  }
+
   return (
     <>
-      <Card className="w-full">
-        <CardHeader>
+      <Card
+        ref={setNodeRef}
+        style={style}
+        className={variants({
+          dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
+        })}
+      >
+        <CardHeader {...attributes} {...listeners}>
           <CardTitle className="flex items-center justify-between">
             <p className=" text-lg">{data?.title}</p>
 
@@ -324,12 +339,7 @@ type openState = {
   cardRefetch: any;
 };
 type AssignmentSubmenuProps = CardProps & openState;
-export const AssignmentSubmenu = ({
-  cardId,
-  setOpen,
-  cardData,
-  cardRefetch,
-}: AssignmentSubmenuProps) => {
+export const AssignmentSubmenu = ({ cardId, setOpen, cardData, cardRefetch }: AssignmentSubmenuProps) => {
   const { boardId } = useParams();
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
   let authTokens = useContext(AuthContext)?.authTokens;
@@ -344,10 +354,8 @@ export const AssignmentSubmenu = ({
         body: JSON.stringify(formData),
       });
     },
-    onError: (error, variables, context) => {
-    },
-    onSuccess: (data, variables, context) => {
-    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
     onSettled: (data, error, variables, context) => {
       cardRefetch();
     },
@@ -363,10 +371,8 @@ export const AssignmentSubmenu = ({
         body: JSON.stringify(formData),
       });
     },
-    onError: (error, variables, context) => {
-    },
-    onSuccess: (data, variables, context) => {
-    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
     onSettled: (data, error, variables, context) => {
       cardRefetch();
     },

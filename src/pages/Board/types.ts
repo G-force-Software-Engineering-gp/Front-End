@@ -47,20 +47,25 @@ export type User = {
   username: string;
 };
 
-
-export type CheckLists  = {
+export type CheckLists = {
   id: number;
   checklists: CheckList[];
-}
+};
 
 export type CheckList = {
   id: number;
   title: string;
   items: CheckListOption[];
-}
+};
 
-export type CheckListOption  = {
+export type CheckListOption = {
   id: number;
   content: string;
   checked: boolean;
-}
+};
+export type CardTypeString = 'Task';
+
+export type CardDragData = {
+  type: CardTypeString;
+  card: Card;
+};

@@ -8,7 +8,7 @@ export const useCard = (cardId: number) => {
   const queryRs = useQuery<Card, Error>({
     queryKey: ['card', cardId],
     queryFn: async () => {
-      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/card/${cardId}`, {
+      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/card/${cardId}?board_id`, {
         method: 'GET',
         headers: {
           Authorization: `JWT ` + authTokens.access,

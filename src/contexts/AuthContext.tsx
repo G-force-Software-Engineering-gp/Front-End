@@ -11,15 +11,9 @@ export type AuthContextType = {
   registerUser: (values: any) => Promise<void>;
   logoutUser: () => void;
 };
-
 const AuthContext = createContext<AuthContextType | null>(null);
 
-export default AuthContext;
-type AuthProviderProps = {
-  children: React.ReactNode;
-};
-
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider = ({ children }: any) => {
   const [authTokens, setAuthTokens] = useState<any>(
     localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')!) : null
   );
@@ -98,3 +92,4 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>;
 };
+export default AuthContext;
