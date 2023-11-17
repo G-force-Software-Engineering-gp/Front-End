@@ -23,6 +23,8 @@ export type Card = {
   startdate?: null;
   duedate?: '2023-10-29T00:00:00Z';
   reminder?: '1 Day before';
+  storypoint?: number;
+  setstimate?: number;
 };
 
 export type Assignee = Member;
@@ -47,18 +49,18 @@ export type User = {
 
 
 export type CheckLists  = {
-  card: number;
-  checkLists: CheckList[];
+  id: number;
+  checklists: CheckList[];
 }
 
 export type CheckList = {
   id: number;
   title: string;
-  options: CheckListOption[];
+  items: CheckListOption[];
 }
 
 export type CheckListOption  = {
   id: number;
-  label: string;
+  content: string;
   checked: boolean;
 }
