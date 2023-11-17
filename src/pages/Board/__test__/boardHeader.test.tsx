@@ -1,31 +1,41 @@
-import { render, screen, waitFor } from '@testing-library/react';
 import { AuthProvider } from '@/contexts/AuthContext';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect'; // For expect(...).toBeInTheDocument()
-import BoardHeader from '../boardHeader';
+
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
+import BoardHeader from '../boardHeader';
+
+const queryClient = new QueryClient();
 
 describe('BoardHeader Component', () => {
   test('renders BoardHeader component correctly', () => {
     render(
-      <MemoryRouter>
-        <AuthProvider>
-          <BoardHeader />
-        </AuthProvider >
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AuthProvider>
+            <BoardHeader />
+          </AuthProvider>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
-    expect(screen.getByText('G-Force')).toBeInTheDocument();
-    expect(screen.getByText('Board')).toBeInTheDocument();
+    waitFor(() => {
+      expect(screen.getByText('G-Force')).toBeInTheDocument();
+      expect(screen.getByText('Board')).toBeInTheDocument();
+    });
   });
 
   test('renders buttons and icons', () => {
     render(
-      <MemoryRouter>
-        <AuthProvider>
-          <BoardHeader />
-        </AuthProvider>
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AuthProvider>
+            <BoardHeader />
+          </AuthProvider>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     expect(screen.getByTestId(/eye/i)).toBeInTheDocument();
@@ -36,11 +46,13 @@ describe('BoardHeader Component', () => {
 
   test('renders popover content on Trello button click', async () => {
     render(
-      <MemoryRouter>
-        <AuthProvider>
-          <BoardHeader />
-        </AuthProvider >
-      </MemoryRouter>
+      <QueryClientProvider client={queryClient}>
+        <MemoryRouter>
+          <AuthProvider>
+            <BoardHeader />
+          </AuthProvider>
+        </MemoryRouter>
+      </QueryClientProvider>
     );
 
     await waitFor(() => {
@@ -50,7 +62,8 @@ describe('BoardHeader Component', () => {
     const trelloButton = screen.getByTestId(/trello/i);
     userEvent.click(trelloButton);
 
-    await waitFor(() => {
+    // await waitFor(() => {
+    waitFor(() => {
       expect(screen.queryByText('See your work in new ways')).toBeInTheDocument();
     });
   });

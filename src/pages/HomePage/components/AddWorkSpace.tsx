@@ -97,7 +97,7 @@ const AddWorkSpace = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="ghost" className=" px-2">
+        <Button variant="ghost" className=" px-2" data-testId="clicking">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -142,12 +142,15 @@ const AddWorkSpace = () => {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="description" className="text-right">
+            <Label id="typeLabel" className="text-right">
               Type
             </Label>
             <Select onValueChange={(e) => handleSelectChange(e)}>
-              <SelectTrigger className={`col-span-3 ${selError && selectedValue === null ? 'border-red-500' : ''}`}>
-                <SelectValue placeholder="Select The Type" />
+              <SelectTrigger
+                aria-labelledby="typeLabel"
+                className={`col-span-3 ${selError && selectedValue === null ? 'border-red-500' : ''}`}
+              >
+                <SelectValue placeholder="Select The Type" data-testId="selectClicking"/>
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>

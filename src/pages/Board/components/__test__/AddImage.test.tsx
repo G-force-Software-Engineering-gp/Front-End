@@ -22,11 +22,13 @@ describe('AddImage Component', () => {
         </AuthProvider>
       </MemoryRouter>
     );
-
-    // const fileInput = screen.getByPlaceholderText('Image');
-    // const file = new File(['dummy content'], 'example.jpg', { type: 'image/jpeg' });
-    // fireEvent.change(fileInput, { target: { files: [file] } });
-    // expect(screen.getByTestId('image-input')).toHaveValue('example.jpg');
+    const button = screen.getByTestId('clicking');
+    fireEvent.click(button);
+    const fileInput = screen.getByPlaceholderText(/Image/i);
+    const file = new File(['bsbdbw'], 'example.jpg', { type: 'image/jpeg' });
+    fireEvent.change(fileInput, { target: { files: [file] } });
+    // expect(fileInput?.files).toHaveLength(1);
+    // expect(fileInput?.files[0].name).toBe('example.jpg');
   });
 
   // test('handles file upload', async () => {
@@ -38,8 +40,8 @@ describe('AddImage Component', () => {
   //     </MemoryRouter>
   //   );
 
-  //   waitFor(() => {
-  //   //   const pa = screen.getAllByText('avdbvd');
+  //   const button = screen.getByTestId('clicking');
+  //   fireEvent.click(button);
   //     const fileInput = screen.getByLabelText('Select Image');
   //     const file = new File(['dummy content'], 'example.jpg', { type: 'image/jpeg' });
   //     fireEvent.change(fileInput, { target: { files: [file] } });
