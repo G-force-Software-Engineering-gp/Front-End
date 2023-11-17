@@ -1,4 +1,5 @@
 import Header from '@/components/Header';
+import HeaderResponsive from '@/components/HeaderResponsive';
 import AuthContext from '@/contexts/AuthContext';
 import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -26,6 +27,7 @@ const Board = () => {
   return (
     <div className="h-[calc(100vh-8.5rem)">
       <Header />
+      <HeaderResponsive />
       <BoardHeader />
       <div
         className="flex overflow-x-auto"
@@ -35,7 +37,6 @@ const Board = () => {
           backgroundSize: 'cover',
         }}
       >
-
         <KanbanBoard />
       </div>
     </div>

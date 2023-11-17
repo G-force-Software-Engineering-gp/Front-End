@@ -41,9 +41,7 @@ const Register: React.FC = () => {
 
   const onSubmit: SubmitHandler<RegistrationFormValues> = async (data) => {
     try {
-
       await registerUser(data);
-
     } catch (error) {
       console.error('Error:', error);
     }
@@ -71,7 +69,6 @@ const Register: React.FC = () => {
                 {...register('firstName')}
                 placeholder="First Name"
                 className="peer bg-transparent pl-9 ring-2"
-                required
               />
               <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
                 <UserCircle className="h-4 w-4" />
@@ -84,7 +81,6 @@ const Register: React.FC = () => {
                 {...register('lastName')}
                 placeholder="Last Name"
                 className="peer bg-transparent pl-9 ring-2"
-                required
               />
               <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
                 <UserCircle className="h-4 w-4" />
@@ -97,7 +93,6 @@ const Register: React.FC = () => {
                 {...register('email')}
                 placeholder="Email"
                 className="peer bg-transparent pl-9 ring-2"
-                required
               />
               <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
                 <Mail className="h-4 w-4" />
@@ -110,7 +105,6 @@ const Register: React.FC = () => {
                 {...register('username')}
                 placeholder="Username"
                 className="peer bg-transparent pl-9 ring-2"
-                required
               />
               <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
                 <UserSquare className="h-4 w-4" />
@@ -123,7 +117,6 @@ const Register: React.FC = () => {
                 {...register('password')}
                 placeholder="Password"
                 className="peer bg-transparent pl-9 ring-2"
-                required
               />
               <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
                 <Lock className="h-4 w-4" />
