@@ -34,6 +34,7 @@ import { CheckListSection } from './components/checkListModal';
 import { CheckListPopover } from './components/checkListPopover';
 import { DatePickerModal } from './components/datePickerModal';
 import { StoryPointComponent } from './components/storyPoint';
+import { useCheckList } from './hooks/useCheckList';
 import { Card } from './types';
 
 interface Props {
@@ -50,7 +51,8 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
 
   const [selectedValue, setSelectedValue] = React.useState(data?.reminder ? data?.reminder : 'None');
   // set for story point
-  const [storyPoint, setStoryPoint] = useState('');
+  const [storyPoint, setStoryPoint] = useState(data.storypoint);
+  const { isLoading, data: checkListData } = useCheckList(data.id);
 
   let authTokens = useContext(AuthContext)?.authTokens;
   const queryClient = useQueryClient();
@@ -64,6 +66,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
         startdate: mainDate?.from,
         duedate: mainDate?.to,
         reminder: selectedValue,
+        storypoint: storyPoint,
       };
 
       return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/${data.id}/`, {
@@ -83,7 +86,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   });
   useEffect(() => {
     dateMutation.mutate();
-  }, [mainDate, selectedValue]);
+  }, [mainDate, selectedValue, storyPoint]);
 
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
@@ -106,7 +109,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                 <Textarea placeholder="Add a more detailed description..." className="bg-secondary" />
               </div>
 
-              <CheckListSection />
+              {checkListData ? <CheckListSection checkLists={checkListData} /> : null}
               <div className="mt-6 flex items-center justify-between">
                 <div className="flex items-center">
                   <MenuSquare className="mb-1 mr-4 h-7 w-7" />
@@ -167,7 +170,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   <CheckSquare className="mb-1 mr-1 h-4 w-4" />
                   Checklist
                 </Button> */}
-                <CheckListPopover />
+                <CheckListPopover data={data} />
                 <DatePickerModal
                   mainDate={mainDate}
                   setMainDate={setMainDate}
