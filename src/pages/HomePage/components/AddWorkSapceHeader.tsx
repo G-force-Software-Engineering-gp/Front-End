@@ -97,7 +97,9 @@ const AddWorkSapceHeader = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="!bg-blue-500">Create</Button>
+        <Button className="!bg-blue-500" data-testId="clicking">
+          Create
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -126,11 +128,14 @@ const AddWorkSapceHeader = () => {
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="description" className="text-right">
+            <Label id="typeLabel" className="text-right">
               Type
             </Label>
             <Select onValueChange={(e) => handleSelectChange(e)}>
-              <SelectTrigger className={`col-span-3 ${selError && selectedValue === null ? 'border-red-500' : ''}`}>
+              <SelectTrigger
+                aria-labelledby="typeLabel"
+                className={`col-span-3 ${selError && selectedValue === null ? 'border-red-500' : ''}`}
+              >
                 <SelectValue placeholder="Select The Type" />
               </SelectTrigger>
               <SelectContent>

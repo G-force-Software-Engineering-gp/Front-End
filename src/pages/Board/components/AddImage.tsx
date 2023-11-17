@@ -69,7 +69,7 @@ const AddImage = () => {
     <>
       <Dialog>
         <DialogTrigger asChild>
-          <Button variant="secondary" className="m-1 ml-2 h-8 w-8 p-0">
+          <Button variant="secondary" className="m-1 ml-2 h-8 w-8 p-0" data-testId="clicking">
             <ImagePlus className="h-4 w-4 " />
           </Button>
         </DialogTrigger>
@@ -86,6 +86,7 @@ const AddImage = () => {
               className=" cursor-pointer placeholder:text-white"
               accept=".jpg, .jpeg, .png"
               onChange={handleFileChange}
+              placeholder="Image"
             />
           </div>
           <DialogFooter className="sm:justify-start">
