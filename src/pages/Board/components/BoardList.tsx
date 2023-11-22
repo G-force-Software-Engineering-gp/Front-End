@@ -17,9 +17,23 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import AuthContext from '@/contexts/AuthContext';
+import { Active, DataRef, Over, useDndContext, type UniqueIdentifier } from '@dnd-kit/core';
+import { SortableContext, useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Calendar, Check, ListIcon, MoreHorizontal, Pencil, Tags, Trash, User as UserIcon } from 'lucide-react';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import { cva } from 'class-variance-authority';
+import {
+  Calendar,
+  Check,
+  GripVertical,
+  ListIcon,
+  MoreHorizontal,
+  Pencil,
+  Tags,
+  Trash,
+  User as UserIcon,
+} from 'lucide-react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { CardDetail } from '../cardDetail';
 import { useCard } from '../hooks/useCard';
@@ -32,8 +46,17 @@ interface Props {
   listId: number;
   columns: List[];
   boardId: number;
+  isOverlay?: boolean;
 }
-export const BoardList = ({ listId, columns, boardId }: Props) => {
+
+export type ColumnType = 'Column';
+
+export interface ColumnDragData {
+  type: ColumnType;
+  list: List | undefined;
+}
+
+export const BoardList = ({ listId, columns, boardId, isOverlay }: Props) => {
   const [open, setOpen] = React.useState(false);
   const queryClient = useQueryClient();
   let authTokens = useContext(AuthContext)?.authTokens;
@@ -55,14 +78,62 @@ export const BoardList = ({ listId, columns, boardId }: Props) => {
   });
 
   const { data } = useList(listId);
+  const tasksIds = useMemo(() => {
+    return data?.card?.map((card) => card.id) || [1, 2, 3, 4, 5, 6, 7];
+  }, [data]);
+
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
+    id: listId,
+    data: {
+      type: 'Column',
+      list: data !== undefined ? data : columns.at(listId),
+    } satisfies ColumnDragData,
+    attributes: {
+      roleDescription: `Column`,
+    },
+  });
+
+  const style = {
+    transition,
+    transform: CSS.Translate.toString(transform),
+  };
+
+  const variants = cva(
+    'board-draggable relative flex max-h-full w-72 shrink-0 snap-center flex-col', //h-[500px] max-h-[500px] w-[350px] max-w-full
+    {
+      variants: {
+        dragging: {
+          default: 'border-2 border-transparent',
+          over: 'opacity-30 ring-2',
+          overlay: 'ring-2 ring-primary',
+        },
+      },
+    }
+  );
+
   return (
-    <div className="board-draggable relative flex max-h-full w-72 shrink-0 flex-col">
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={variants({
+        dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
+      })}
+    >
       <div className="board-draggable-handler flex items-center justify-between px-0.5 pb-3">
         <div className="flex items-center space-x-2">
           <div className="bg-info/10 text-info flex h-8 w-8 items-center justify-center rounded-lg">
             <ListIcon className="text-base" />
           </div>
           <h3 className=" text-base">{data?.title}</h3>
+          <Button
+            variant={'ghost'}
+            {...attributes}
+            {...listeners}
+            className=" relative -ml-2 h-auto cursor-grab p-1 text-primary/50"
+          >
+            <span className="sr-only">{`Move `}</span>
+            <GripVertical />
+          </Button>
         </div>
         <div className="inline-flex">
           <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -85,7 +156,9 @@ export const BoardList = ({ listId, columns, boardId }: Props) => {
         </div>
       </div>
       <div className="is-scrollbar-hidden relative space-y-2.5 overflow-y-auto p-0.5">
-        {data?.card?.map((card) => <ListCard columns={columns} cardId={card.id} listId={listId} />)}
+        <SortableContext items={tasksIds}>
+          {data?.card?.map((card) => <ListCard key={card.id} columns={columns} cardId={card.id} listId={listId} />)}
+        </SortableContext>
       </div>
       <div className="flex justify-center  py-2">{data !== undefined && <CreateTaskModal listId={data.id} />}</div>
     </div>
@@ -96,10 +169,18 @@ type CardProps = {
   cardId: number;
   listId: number;
   columns: List[];
+  isOverlay?: boolean;
 };
 
-export const ListCard = ({ cardId, columns, listId }: CardProps) => {
+export interface TaskDragData {
+  type: TaskType;
+  card: CardType | undefined;
+}
+export type TaskType = 'Task';
+
+export const ListCard = ({ cardId, columns, listId, isOverlay }: CardProps) => {
   const { data, isLoading, refetch: cardRefetch } = useCard(cardId);
+
   const [open, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -123,21 +204,64 @@ export const ListCard = ({ cardId, columns, listId }: CardProps) => {
       queryClient.invalidateQueries({ queryKey: ['list', listId] });
     },
   });
-  if (data !== undefined || isLoading) {
-    <Card className="w-full bg-slate-600">
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <p className="  bg-inherit/20 text-lg">{data?.title}</p>
-        </CardTitle>
-      </CardHeader>
-    </Card>;
-  }
+
+  const { setNodeRef, attributes, listeners, transform, transition, isDragging } = useSortable({
+    id: cardId,
+    data: {
+      type: 'Task',
+      card: data ? data : columns?.at(listId)?.card?.at(cardId),
+    } satisfies TaskDragData,
+    attributes: {
+      roleDescription: 'Task',
+    },
+  });
+
+  const style = {
+    transition,
+    transform: CSS.Translate.toString(transform),
+  };
+
+  const variants = cva('w-full', {
+    variants: {
+      dragging: {
+        over: 'opacity-30 ring-2',
+        overlay: 'ring-2 ring-primary',
+      },
+    },
+  });
+  // if (data !== undefined || isLoading) {
+  //   <Card
+
+  //   >
+  //     <CardHeader>
+  //       <CardTitle className="flex items-center justify-between">
+  //         <p className="  bg-inherit/20 text-lg">{data?.title}</p>
+  //       </CardTitle>
+  //     </CardHeader>
+  //   </Card>;
+  // }
+
   return (
     <>
-      <Card className="w-full">
+      <Card
+        ref={setNodeRef}
+        style={style}
+        className={variants({
+          dragging: isOverlay ? 'overlay' : isDragging ? 'over' : undefined,
+        })}
+      >
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <p className=" text-lg">{data?.title}</p>
+            <Button
+              variant={'ghost'}
+              {...attributes}
+              {...listeners}
+              className=" relative -ml-2 h-auto cursor-grab p-1 text-primary/50"
+            >
+              <span className="sr-only">{`Move `}</span>
+              <GripVertical />
+            </Button>
 
             <DropdownMenu open={open} onOpenChange={setOpen}>
               <DropdownMenuTrigger asChild>
@@ -312,7 +436,7 @@ type openState = {
   cardData: CardType | undefined;
   cardRefetch: any;
 };
-type AssignmentSubmenuProps = CardProps & openState;
+type AssignmentSubmenuProps = Omit<CardProps, 'isOverlay'> & openState;
 export const AssignmentSubmenu = ({ cardId, setOpen, cardData, cardRefetch }: AssignmentSubmenuProps) => {
   const { boardId } = useParams();
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));

@@ -5,9 +5,18 @@ import { BrowserRouter } from 'react-router-dom';
 import Routers from './pages/Router';
 
 const queryClient = new QueryClient();
+//   {
+//   defaultOptions: {
+//     queries: {
+//       onError: () => {},
+//     },
+//     mutations: {
+//       onError: () => {},
+//     },
+//   },
+// }
 
 function App() {
-
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <QueryClientProvider client={queryClient}>

@@ -1,7 +1,8 @@
 import internal from 'stream';
+import type { UniqueIdentifier } from '@dnd-kit/core';
 
 export type Board = {
-  id: number;
+  id: Extract<UniqueIdentifier, number>;
   title: string;
   workspace: number;
   list: List[];
@@ -9,14 +10,14 @@ export type Board = {
 };
 
 export type List = {
-  id: number;
+  id: Extract<UniqueIdentifier, number>;
   title: string;
   board?: number;
   card?: Card[];
 };
 
 export type Card = {
-  id: number;
+  id: Extract<UniqueIdentifier, number>;
   title: string;
   list?: number;
   members?: Assignee[];
