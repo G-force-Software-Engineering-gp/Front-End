@@ -68,3 +68,13 @@ export type CheckListOption = {
   content: string;
   checked: boolean;
 };
+
+export type LabelItem = {
+  id: number;
+  title: string;
+  color: string;
+};
+export type LabelItems = {
+  id : number
+  labels?: LabelItem[]
+};
