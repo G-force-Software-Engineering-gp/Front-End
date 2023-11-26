@@ -33,6 +33,7 @@ import { DateRange } from 'react-day-picker';
 import { CheckListSection } from './components/checkListModal';
 import { CheckListPopover } from './components/checkListPopover';
 import { DatePickerModal } from './components/datePickerModal';
+import { LabelPopover } from './components/labelPopover';
 import { StoryPointComponent } from './components/storyPoint';
 import { useCheckList } from './hooks/useCheckList';
 import { Card } from './types';
@@ -154,14 +155,15 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   <User className="mb-1 mr-1 h-4 w-4" />
                   Members
                 </Button>
-                <Button
+                {/* <Button
                   size="sm"
                   variant="secondary"
                   className="col-span-3 mx-4 mb-2 flex cursor-pointer justify-start rounded-sm px-4  text-sm md:col-span-6"
                 >
                   <Tag className="mb-1 mr-1 h-4 w-4" />
                   Labels
-                </Button>
+                </Button> */}
+                <LabelPopover />
                 {/* <Button
                   size="sm"
                   variant="secondary"
