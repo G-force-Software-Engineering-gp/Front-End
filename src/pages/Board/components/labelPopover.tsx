@@ -8,6 +8,34 @@ import { useForm } from 'react-hook-form';
 import { LabelItems as LabelItemsType, LabelItem as LabelItemType } from '../types';
 import { CreateLable } from './createLable';
 
+const colorBoxes = [
+  '#baf3db',
+  '#f8e6a0',
+  '#fedec8',
+  '#ffd5d2',
+  '#dfd8fd',
+  '#4bce97',
+  '#f5cd47',
+  '#fea362',
+  '#f87168',
+  '#9f8fef',
+  '#1f845a',
+  '#946f00',
+  '#c25100',
+  '#ae2e24',
+  '#6e5dc6',
+  '#cce0ff',
+  '#d3f1a7',
+  '#fdd0ec',
+  '#dcdfe4',
+  '#579dff',
+  '#94c748',
+  '#e774bb',
+  '#8590a2',
+  '#0c66e4',
+  '#5b7f24',
+];
+
 const data = {
   id: 6,
   labels: [
@@ -207,33 +235,7 @@ export function EditLable({ item }: EditLableProps) {
     console.log(newLabel);
     //   createCheckList.mutate(dataNewCheckList);
   };
-  const colorBoxes = [
-    '#baf3db',
-    '#f8e6a0',
-    '#fedec8',
-    '#ffd5d2',
-    '#dfd8fd',
-    '#4bce97',
-    '#f5cd47',
-    '#fea362',
-    '#f87168',
-    '#9f8fef',
-    '#1f845a',
-    '#946f00',
-    '#c25100',
-    '#ae2e24',
-    '#6e5dc6',
-    '#cce0ff',
-    '#d3f1a7',
-    '#fdd0ec',
-    '#dcdfe4',
-    '#579dff',
-    '#94c748',
-    '#e774bb',
-    '#8590a2',
-    '#0c66e4',
-    '#5b7f24',
-  ];
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -247,7 +249,7 @@ export function EditLable({ item }: EditLableProps) {
             <h4 className="text-center text-xs font-bold leading-none">Edit label</h4>
           </div>
           <div className="bg-secondary p-8">
-            <div className="rounded-sm p-2" style={{ backgroundColor: colorValue }}>
+            <div className="h-9 rounded-sm p-2" style={{ backgroundColor: colorValue }}>
               {inputValue}
             </div>
           </div>
@@ -281,8 +283,8 @@ export function EditLable({ item }: EditLableProps) {
                 </Button>
               </div>
 
-              <Button type="submit" className="mt-3 px-0">
-                Add
+              <Button type="submit" className="mt-3 px-0" disabled={!inputValue.trim()}>
+                Save
               </Button>
               <Button variant="destructive" type="submit" className="col-start-5 col-end-6 mt-3 px-0">
                 Delete
@@ -294,83 +296,3 @@ export function EditLable({ item }: EditLableProps) {
     </Popover>
   );
 }
-
-// return (
-//   <Popover>
-//     <PopoverTrigger asChild>
-//       <Button variant="secondary" className="h-7">
-//         <Pencil className="h-3 w-3" />
-//       </Button>
-//     </PopoverTrigger>
-//     <PopoverContent className="w-80">
-//       <form onSubmit={handleSubmit(onSubmit)} className="grid gap-3">
-//         <div className="space-y-2">
-//           <h4 className="text-center text-xs font-bold leading-none">Edit label</h4>
-//         </div>
-//         <div className="bg-secondary p-8">
-//           <div className="rounded-sm p-2" style={{ backgroundColor: item.color }}>
-//             {inputValue}
-//           </div>
-//         </div>
-//         <div className="grid gap-2 space-y-2">
-//           <div>
-//             <Label htmlFor="width" className="text-xs font-bold leading-none">
-//               Title
-//             </Label>
-//             <Input
-//               defaultValue={item.title}
-//               {...register('Label', { required: true })}
-//               onChange={(e) => setInputValue(e.target.value)}
-//               className="col-span-2 h-8"
-//             />
-//           </div>
-//           <div className="grid grid-cols-5 gap-2">
-//             <Label htmlFor="width" className="col-span-5 text-xs font-bold leading-none">
-//               Select color
-//             </Label>
-
-//             <div className="col-span-2" style={{ backgroundColor: '#FF2222' }}>
-//               <Button variant="outline">1</Button>
-//             </div>
-//             <div className="col-span-" style={{ backgroundColor: '#FFFF22' }}>
-//               <Button variant="outline">2</Button>
-//             </div>
-//             <div className="col-span-1 " style={{ backgroundColor: '#FF22FF' }}>
-//               <Button variant="outline">3</Button>
-//             </div>
-//             <div className="col-span-1 " style={{ backgroundColor: '#FF22FF' }}>
-//               <Button variant="outline">5</Button>
-//             </div>
-//             <div className="col-span-1 " style={{ backgroundColor: '#FF22FF' }}>
-//               <Button variant="outline">7</Button>
-//             </div>
-//             <div className="col-span-1 " style={{ backgroundColor: '#FF22FF' }}>
-//               <Button variant="outline">11</Button>
-//             </div>
-//             <div className="col-span-1" style={{ backgroundColor: '#FF22FF' }}>
-//               <Button variant="outline">13</Button>
-//             </div>
-//             <div className="col-span-1 col-start-1" style={{ backgroundColor: '#FF22FF' }}>
-//               <Button variant="outline">17</Button>
-//             </div>
-//             <div className="col-span-1 col-end-8" style={{ backgroundColor: '#FF22FF' }}>
-//               <Button variant="outline">19</Button>
-//             </div>
-//             <div className="col-span-3 col-end-6 items-center rounded-md border border-destructive text-destructive">
-//               <Button variant="outline" className="w-full">
-//                 Remove
-//               </Button>
-//             </div>
-//           </div>
-//           <Button type="submit" className="mt-3 px-0">
-//             Add
-//           </Button>
-//           <Button variant="destructive" type="submit" className="mt-3 px-0">
-//             Delete
-//           </Button>
-//         </div>
-//       </form>
-//     </PopoverContent>
-//   </Popover>
-// );
-// }
