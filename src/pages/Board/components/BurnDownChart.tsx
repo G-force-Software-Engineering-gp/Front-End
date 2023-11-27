@@ -1,80 +1,25 @@
-import { table } from 'console';
+import { Input } from '@/components/ui/input';
 import {
+  Table as T1,
+  TableBody,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
+import {
+  Column,
   ColumnDef,
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   RowData,
+  Table,
   useReactTable,
 } from '@tanstack/react-table';
-import React, { useState } from 'react';
-
-type Person = {
-  Estimate1: number;
-  Done1: number;
-  Estimate2: number;
-  Done2: number;
-};
-
-const defaultData: Person[] = [
-  {
-    Estimate1: 10,
-    Done1: 12,
-    Estimate2: 5,
-    Done2: 6,
-  },
-  {
-    Estimate1: 8,
-    Done1: 6,
-    Estimate2: 5,
-    Done2: 6,
-  },
-  {
-    Estimate1: 4,
-    Done1: 7,
-    Estimate2: 5,
-    Done2: 6,
-  },
-];
-
-const columnHelper = createColumnHelper<Person>();
-
-const columns = [
-  columnHelper.group({
-    id: 'Matin',
-    header: () => <span>Matin</span>,
-    columns: [
-      columnHelper.accessor('Estimate1', {
-        header: 'Estimate',
-        cell: (info) => info.getValue(),
-        // footer: (props) => props.column.id,
-      }),
-      columnHelper.accessor('Done1', {
-        header: 'Done',
-        cell: (info) => info.getValue(),
-        // footer: (props) => props.column.id,
-      }),
-    ],
-  }),
-  columnHelper.group({
-    id: 'Mohammad',
-    header: () => <span>Mohammad</span>,
-    columns: [
-      columnHelper.accessor('Estimate2', {
-        header: 'Estimate',
-        cell: (info) => info.getValue(),
-        // footer: (props) => props.column.id,
-      }),
-      columnHelper.accessor('Done2', {
-        header: 'Done',
-        cell: (info) => info.getValue(),
-        // footer: (props) => props.column.id,
-      }),
-    ],
-  }),
-];
+import React from 'react';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
@@ -82,56 +27,132 @@ declare module '@tanstack/react-table' {
   }
 }
 
-const DefaultColumn: Partial<ColumnDef<Person>> = {
-  cell: ({ getValue, row: { index }, column: { id }, table }) => {
+const types = ['Estimate1', 'Done1', 'Estimate2', 'Done2', 'Estimate3', 'Done3'];
+type Person = {
+  // Should be converted to a map
+  Estimate1: number;
+  Done1: number;
+  Estimate2: number;
+  Done2: number;
+  Estimate3: number;
+  Done3: number;
+};
+// type Person = {
+//   [K in typeof types[number]]: number;
+// };
+
+const defaultData: Person[] = [
+  // should be a map
+  {
+    Estimate1: 10,
+    Done1: 12,
+    Estimate2: 5,
+    Done2: 6,
+    Estimate3: 5,
+    Done3: 6,
+  },
+  {
+    Estimate1: 8,
+    Done1: 6,
+    Estimate2: 5,
+    Done2: 6,
+    Estimate3: 5,
+    Done3: 6,
+  },
+  {
+    Estimate1: 4,
+    Done1: 7,
+    Estimate2: 5,
+    Done2: 6,
+    Estimate3: 5,
+    Done3: 6,
+  },
+];
+
+const defaultColumn: Partial<ColumnDef<Person>> = {
+  cell: function Cell({ getValue, row: { index }, column: { id }, table }) {
     const initialValue = getValue();
     // We need to keep and update the state of the cell normally
     const [value, setValue] = React.useState(initialValue);
-
-    // When the input is blurred, we'll call our table meta's updateData function
     const onBlur = () => {
       table.options.meta?.updateData(index, id, value);
     };
-
-    // If the initialValue is changed external, sync it up with our state
     React.useEffect(() => {
       setValue(initialValue);
     }, [initialValue]);
 
-    return <input value={value as string} onChange={(e) => setValue(e.target.value)} onBlur={onBlur} />;
+    return <Input value={value as string} onChange={(e) => setValue(e.target.value)} onBlur={onBlur} />;
   },
 };
 
-function useSkipper() {
-  const shouldSkipRef = React.useRef(true);
-  const shouldSkip = shouldSkipRef.current;
-  const skip = React.useCallback(() => {
-    shouldSkipRef.current = false;
-  }, []);
+function BurnDownChart() {
+  // Should convert columns to a map
+  const columns = React.useMemo<ColumnDef<Person>[]>(
+    () => [
+      {
+        header: 'Matin',
+        // footer: (props) => props.column.id,
+        columns: [
+          {
+            accessorKey: 'Estimate1',
+            header: 'Estimate',
+            id: 'Estimate1',
+            footer: (props) => props.column.id,
+          },
+          {
+            accessorFn: (row) => row.Done1,
+            id: 'Done1',
+            footer: (props) => props.column.id,
+          },
+        ],
+      },
+      {
+        header: 'Mohmamad',
+        // footer: (props) => props.column.id,
+        columns: [
+          {
+            accessorKey: 'Estimate2',
+            id: 'Estimate2',
+            footer: (props) => props.column.id,
+          },
+          {
+            accessorFn: (row) => row.Done2,
+            id: 'Done2',
+            footer: (props) => props.column.id,
+          },
+        ],
+      },
+      {
+        header: 'Aryan',
+        // footer: (props) => props.column.id,
+        columns: [
+          {
+            accessorFn: (row) => row.Estimate3,
+            id: 'Estimate3',
+            footer: (props) => props.column.id,
+          },
+          {
+            accessorFn: (row) => row.Done3,
+            id: 'Done3',
+            footer: (props) => props.column.id,
+          },
+        ],
+      },
+    ],
+    []
+  );
 
-  React.useEffect(() => {
-    shouldSkipRef.current = true;
-  });
-
-  return [shouldSkip, skip] as const;
-}
-
-const BurnDownChart = () => {
-  const [data, setData] = React.useState(() => [...defaultData]);
-  const [autoResetPageIndex, skipAutoResetPageIndex] = useSkipper();
+  const [data, setData] = React.useState([...defaultData]);
   const table = useReactTable({
     data,
     columns,
-    defaultColumn: DefaultColumn,
+    defaultColumn,
     getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    autoResetPageIndex,
     // Provide our updateData function to our table meta
     meta: {
       updateData: (rowIndex, columnId, value) => {
-        // Skip page index reset until after next rerender
-        skipAutoResetPageIndex();
+        // Here we should do the api
         setData((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {
@@ -145,75 +166,68 @@ const BurnDownChart = () => {
         );
       },
     },
-    debugTable: true,
   });
+  console.log(table.getFooterGroups()[0].headers);
+
   return (
-    <div className="p-4">
-      <table
-        style={{
-          border: '1px solid lightgray',
-        }}
-      >
-        <thead>
+    <div className="p-2">
+      <div className="h-2" />
+      <T1>
+        <TableHeader>
+          {/* Header */}
           {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  style={{
-                    width: header.getSize(),
-                    borderBottom: '1px solid lightgray',
-                    borderRight: '1px solid lightgray',
-                    padding: '2px 4px',
-                  }}
-                  key={header.id}
-                  colSpan={header.colSpan}
-                >
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
-                </th>
-              ))}
-            </tr>
+            <TableRow key={headerGroup.id}>
+              {headerGroup.headers.map((header) => {
+                return (
+                  <TableHead key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
+                    )}
+                  </TableHead>
+                );
+              })}
+            </TableRow>
           ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  style={{
-                    borderBottom: '1px solid lightgray',
-                    borderRight: '1px solid lightgray',
-                    padding: '2px 4px',
-                  }}
-                  key={cell.id}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
+        </TableHeader>
+        <TableBody>
+          {/* Body */}
+          {table.getRowModel().rows.map((row) => {
+            return (
+              <TableRow key={row.id}>
+                {row.getVisibleCells().map((cell) => {
+                  return (
+                    <TableCell className=" bg-inherit" key={cell.id}>
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </TableCell>
+                  );
+                })}
+              </TableRow>
+            );
+          })}
+        </TableBody>
+        {/* Footer */}
+        <TableFooter>
+          <TableRow>
+            {table.getFooterGroups()[0].headers.map((header) => (
+              <TableCell key={header.id} colSpan={header.colSpan}>
+                {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
+              </TableCell>
+            ))}
+          </TableRow>
           {/* {table.getFooterGroups().map((footerGroup) => (
-            <tr key={footerGroup.id}>
+            <TableRow key={footerGroup.id}>
               {footerGroup.headers.map((header) => (
-                <th
-                  style={{
-                    borderBottom: '1px solid lightgray',
-                    borderRight: '1px solid lightgray',
-                    padding: '2px 4px',
-                  }}
-                  key={header.id}
-                  colSpan={header.colSpan}
-                >
+                <TableCell key={header.id} colSpan={header.colSpan}>
                   {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
-                </th>
+                </TableCell>
               ))}
-            </tr>
+            </TableRow>
           ))} */}
-        </tfoot>
-      </table>
+        </TableFooter>
+      </T1>
+      <div className="h-2" />
     </div>
   );
-};
+}
 
 export default BurnDownChart;
