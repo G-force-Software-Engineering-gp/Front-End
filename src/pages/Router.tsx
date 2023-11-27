@@ -9,6 +9,8 @@ import Settings from './settingsPage';
 import Advanced from './settingsPage/advanced';
 import Cards from './settingsPage/cards';
 import Profile from './settingsPage/profile';
+import BurnDownChart from './Board/components/BurnDownChart';
+import BasicTable from './Board/components/BasicTable';
 
 const Router = () => {
   return (
@@ -20,6 +22,8 @@ const Router = () => {
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<Home />} />
             <Route path="/board" element={<Board />} />
+            <Route path="/burndown" element={<BurnDownChart />} />
+            <Route path="/burndown1" element={<BasicTable />} />
             <Route path="/board/:boardId" element={<Board />} />
             <Route path="/settings" element={<Settings />}>
               <Route index element={<Profile />} />
