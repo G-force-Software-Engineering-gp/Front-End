@@ -2,7 +2,7 @@ import Header from '@/components/Header';
 import HeaderResponsive from '@/components/HeaderResponsive';
 import AuthContext from '@/contexts/AuthContext';
 import { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Outlet, useParams } from 'react-router-dom';
 import BoardHeader from './boardHeader';
 import { KanbanBoard } from './components/KanbanBoard';
 
@@ -37,7 +37,7 @@ const Board = () => {
           backgroundSize: 'cover',
         }}
       >
-        <KanbanBoard />
+        <Outlet />
       </div>
     </div>
   );

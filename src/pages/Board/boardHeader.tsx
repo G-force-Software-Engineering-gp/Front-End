@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import {
+  CalendarDays,
   ChevronDown,
   Eye,
   ListFilter,
@@ -26,13 +27,14 @@ import {
 } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import AddImage from './components/AddImage';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Menu } from 'lucide-react';
 import { useBoard } from './hooks/useBoard';
 import _ from "lodash";
 import { BoardSidebar } from './boardSidebar';
+import { useNavigate } from 'react-router-dom';
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -73,9 +75,13 @@ interface Member {
 
 
 const BoardHeader = () => {
+  const navigate = useNavigate();
   const { boardId } = useParams();
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
   const { data: boardData } = useBoard(parseInt(boardId ? boardId : ''));
+
+  const { pathname } = useLocation();
+  const isCalendarRoute = pathname.includes('/calendar');
 
   return (
     <div className="backdrop-blur">
@@ -147,6 +153,16 @@ const BoardHeader = () => {
             </div>
           </div>
           <div className="flex items-center justify-end space-x-2">
+            {isCalendarRoute &&
+              <Button onClick={() => navigate(``)} variant="secondary" className='h-8 w-8 p-0'>
+                <Trello className='h-4 w-4' />
+              </Button>
+            }
+            {!isCalendarRoute &&
+              <Button onClick={() => navigate(`calendar`)} variant="secondary" className='h-8 w-8 p-0'>
+                <CalendarDays className='h-4 w-4' />
+              </Button>
+            }
             <Button data-testid='list filter' variant="secondary" className="h-8 w-8 p-0">
               <ListFilter className="h-4 w-4" />
             </Button>
