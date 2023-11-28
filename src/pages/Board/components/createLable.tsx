@@ -2,9 +2,12 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/popOverMod
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import AuthContext from '@/contexts/AuthContext';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Pencil } from 'lucide-react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useParams } from 'react-router-dom';
 
 const colorBoxes = [
   '#baf3db',
@@ -37,36 +40,34 @@ const randomIndex = Math.floor(Math.random() * colorBoxes.length);
 export function CreateLable() {
   const [inputValue, setInputValue] = useState('');
   const [colorValue, setColorValue] = useState(colorBoxes[randomIndex]);
-  // interface CheckListPopoverProps {
-  //     data: Card;
-  //   }
 
-  //   export function CheckListPopover({ data }: CheckListPopoverProps) {
-  //     let authTokens = useContext(AuthContext)?.authTokens;
-  //     const queryClient = useQueryClient();
-  //     const createCheckList = useMutation({
-  //       mutationFn: (formData: any) => {
-  //         formData.card = data?.id;
-  //         return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crchecklist/`, {
-  //           method: 'POST',
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //             Authorization: `JWT ` + authTokens.access,
-  //           },
-  //           body: JSON.stringify(formData),
-  //         });
-  //       },
-  //       onError: (error, variables, context) => {},
-  //       onSuccess: (data, variables, context) => {},
-  //       onSettled: () => {
-  //         queryClient.invalidateQueries({ queryKey: ['checklist', data?.id] });
-  //       },
-  //     });
+  const { boardId } = useParams();
+  let authTokens = useContext(AuthContext)?.authTokens;
+  const queryClient = useQueryClient();
+  const createLabel = useMutation({
+    mutationFn: (formData: any) => {
+      formData.board = boardId;
+      formData.color = colorValue;
+      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crlabel/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ` + authTokens.access,
+        },
+        body: JSON.stringify(formData),
+      });
+    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['label', boardId] });
+    },
+  });
   const { register, handleSubmit, reset } = useForm();
 
   const onSubmit = (newLabel: any) => {
     console.log(newLabel);
-    //   createCheckList.mutate(dataNewCheckList);
+    createLabel.mutate(newLabel);
   };
   return (
     <Popover>
@@ -91,7 +92,7 @@ export function CreateLable() {
                 Title
               </Label>
               <Input
-                {...register('Label', { required: true })}
+                {...register('title', { required: true })}
                 onChange={(e) => setInputValue(e.target.value)}
                 className="col-span-2 h-8"
               />
