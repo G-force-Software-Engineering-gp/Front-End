@@ -36,6 +36,7 @@ import { DatePickerModal } from './components/datePickerModal';
 import { LabelPopover } from './components/labelPopover';
 import { StoryPointComponent } from './components/storyPoint';
 import { useCheckList } from './hooks/useCheckList';
+import { useLabel } from './hooks/useLabel';
 import { Card } from './types';
 
 interface Props {
@@ -53,7 +54,8 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   const [selectedValue, setSelectedValue] = React.useState(data?.reminder ? data?.reminder : 'None');
   // set for story point
   const [storyPoint, setStoryPoint] = useState(data.storypoint);
-  const { isLoading, data: checkListData } = useCheckList(data.id);
+  const { isLoading: checkListLoading, data: checkListData } = useCheckList(data.id);
+  const { isLoading: labelLoading, data: labelData } = useLabel();
 
   let authTokens = useContext(AuthContext)?.authTokens;
   const queryClient = useQueryClient();
@@ -163,7 +165,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   <Tag className="mb-1 mr-1 h-4 w-4" />
                   Labels
                 </Button> */}
-                <LabelPopover />
+                <LabelPopover labelData={labelData} />
                 {/* <Button
                   size="sm"
                   variant="secondary"

@@ -59,11 +59,16 @@ const data = {
       title: 'devops',
       color: 'orange',
     },
+    {
+      id: 5,
+      title: 'devplus',
+      color: 'pink',
+    },
   ],
 };
 interface LabelItemProps {
-  item: LabelItemType;
-  LabelsModalId: number;
+  item?: LabelItemType;
+  LabelsModalId?: number;
   labels: any;
   labelOpen: boolean;
   setLabelOpen: any;
@@ -74,9 +79,9 @@ const LabelItem = ({ item, LabelsModalId, labels, labelOpen, setLabelOpen }: Lab
     <>
       <div
         className={`m-1 inline-block w-full rounded px-2 py-1 text-sm font-semibold`}
-        style={{ backgroundColor: item.color }}
+        style={{ backgroundColor: item?.color }}
       >
-        {item.title}
+        {item?.title}
       </div>
       <div>
         <EditLable item={item} />
@@ -84,10 +89,31 @@ const LabelItem = ({ item, LabelsModalId, labels, labelOpen, setLabelOpen }: Lab
     </>
   );
 };
-export function LabelPopover() {
+interface LabelPopoverProps {
+  labelData?: LabelItemsType;
+}
+export function LabelPopover({ labelData }: LabelPopoverProps) {
   //   const [label, setLabel] = useState(data.labels);
   const [labelOpen, setLabelOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredLabels, setFilteredLabels] = useState(labelData?.labels);
 
+  const handleSearch = (query: string) => {
+    const lowerCaseQuery = query.toLowerCase();
+    const filtered = labelData?.labels?.filter((label: LabelItemType) =>
+      label.title.toLowerCase().includes(lowerCaseQuery)
+    );
+    console.log(filtered);
+    setFilteredLabels(filtered);
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const query = event.target.value;
+    console.log(query);
+    setSearchQuery(query);
+    handleSearch(query);
+  };
+  // card/?board=boardId
   return (
     <Popover open={labelOpen} onOpenChange={setLabelOpen}>
       <PopoverTrigger asChild>
@@ -104,9 +130,14 @@ export function LabelPopover() {
         <div className="grid gap-4">
           <div className="space-y-2">
             <h4 className="text-center text-sm font-bold leading-none text-muted-foreground">Labels</h4>
-            <Input placeholder="Search labels..."></Input>
+            <Input placeholder="Search labels..." value={searchQuery} onChange={handleInputChange} />
             <p className="text-xs text-muted-foreground">labels</p>
-            <LabelItems LabelsModal={data} labelOpen={labelOpen} setLabelOpen={setLabelOpen} />
+            <LabelItems
+              LabelsModal={labelData}
+              filteredLabels={filteredLabels}
+              labelOpen={labelOpen}
+              setLabelOpen={setLabelOpen}
+            />
           </div>
           <CreateLable />
         </div>
@@ -115,15 +146,16 @@ export function LabelPopover() {
   );
 }
 interface LabelItemsProps {
-  LabelsModal: LabelItemsType;
+  LabelsModal?: LabelItemsType;
+  filteredLabels?: LabelItemType[];
   labelOpen: boolean;
   setLabelOpen: any;
 }
-const LabelItems = ({ LabelsModal, labelOpen, setLabelOpen }: LabelItemsProps) => {
-  const [labels, setLabels] = useState(LabelsModal.labels);
+const LabelItems = ({ LabelsModal, filteredLabels, labelOpen, setLabelOpen }: LabelItemsProps) => {
+  const [labels, setLabels] = useState(filteredLabels);
   useEffect(() => {
-    setLabels(LabelsModal.labels);
-  }, [LabelsModal]);
+    setLabels(filteredLabels);
+  }, [filteredLabels]);
   const [toggleButton, setToggleButton] = useState(false);
   // let authTokens = useContext(AuthContext)?.authTokens;
   // const queryClient = useQueryClient();
@@ -168,8 +200,8 @@ const LabelItems = ({ LabelsModal, labelOpen, setLabelOpen }: LabelItemsProps) =
         <div key={item.id} className="flex flex-row items-center space-x-3">
           <LabelItem
             item={item}
-            labels={LabelsModal.labels}
-            LabelsModalId={LabelsModal.id}
+            labels={LabelsModal?.labels}
+            LabelsModalId={LabelsModal?.id}
             labelOpen={labelOpen}
             setLabelOpen={setLabelOpen}
           />
@@ -199,11 +231,11 @@ const LabelItems = ({ LabelsModal, labelOpen, setLabelOpen }: LabelItemsProps) =
   );
 };
 interface EditLableProps {
-  item: LabelItemType;
+  item?: LabelItemType;
 }
 export function EditLable({ item }: EditLableProps) {
-  const [inputValue, setInputValue] = useState(item.title);
-  const [colorValue, setColorValue] = useState(item.color);
+  const [inputValue, setInputValue] = useState(item?.title);
+  const [colorValue, setColorValue] = useState(item?.color);
   // interface CheckListPopoverProps {
   //     data: Card;
   //   }
@@ -259,7 +291,7 @@ export function EditLable({ item }: EditLableProps) {
                 Title
               </Label>
               <Input
-                defaultValue={item.title}
+                defaultValue={item?.title}
                 {...register('Label', { required: true })}
                 onChange={(e) => setInputValue(e.target.value)}
                 className="col-span-2 h-8"
@@ -283,7 +315,7 @@ export function EditLable({ item }: EditLableProps) {
                 </Button>
               </div>
 
-              <Button type="submit" className="mt-3 px-0" disabled={!inputValue.trim()}>
+              <Button type="submit" className="mt-3 px-0" disabled={!inputValue?.trim()}>
                 Save
               </Button>
               <Button variant="destructive" type="submit" className="col-start-5 col-end-6 mt-3 px-0">
