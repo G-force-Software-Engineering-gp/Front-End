@@ -20,6 +20,7 @@ export type Card = {
   id: Extract<UniqueIdentifier, number>;
   title: string;
   list?: number;
+  order?: number;
   members?: Assignee[];
   role?: Role[];
   startdate?: null;

@@ -1,3 +1,4 @@
+import AuthContext from '@/contexts/AuthContext';
 import {
   Active,
   closestCorners,
@@ -22,10 +23,10 @@ import {
 } from '@dnd-kit/core';
 import { arrayMove, SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { QueryClient, useMutation, useQueryClient } from '@tanstack/react-query';
 import { cva } from 'class-variance-authority';
 import _ from 'lodash';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useParams } from 'react-router-dom';
 import { useBoard } from '../hooks/useBoard';
@@ -157,6 +158,62 @@ export const KanbanBoard = () => {
       coordinateGetter: coordinateGetter,
     })
   );
+  const { mutate: moveCardMutation } = useMutation(
+    async (newCardData) => {
+      // Make the API call to update the card's columnId
+      const response = await fetch(`your-api-endpoint-for-moving-cards`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          // Add your authorization header
+        },
+        body: JSON.stringify(newCardData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to move card');
+      }
+
+      return response.json();
+    },
+    {
+      // You can use onSuccess and onError callbacks if needed
+      onSuccess: () => {},
+    }
+  );
+
+  let authTokens = useContext(AuthContext)?.authTokens;
+  const dndTask = useMutation({
+    mutationFn: ({
+      list,
+      order,
+      cardId,
+    }: {
+      list: number | undefined;
+      order: number | undefined;
+      cardId: number | undefined;
+    }) => {
+      // console.log(list, order, cardId);
+      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/dnd/${cardId}/`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ` + authTokens.access,
+        },
+        body: JSON.stringify({ list, order }),
+      })
+        .then((response) => response.json())
+        .then((rs) => console.log(rs));
+    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
+    onSettled: (data, error, variables, context) => {
+      // Invalidate and refetch queries after the mutation is successful
+      queryClient.invalidateQueries(['list' /* your list id */]);
+      queryClient.invalidateQueries(['board' /* your board id */]);
+      // Add more invalidation keys if needed
+    },
+  });
   return (
     <>
       <DndContext
@@ -241,8 +298,8 @@ export const KanbanBoard = () => {
   function onDragStart(event: DragStartEvent) {
     if (!hasDraggableData(event.active)) return;
     const data: any = event.active.data.current;
-    console.log('start');
-    console.log(data);
+    // console.log('start');
+    // console.log(data);
     if (data?.type === 'Column') {
       setActiveList(data.list);
       return;
@@ -257,8 +314,8 @@ export const KanbanBoard = () => {
   function onDragEnd(event: DragEndEvent) {
     setActiveList(null);
     setActiveCard(null);
-    console.log('end');
-    console.log(event);
+    // console.log('end');
+    // console.log(event);
     const { active, over } = event;
     if (!over) return;
 
@@ -286,13 +343,13 @@ export const KanbanBoard = () => {
   function onDragOver(event: DragOverEvent) {
     const { active, over } = event;
 
-    console.log('over');
-    console.log(event);
+    // console.log('over');
+    // console.log(event);
 
     if (!over) return;
     const activeId = active.id;
     const overId = over.id;
-
+    if (data === undefined) return;
     if (activeId === overId) return;
 
     if (!hasDraggableData(active) || !hasDraggableData(over)) return;
@@ -308,39 +365,53 @@ export const KanbanBoard = () => {
     // Im dropping a Task over another Task
     if (isActiveATask && isOverATask) {
       const ListsData = data?.list.map((list) => queryClient.getQueryData(['list', list.id]) as List);
-      console.log(ListsData);
-      console.log(columns);
-
-      const findCardInfo = (ListsData: List[], cardTitle: string) => {
-        let result: any = { listId: null, cardId: null };
-
+      // console.log(ListsData);
+      const findCardInfo = (ListsData: List[], cardid: number) => {
+        let result: { listId: null | number; cardId: null | number; card: Card | null } = {
+          listId: null,
+          cardId: null,
+          card: null,
+        };
         _.forEach(ListsData, (list) => {
-          const card = _.find(list.card, { title: cardTitle });
-
+          const card = _.find(list.card, { id: cardid });
           if (card) {
-            result = { listId: list.id, cardId: card.id };
+            result = { listId: list.id, cardId: card.id, card: queryClient.getQueryData(['card', card.id]) as Card };
             return false; // Break out of the loop once a match is found
           }
         });
-
         return result;
       };
-
+      console.log('activeID,overid', activeId, overId);
       // queryClient.setQueryData(['list', ]);
-      // setTasks((tasks) => {
+
+      const activeIndes = findCardInfo(ListsData, activeId as number);
+      const overIndes = findCardInfo(ListsData, overId as number);
+      console.log('activeID,overId', activeIndes, overIndes);
+
       // const activeIndex = tasks.findIndex((t) => t.id === activeId);
       // const overIndex = tasks.findIndex((t) => t.id === overId);
-      // const activeTask = tasks[activeIndex];
-      // const overTask = tasks[overIndex];
-      // if (
-      //   activeTask &&
-      //   overTask &&
-      //   activeTask.columnId !== overTask.columnId
-      // ) {
-      //   activeTask.columnId = overTask.columnId;
-      //   return arrayMove(tasks, activeIndex, overIndex - 1);
-      // }
-
+      const activeTask = activeIndes.card;
+      const overTask = overIndes.card;
+      // setTasks((tasks) => {
+      if (activeTask && overTask) {
+        activeTask.list = overTask.list;
+        // console.log(activeTask.list !== overTask.list ? overTask.list : activeTask.list);
+        // console.log(overTask.order);
+        dndTask
+          .mutateAsync({
+            list: activeTask.list !== overTask.list ? overTask.list : activeTask.list,
+            order: overTask.order,
+            cardId: activeTask.id,
+          })
+          .then(() => {
+            queryClient.invalidateQueries(['list', overTask.list]);
+            const a = queryClient.getQueryData(['list', overTask.list]) as List;
+            const b = queryClient.getQueryData(['list', activeTask.list]) as List;
+            a?.card?.map((item) => queryClient.invalidateQueries(['card', item.id]));
+            b?.card?.map((item) => queryClient.invalidateQueries(['card', item.id]));
+          });
+        // return arrayMove(tasks, activeIndex, overIndex - 1);
+      }
       // return arrayMove(tasks, activeIndex, overIndex);
       // });
     }

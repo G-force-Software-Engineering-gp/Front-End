@@ -252,7 +252,10 @@ export const ListCard = ({ cardId, columns, listId, isOverlay }: CardProps) => {
       >
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <p className=" text-lg">{data?.title}</p>
+            <p className=" text-lg">
+              {/* {data?.title}:  */}
+              id - {data?.id} - order:{data?.order}
+            </p>
             <Button
               variant={'ghost'}
               {...attributes}
@@ -472,6 +475,7 @@ export const AssignmentSubmenu = ({ cardId, setOpen, cardData, cardRefetch }: As
         body: JSON.stringify(formData),
       });
     },
+    onMutate: () => {},
     onError: (error, variables, context) => {},
     onSuccess: (data, variables, context) => {},
     onSettled: (data, error, variables, context) => {
