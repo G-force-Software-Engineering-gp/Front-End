@@ -5,12 +5,17 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import _ from 'lodash';
+import _, { merge } from 'lodash';
 import { Pencil, Tag } from 'lucide-react';
 import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { LabelAssign as labelAssignType, LabelItems as LabelItemsType, LabelItem as LabelItemType } from '../types';
+import {
+  Card,
+  LabelAssign as labelAssignType,
+  LabelItems as LabelItemsType,
+  LabelItem as LabelItemType,
+} from '../types';
 import { CreateLable } from './createLable';
 
 type mergeDataType = {
@@ -52,47 +57,94 @@ const colorBoxes = [
   '#5b7f24',
 ];
 
-const data = {
-  id: 6,
-  labels: [
-    {
-      id: 1,
-      title: 'front',
-      color: 'green',
-    },
-    {
-      id: 2,
-      title: 'back',
-      color: 'blue',
-    },
-    {
-      id: 3,
-      title: 'database',
-      color: 'red',
-    },
-    {
-      id: 4,
-      title: 'devops',
-      color: 'orange',
-    },
-    {
-      id: 5,
-      title: 'devplus',
-      color: 'pink',
-    },
-  ],
-};
+// const data = {
+//   id: 6,
+//   labels: [
+//     {
+//       id: 1,
+//       title: 'front',
+//       color: 'green',
+//     },
+//     {
+//       id: 2,
+//       title: 'back',
+//       color: 'blue',
+//     },
+//     {
+//       id: 3,
+//       title: 'database',
+//       color: 'red',
+//     },
+//     {
+//       id: 4,
+//       title: 'devops',
+//       color: 'orange',
+//     },
+//     {
+//       id: 5,
+//       title: 'devplus',
+//       color: 'pink',
+//     },
+//   ],
+// };
 
 interface LabelItemProps {
   item?: labelsType;
-  mergeData: mergeDataType;
+  mergeData?: mergeDataType;
+  cardData: Card;
   labelOpen: boolean;
   setLabelOpen: any;
 }
-const LabelItem = ({ item, mergeData, labelOpen, setLabelOpen }: LabelItemProps) => {
+const LabelItem = ({ item, mergeData, cardData, labelOpen, setLabelOpen }: LabelItemProps) => {
   //   const [createLabelOpen, setCreateLabelOpen] = useState(false);
-  const handleCheckboxChange = (id: number | undefined) => {
-    console.log(`Checkbox with id ${id} changed`);
+  const { boardId } = useParams();
+  let authTokens = useContext(AuthContext)?.authTokens;
+  const queryClient = useQueryClient();
+  const checkLabel = useMutation({
+    mutationFn: (formData: any) => {
+      formData.card = cardData.id;
+      console.log(formData);
+      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard-labels/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ` + authTokens.access,
+        },
+        body: JSON.stringify(formData),
+      });
+    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['assignLabel', cardData.id] });
+    },
+  });
+  const deleteLabel = useMutation({
+    mutationFn: (formData: any) => {
+      console.log(formData);
+      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard-labels/${formData.id}/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ` + authTokens.access,
+        },
+        // body: JSON.stringify(formData),
+      });
+    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['assignLabel', cardData.id] });
+    },
+  });
+  const handleCheckboxChange = (item: labelsType | undefined) => {
+    console.log(`Checkbox with id ${item?.id} changed`);
+    console.log(item);
+    if (item?.checked) {
+      deleteLabel.mutate({ id: item.labelcard });
+    } else {
+      checkLabel.mutate({ label: item?.id });
+    }
   };
 
   return (
@@ -102,7 +154,7 @@ const LabelItem = ({ item, mergeData, labelOpen, setLabelOpen }: LabelItemProps)
         <Checkbox
           // checked={assigndata?.labelcard?.some((assignedItem) => assignedItem.id === item?.id)}
           checked={item?.checked}
-          onChange={() => handleCheckboxChange(item?.id)}
+          onClick={() => handleCheckboxChange(item)}
         />
       </div>
       <div
@@ -120,14 +172,15 @@ const LabelItem = ({ item, mergeData, labelOpen, setLabelOpen }: LabelItemProps)
 interface LabelPopoverProps {
   labelData?: LabelItemsType;
   assigndata?: labelAssignType;
+  cardData: Card;
 }
-export function LabelPopover({ labelData, assigndata }: LabelPopoverProps) {
+export function LabelPopover({ labelData, assigndata, cardData }: LabelPopoverProps) {
   //   const [label, setLabel] = useState(data.labels);
   const [labelOpen, setLabelOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
   const mergeObject = useMemo(() => {
-    const mergedLabelsData = _.map(data.labels, (label, index) => {
+    const mergedLabelsData = _.map(labelData?.labels, (label, index) => {
       const assignedLabel = _.find(assigndata?.labels, { id: label?.id });
       const assignedLabelIndex = _.findIndex(assigndata?.labels, { id: label?.id });
       return assignedLabel
@@ -135,13 +188,16 @@ export function LabelPopover({ labelData, assigndata }: LabelPopoverProps) {
         : { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex]?.id, checked: false };
     });
     const mergedData = {
-      id: data.id,
+      id: labelData?.id || 11,
       labels: mergedLabelsData,
     };
     return mergedData;
   }, [labelData, assigndata]);
-
+  console.log(mergeObject);
   const [filteredLabels, setFilteredLabels] = useState(mergeObject.labels);
+  useEffect(() => {
+    handleSearch(searchQuery);
+  }, [mergeObject]);
 
   const handleSearch = (query: string) => {
     const lowerCaseQuery = query.toLowerCase();
@@ -180,6 +236,7 @@ export function LabelPopover({ labelData, assigndata }: LabelPopoverProps) {
             <LabelItems
               mergedData={mergeObject}
               filteredLabels={filteredLabels}
+              cardData={cardData}
               labelOpen={labelOpen}
               setLabelOpen={setLabelOpen}
             />
@@ -191,12 +248,13 @@ export function LabelPopover({ labelData, assigndata }: LabelPopoverProps) {
   );
 }
 interface LabelItemsProps {
-  mergedData: mergeDataType;
+  mergedData?: mergeDataType;
   filteredLabels?: labelsType[];
+  cardData: Card;
   labelOpen: boolean;
   setLabelOpen: any;
 }
-const LabelItems = ({ filteredLabels, labelOpen, setLabelOpen, mergedData }: LabelItemsProps) => {
+const LabelItems = ({ filteredLabels, cardData, labelOpen, setLabelOpen, mergedData }: LabelItemsProps) => {
   const [labels, setLabels] = useState(filteredLabels);
 
   useEffect(() => {
@@ -244,7 +302,13 @@ const LabelItems = ({ filteredLabels, labelOpen, setLabelOpen, mergedData }: Lab
     <div className="">
       {labels?.map((item) => (
         <div key={item.id} className="flex flex-row items-center space-x-3">
-          <LabelItem item={item} mergeData={mergedData} labelOpen={labelOpen} setLabelOpen={setLabelOpen} />
+          <LabelItem
+            item={item}
+            mergeData={mergedData}
+            cardData={cardData}
+            labelOpen={labelOpen}
+            setLabelOpen={setLabelOpen}
+          />
         </div>
       ))}
       {/* {toggleButton && (
@@ -277,6 +341,7 @@ export function EditLable({ item }: EditLableProps) {
   const { boardId } = useParams();
   const [inputValue, setInputValue] = useState(item?.title);
   const [colorValue, setColorValue] = useState(item?.color);
+  const [updateLabelOpen, setUpdateLabelOpen] = useState(false);
   let authTokens = useContext(AuthContext)?.authTokens;
   const queryClient = useQueryClient();
   const editLabel = useMutation({
@@ -305,10 +370,27 @@ export function EditLable({ item }: EditLableProps) {
   const onSubmit = (editLabelTitle: any) => {
     console.log(editLabelTitle);
     editLabel.mutate(editLabelTitle);
+    setUpdateLabelOpen(false);
   };
+  const deleteLabel = useMutation({
+    mutationFn: (formData: any) => {
+      return fetch(`https://amirmohammadkomijani.pythonanywhere.com//tascrum/crlabel/${formData?.id}/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ` + authTokens.access,
+        },
+      });
+    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['label', boardId] });
+    },
+  });
 
   return (
-    <Popover>
+    <Popover open={updateLabelOpen} onOpenChange={setUpdateLabelOpen}>
       <PopoverTrigger asChild>
         <Button variant="secondary" className="h-7">
           <Pencil className="h-3 w-3" />
@@ -348,8 +430,15 @@ export function EditLable({ item }: EditLableProps) {
                   style={{ backgroundColor: color }}
                 ></div>
               ))}
-              <div onClick={() => setColorValue('#e9ebee')} className="col-span-5  items-center rounded-md ">
-                <Button variant="outline" className="w-full">
+              <div className="col-span-5  items-center rounded-md ">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setColorValue('#e9ebee');
+                  }}
+                >
                   Remove color
                 </Button>
               </div>
@@ -357,7 +446,12 @@ export function EditLable({ item }: EditLableProps) {
               <Button type="submit" className="mt-3 px-0" disabled={!inputValue?.trim()}>
                 Save
               </Button>
-              <Button variant="destructive" type="submit" className="col-start-5 col-end-6 mt-3 px-0">
+              <Button
+                variant="destructive"
+                type="submit"
+                className="col-start-5 col-end-6 mt-3 px-0"
+                onClick={() => deleteLabel.mutate({ id: item?.id })}
+              >
                 Delete
               </Button>
             </div>

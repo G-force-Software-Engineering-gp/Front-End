@@ -19,15 +19,12 @@ import {
   AppWindow,
   Archive,
   ArrowLeftRight,
-  BookKey,
   Copy,
   LayoutTemplate,
   MenuSquare,
   Paperclip,
-  Pen,
   Rows,
   Share2,
-  Tag,
   User,
 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
@@ -200,7 +197,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   <Tag className="mb-1 mr-1 h-4 w-4" />
                   Labels
                 </Button> */}
-                <LabelPopover labelData={boardLabelData} assigndata={assignLabelData} />
+                <LabelPopover cardData={data} labelData={boardLabelData} assigndata={assignLabelData} />
                 {/* <Button
                   size="sm"
                   variant="secondary"

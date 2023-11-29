@@ -10,15 +10,21 @@ export const useBoardLabels = () => {
   const queryRs = useQuery<LabelItems, Error>({
     queryKey: ['label', boardId],
     queryFn: async () => {
-      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board-labels/${boardId}`, {
+      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board-labels/${boardId}/`, {
         method: 'GET',
         headers: {
           Authorization: `JWT ` + authTokens.access,
         },
       });
+      if (response.status === 404) {
+        return { data: [] };
+      }
       const data = await response.json();
 
       return data;
+    },
+    onError: (error) => {
+      console.log(error);
     },
   });
   return queryRs;

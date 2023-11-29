@@ -8,15 +8,21 @@ export const useCheckList = (cardId: number) => {
   const queryRs = useQuery<CheckLists, Error>({
     queryKey: ['checklist', cardId],
     queryFn: async () => {
-      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/checklist/${cardId}`, {
+      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/checklist/${cardId}/`, {
         method: 'GET',
         headers: {
           Authorization: `JWT ` + authTokens.access,
         },
       });
+      if (response.status === 404) {
+        return { data: [] };
+      }
       const data = await response.json();
 
       return data;
+    },
+    onError: (error) => {
+      console.log(error);
     },
   });
   return queryRs;
