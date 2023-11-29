@@ -26,6 +26,7 @@ export type Card = {
   reminder?: '1 Day before';
   storypoint?: number;
   setstimate?: number;
+  description?:string;
 };
 export type Role = {
   id: number;

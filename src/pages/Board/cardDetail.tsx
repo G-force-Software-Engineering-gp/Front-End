@@ -34,6 +34,7 @@ import { DateRange } from 'react-day-picker';
 import { CheckListSection } from './components/checkListModal';
 import { CheckListPopover } from './components/checkListPopover';
 import { DatePickerModal } from './components/datePickerModal';
+import { DescriptionModalComponent } from './components/descriptionModal';
 import { LabelPopover } from './components/labelPopover';
 import { SetStimateComponent } from './components/setStimate';
 import { StoryPointComponent } from './components/storyPoint';
@@ -88,6 +89,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   // set for story point
   const [storyPoint, setStoryPoint] = useState(data.storypoint);
   const [setStimate, setSetStimate] = useState(data.setstimate);
+  const [description, setDescription] = useState(data.description);
   const { isLoading: checkListLoading, data: checkListData } = useCheckList(data.id);
   const { isLoading: boardLabelLoading, data: boardLabelData } = useBoardLabels();
   const { isLoading: assignLabelLoading, data: assignLabelData } = useAssignedLabels(data.id);
@@ -106,6 +108,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
         reminder: selectedValue,
         storypoint: storyPoint,
         setestimate: setStimate,
+        description: description,
       };
 
       return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/${data.id}/`, {
@@ -125,7 +128,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   });
   useEffect(() => {
     dateMutation.mutate();
-  }, [mainDate, selectedValue, storyPoint, setStimate]);
+  }, [mainDate, selectedValue, storyPoint, setStimate, description]);
 
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
@@ -140,13 +143,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
           </DialogHeader>
           <div className="grid md:flex">
             <div className="ml- w-3/4">
-              <div className="mt-6 flex items-center">
-                <AlignJustify className="mb-1 mr-3 h-7 w-7" />
-                <Label className="text-md font-semibold">Description</Label>
-              </div>
-              <div className="ml-10 cursor-pointer">
-                <Textarea placeholder="Add a more detailed description..." className="bg-secondary" />
-              </div>
+              <DescriptionModalComponent description={description} setDescription={setDescription} />
 
               {checkListData ? <CheckListSection checkLists={checkListData} /> : null}
               <div className="mt-6 flex items-center justify-between">
