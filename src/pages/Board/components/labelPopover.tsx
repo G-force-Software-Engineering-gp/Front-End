@@ -128,11 +128,11 @@ export function LabelPopover({ labelData, assigndata }: LabelPopoverProps) {
 
   const mergeObject = useMemo(() => {
     const mergedLabelsData = _.map(data.labels, (label, index) => {
-      const assignedLabel = _.find(assigndata?.labels, { id: label.id });
-      const assignedLabelIndex = _.findIndex(assigndata?.labels, { id: label.id });
+      const assignedLabel = _.find(assigndata?.labels, { id: label?.id });
+      const assignedLabelIndex = _.findIndex(assigndata?.labels, { id: label?.id });
       return assignedLabel
-        ? { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex].id, checked: true }
-        : { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex].id, checked: false };
+        ? { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex]?.id, checked: true }
+        : { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex]?.id, checked: false };
     });
     const mergedData = {
       id: data.id,

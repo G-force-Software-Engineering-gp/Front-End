@@ -35,6 +35,7 @@ import { CheckListSection } from './components/checkListModal';
 import { CheckListPopover } from './components/checkListPopover';
 import { DatePickerModal } from './components/datePickerModal';
 import { LabelPopover } from './components/labelPopover';
+import { SetStimateComponent } from './components/setStimate';
 import { StoryPointComponent } from './components/storyPoint';
 import { useCheckList } from './hooks/useCheckList';
 import { useAssignedLabels, useBoardLabels } from './hooks/useLabel';
@@ -86,6 +87,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   const [selectedValue, setSelectedValue] = React.useState(data?.reminder ? data?.reminder : 'None');
   // set for story point
   const [storyPoint, setStoryPoint] = useState(data.storypoint);
+  const [setStimate, setSetStimate] = useState(data.setstimate);
   const { isLoading: checkListLoading, data: checkListData } = useCheckList(data.id);
   const { isLoading: boardLabelLoading, data: boardLabelData } = useBoardLabels();
   const { isLoading: assignLabelLoading, data: assignLabelData } = useAssignedLabels(data.id);
@@ -103,6 +105,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
         duedate: mainDate?.to,
         reminder: selectedValue,
         storypoint: storyPoint,
+        setestimate: setStimate,
       };
 
       return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/${data.id}/`, {
@@ -122,7 +125,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   });
   useEffect(() => {
     dateMutation.mutate();
-  }, [mainDate, selectedValue, storyPoint]);
+  }, [mainDate, selectedValue, storyPoint, setStimate]);
 
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
@@ -234,14 +237,15 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
               </div>
               <div className="mx-4 mb-2 text-xs font-medium">Power-Ups</div>
               <div className="grid grid-cols-6 ">
-                <Button
+                {/* <Button
                   size="sm"
                   variant="secondary"
                   className="col-span-3 mx-4 mb-2 flex cursor-pointer justify-start rounded-sm px-4  text-sm md:col-span-6"
                 >
                   <BookKey className="mb-1 mr-1 h-4 w-4" />
                   Set Stimate
-                </Button>
+                </Button> */}
+                <SetStimateComponent setStimate={setStimate} setSetStimate={setSetStimate} />
                 {/* <Button
                   size="sm"
                   variant="secondary"
