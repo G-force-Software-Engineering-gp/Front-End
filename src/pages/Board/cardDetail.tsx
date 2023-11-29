@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AuthContext from '@/contexts/AuthContext';
@@ -90,6 +91,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   const [storyPoint, setStoryPoint] = useState(data.storypoint);
   const [setStimate, setSetStimate] = useState(data.setstimate);
   const [description, setDescription] = useState(data.description);
+  const [modalTitle, setModalTitle] = useState(data.title);
   const { isLoading: checkListLoading, data: checkListData } = useCheckList(data.id);
   const { isLoading: boardLabelLoading, data: boardLabelData } = useBoardLabels();
   const { isLoading: assignLabelLoading, data: assignLabelData } = useAssignedLabels(data.id);
@@ -101,14 +103,13 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
     mutationFn: () => {
       let newCard_data = {
         id: data.id,
-        title: data.title,
+        title: modalTitle,
         list: data.list,
         startdate: mainDate?.from,
         duedate: mainDate?.to,
         reminder: selectedValue,
         storypoint: storyPoint,
         setestimate: setStimate,
-        description: description,
       };
 
       return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/${data.id}/`, {
@@ -128,16 +129,17 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   });
   useEffect(() => {
     dateMutation.mutate();
-  }, [mainDate, selectedValue, storyPoint, setStimate, description]);
+  }, [mainDate, selectedValue, storyPoint, setStimate, description, modalTitle]);
 
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       <DialogContent className="h-5/6 max-w-[800px]">
         <div className="m-2 overflow-y-auto">
           <DialogHeader>
-            <div className="flex items-center">
+            <div className="mt-1 flex items-center">
               <Rows className="mb-1 mr-3 h-7 w-7" />
-              <DialogTitle>{data.title}</DialogTitle>
+              <Input value={modalTitle} onChange={(e) => setModalTitle(e.target.value)} className="w-5/6" />
+              {/* <DialogTitle>{data.title}</DialogTitle> */}
             </div>
             <DialogDescription className="ml-10">After getting api say name of lists</DialogDescription>
           </DialogHeader>
