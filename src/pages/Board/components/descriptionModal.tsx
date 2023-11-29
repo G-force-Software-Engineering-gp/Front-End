@@ -29,7 +29,7 @@ export function DescriptionModalComponent({ description, setDescription }: Descr
       {toggleButton ? (
         <>
           <div
-            className="ml-12 h-auto w-full cursor-pointer  rounded-sm bg-secondary p-2 pb-8 text-sm"
+            className="w-6/7 ml-12 h-auto cursor-pointer  rounded-sm bg-secondary p-2 pb-8 text-sm"
             onClick={() => setToggleButton(!toggleButton)}
           >
             {/* <div> {'description'}</div>
