@@ -1,8 +1,10 @@
 import { AuthProvider } from '@/contexts/AuthContext';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import axios, { Axios } from 'axios';
 import { MemoryRouter } from 'react-router-dom';
 import HomePageDetails from '../HomePageDetails';
 
+jest.mock('axios');
 describe('HomePageDetails Component', () => {
   it('renders without errors', () => {
     render(
@@ -165,5 +167,28 @@ describe('HomePageDetails Component', () => {
       expect(mockNavigate).toHaveBeenCalledWith('/board/1');
     });
     // Ensure it navigates to the correct board path
+  });
+  test('renders Recently Viewed section with board cards', async () => {
+    const recentlyBoards = [
+      { id: 1, title: 'Board 1', backgroundImage: 'url1', has_star: false },
+      { id: 2, title: 'Board 2', backgroundImage: 'url2', has_star: true },
+    ];
+    // Axios.get = jest.fn();
+    // (Axios.get as jest.Mock<{}>).mockResolvedValue(response);
+    render(
+      <MemoryRouter>
+        <AuthProvider>
+          <HomePageDetails />
+        </AuthProvider>
+      </MemoryRouter>
+    );
+
+    // Ensure Recently Viewed heading is rendered
+    expect(screen.getByText('Recently viewed')).toBeInTheDocument();
+
+    // Ensure board cards are rendered
+    recentlyBoards.forEach((board) => {
+      expect(screen.getByText(board.title)).toBeInTheDocument();
+    });
   });
 });
