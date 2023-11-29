@@ -89,7 +89,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   const [selectedValue, setSelectedValue] = React.useState(data?.reminder ? data?.reminder : 'None');
   // set for story point
   const [storyPoint, setStoryPoint] = useState(data.storypoint);
-  const [setStimate, setSetStimate] = useState(data.setstimate);
+  const [setStimate, setSetStimate] = useState(data.setestimate);
   const [description, setDescription] = useState(data.description);
   const [modalTitle, setModalTitle] = useState(data.title);
   const { isLoading: checkListLoading, data: checkListData } = useCheckList(data.id);
