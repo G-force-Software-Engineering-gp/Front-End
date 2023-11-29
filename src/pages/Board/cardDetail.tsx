@@ -107,6 +107,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
         reminder: selectedValue,
         storypoint: storyPoint,
         setestimate: setStimate,
+        description: description,
       };
 
       return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/${data.id}/`, {

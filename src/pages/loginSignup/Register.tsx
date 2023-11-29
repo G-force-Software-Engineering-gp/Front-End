@@ -5,8 +5,8 @@ import { Input } from '@/components/ui/input';
 import AuthContext, { AuthContextType } from '@/contexts/AuthContext';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-dropdown-menu';
-import { Lock, Mail, UserCircle, UserSquare } from 'lucide-react';
-import React, { useContext } from 'react';
+import { Eye, EyeOff, Lock, Mail, UserCircle, UserSquare } from 'lucide-react';
+import React, { useContext, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
@@ -27,6 +27,7 @@ type RegistrationFormValues = z.input<typeof registrationSchema>;
 
 const Register: React.FC = () => {
   const authContext = useContext<AuthContextType | null>(AuthContext);
+  const [showPassword, setShowPassword] = useState(false);
   if (!authContext) {
     throw new Error('AuthContext is not provided properly.');
   }
@@ -113,11 +114,17 @@ const Register: React.FC = () => {
             {errors.username && <Label className="mb-4 text-xs text-red-500">{errors.username.message}</Label>}
             <Label className="relative mb-4 flex">
               <Input
-                type="password"
+                type={showPassword ? 'text' : 'password'}
                 {...register('password')}
                 placeholder="Password"
                 className="peer bg-transparent pl-9 ring-2"
               />
+              <Label
+                className="absolute right-0 flex h-full w-10 cursor-pointer items-center justify-center text-primary/60 peer-focus:text-primary"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </Label>
               <Label className="pointer-events-none absolute flex h-full w-10 items-center justify-center text-primary/60 peer-focus:text-primary">
                 <Lock className="h-4 w-4" />
               </Label>
