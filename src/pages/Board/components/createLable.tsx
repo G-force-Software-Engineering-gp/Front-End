@@ -4,7 +4,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { Pencil } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
@@ -40,6 +39,7 @@ const randomIndex = Math.floor(Math.random() * colorBoxes.length);
 export function CreateLable() {
   const [inputValue, setInputValue] = useState('');
   const [colorValue, setColorValue] = useState(colorBoxes[randomIndex]);
+  const [createLabelOpen, setCreateLabelOpen] = useState(false);
 
   const { boardId } = useParams();
   let authTokens = useContext(AuthContext)?.authTokens;
@@ -68,9 +68,10 @@ export function CreateLable() {
   const onSubmit = (newLabel: any) => {
     console.log(newLabel);
     createLabel.mutate(newLabel);
+    setCreateLabelOpen(false);
   };
   return (
-    <Popover>
+    <Popover open={createLabelOpen} onOpenChange={setCreateLabelOpen}>
       <PopoverTrigger asChild>
         <Button variant="secondary" className="">
           <Label className="cursor-pointer">Create a new label</Label>
