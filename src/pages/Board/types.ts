@@ -78,3 +78,13 @@ export type LabelItems = {
   id : number
   labels?: LabelItem[]
 };
+interface Labelcard {
+  id: number;
+}
+
+export type LabelAssign = {
+  id : number
+  labels?: LabelItem[]
+  labelcard ?: Labelcard[]
+};
+

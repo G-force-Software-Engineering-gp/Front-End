@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { assign } from 'lodash';
 import {
   AlignJustify,
   AppWindow,
@@ -36,9 +37,40 @@ import { DatePickerModal } from './components/datePickerModal';
 import { LabelPopover } from './components/labelPopover';
 import { StoryPointComponent } from './components/storyPoint';
 import { useCheckList } from './hooks/useCheckList';
-import { useBoardLabels } from './hooks/useLabel';
+import { useAssignedLabels, useBoardLabels } from './hooks/useLabel';
 import { Card } from './types';
 
+// const assigndata = {
+//   id: 3,
+//   labels: [
+//     {
+//       id: 1,
+//       title: 'label1',
+//       color: 'green',
+//     },
+//     {
+//       id: 2,
+//       title: 'label2',
+//       color: 'bb',
+//     },
+//     {
+//       id: 8,
+//       title: 'qmars',
+//       color: '#ba67c8',
+//     },
+//   ],
+//   labelcard: [
+//     {
+//       id: 6,
+//     },
+//     {
+//       id: 2,
+//     },
+//     {
+//       id: 8,
+//     },
+//   ],
+// };
 interface Props {
   modalOpen: boolean;
   setModalOpen: any;
@@ -55,7 +87,8 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   // set for story point
   const [storyPoint, setStoryPoint] = useState(data.storypoint);
   const { isLoading: checkListLoading, data: checkListData } = useCheckList(data.id);
-  const { isLoading: labelLoading, data: labelData } = useBoardLabels();
+  const { isLoading: boardLabelLoading, data: boardLabelData } = useBoardLabels();
+  const { isLoading: assignLabelLoading, data: assignLabelData } = useAssignedLabels(data.id);
 
   let authTokens = useContext(AuthContext)?.authTokens;
   const queryClient = useQueryClient();
@@ -165,7 +198,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   <Tag className="mb-1 mr-1 h-4 w-4" />
                   Labels
                 </Button> */}
-                <LabelPopover labelData={labelData} />
+                <LabelPopover labelData={boardLabelData} assigndata={assignLabelData} />
                 {/* <Button
                   size="sm"
                   variant="secondary"

@@ -1,16 +1,29 @@
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/popOverModal';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import _ from 'lodash';
 import { Pencil, Tag } from 'lucide-react';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
-import { LabelItems as LabelItemsType, LabelItem as LabelItemType } from '../types';
+import { LabelAssign as labelAssignType, LabelItems as LabelItemsType, LabelItem as LabelItemType } from '../types';
 import { CreateLable } from './createLable';
 
+type mergeDataType = {
+  id: number;
+  labels: labelsType[];
+};
+type labelsType = {
+  labelcard: number | undefined;
+  checked: boolean;
+  id: number;
+  title: string;
+  color: string;
+};
 const colorBoxes = [
   '#baf3db',
   '#f8e6a0',
@@ -69,17 +82,29 @@ const data = {
     },
   ],
 };
+
 interface LabelItemProps {
-  item?: LabelItemType;
-  LabelsModalId?: number;
-  labels: any;
+  item?: labelsType;
+  mergeData: mergeDataType;
   labelOpen: boolean;
   setLabelOpen: any;
 }
-const LabelItem = ({ item, LabelsModalId, labels, labelOpen, setLabelOpen }: LabelItemProps) => {
+const LabelItem = ({ item, mergeData, labelOpen, setLabelOpen }: LabelItemProps) => {
   //   const [createLabelOpen, setCreateLabelOpen] = useState(false);
+  const handleCheckboxChange = (id: number | undefined) => {
+    console.log(`Checkbox with id ${id} changed`);
+  };
+
   return (
     <>
+      <div>
+        {/* onCheckedChange={() => handleCheckChange(item.id)} */}
+        <Checkbox
+          // checked={assigndata?.labelcard?.some((assignedItem) => assignedItem.id === item?.id)}
+          checked={item?.checked}
+          onChange={() => handleCheckboxChange(item?.id)}
+        />
+      </div>
       <div
         className={`m-1 inline-block w-full rounded px-2 py-1 text-sm font-semibold`}
         style={{ backgroundColor: item?.color }}
@@ -94,16 +119,33 @@ const LabelItem = ({ item, LabelsModalId, labels, labelOpen, setLabelOpen }: Lab
 };
 interface LabelPopoverProps {
   labelData?: LabelItemsType;
+  assigndata?: labelAssignType;
 }
-export function LabelPopover({ labelData }: LabelPopoverProps) {
+export function LabelPopover({ labelData, assigndata }: LabelPopoverProps) {
   //   const [label, setLabel] = useState(data.labels);
   const [labelOpen, setLabelOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredLabels, setFilteredLabels] = useState(labelData?.labels);
+
+  const mergeObject = useMemo(() => {
+    const mergedLabelsData = _.map(data.labels, (label, index) => {
+      const assignedLabel = _.find(assigndata?.labels, { id: label.id });
+      const assignedLabelIndex = _.findIndex(assigndata?.labels, { id: label.id });
+      return assignedLabel
+        ? { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex].id, checked: true }
+        : { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex].id, checked: false };
+    });
+    const mergedData = {
+      id: data.id,
+      labels: mergedLabelsData,
+    };
+    return mergedData;
+  }, [labelData, assigndata]);
+
+  const [filteredLabels, setFilteredLabels] = useState(mergeObject.labels);
 
   const handleSearch = (query: string) => {
     const lowerCaseQuery = query.toLowerCase();
-    const filtered = labelData?.labels?.filter((label: LabelItemType) =>
+    const filtered = mergeObject?.labels?.filter((label: LabelItemType) =>
       label.title.toLowerCase().includes(lowerCaseQuery)
     );
     console.log(filtered);
@@ -116,7 +158,7 @@ export function LabelPopover({ labelData }: LabelPopoverProps) {
     setSearchQuery(query);
     handleSearch(query);
   };
-  // card/?board=boardId
+
   return (
     <Popover open={labelOpen} onOpenChange={setLabelOpen}>
       <PopoverTrigger asChild>
@@ -136,7 +178,7 @@ export function LabelPopover({ labelData }: LabelPopoverProps) {
             <Input placeholder="Search labels..." value={searchQuery} onChange={handleInputChange} />
             <p className="text-xs text-muted-foreground">labels</p>
             <LabelItems
-              LabelsModal={labelData}
+              mergedData={mergeObject}
               filteredLabels={filteredLabels}
               labelOpen={labelOpen}
               setLabelOpen={setLabelOpen}
@@ -149,13 +191,14 @@ export function LabelPopover({ labelData }: LabelPopoverProps) {
   );
 }
 interface LabelItemsProps {
-  LabelsModal?: LabelItemsType;
-  filteredLabels?: LabelItemType[];
+  mergedData: mergeDataType;
+  filteredLabels?: labelsType[];
   labelOpen: boolean;
   setLabelOpen: any;
 }
-const LabelItems = ({ LabelsModal, filteredLabels, labelOpen, setLabelOpen }: LabelItemsProps) => {
+const LabelItems = ({ filteredLabels, labelOpen, setLabelOpen, mergedData }: LabelItemsProps) => {
   const [labels, setLabels] = useState(filteredLabels);
+
   useEffect(() => {
     setLabels(filteredLabels);
   }, [filteredLabels]);
@@ -201,13 +244,7 @@ const LabelItems = ({ LabelsModal, filteredLabels, labelOpen, setLabelOpen }: La
     <div className="">
       {labels?.map((item) => (
         <div key={item.id} className="flex flex-row items-center space-x-3">
-          <LabelItem
-            item={item}
-            labels={LabelsModal?.labels}
-            LabelsModalId={LabelsModal?.id}
-            labelOpen={labelOpen}
-            setLabelOpen={setLabelOpen}
-          />
+          <LabelItem item={item} mergeData={mergedData} labelOpen={labelOpen} setLabelOpen={setLabelOpen} />
         </div>
       ))}
       {/* {toggleButton && (
