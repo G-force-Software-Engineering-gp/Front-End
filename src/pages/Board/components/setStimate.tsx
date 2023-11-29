@@ -18,6 +18,7 @@ export function SetStimateComponent({ setStimate, setSetStimate }: SetStimateCom
   const onSubmit = (newStimate: any) => {
     console.log(newStimate);
     setSetStimate(newStimate?.stimate);
+    setStimateOpen(false);
   };
   return (
     <Popover open={stimateOpen} onOpenChange={setStimateOpen}>
@@ -45,7 +46,7 @@ export function SetStimateComponent({ setStimate, setSetStimate }: SetStimateCom
               {...register('stimate', { required: true })}
               className="col-span-2 h-8"
             />
-            <Button type="submit" className="mt-3 px-0" onClick={() => setStimateOpen(false)}>
+            <Button type="submit" className="mt-3 px-0">
               Save
             </Button>
           </div>
