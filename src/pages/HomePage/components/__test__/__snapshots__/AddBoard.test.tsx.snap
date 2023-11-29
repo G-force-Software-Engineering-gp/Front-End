@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AddBoard Component matches snapshot 1`] = `
+<DocumentFragment>
+  <div>
+    <div
+      aria-controls="radix-:r3:"
+      aria-expanded="false"
+      aria-haspopup="dialog"
+      class="rounded-lg border text-card-foreground shadow-sm cursor-pointer bg-slate-300 dark:bg-slate-800"
+      data-state="closed"
+      type="button"
+    >
+      <div
+        class="grid cursor-pointer place-items-center py-14 md:py-14"
+        data-testid="clicking"
+      >
+        <h1
+          class="text-xl font-semibold"
+        >
+          Create a new Board
+        </h1>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

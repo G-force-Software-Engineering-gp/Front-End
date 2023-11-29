@@ -67,9 +67,21 @@ const BoardCard: React.FC<BoardCardProps> = ({ id, title, backgroundImage, has_s
           </div>
           <Button variant="ghost">
             {Star ? (
-              <Sparkles className="h-8 w-8" strokeWidth={3} color="gold" onClick={(e) => SetStarOrNot(e)} />
+              <Sparkles
+                className="h-8 w-8"
+                strokeWidth={3}
+                color="gold"
+                onClick={(e) => SetStarOrNot(e)}
+                data-testid="star-icon1"
+              />
             ) : (
-              <StarIcon className="h-8 w-8" strokeWidth={3} color="white" onClick={(e) => SetStarOrNot(e)} />
+              <StarIcon
+                className="h-8 w-8"
+                strokeWidth={3}
+                color="white"
+                onClick={(e) => SetStarOrNot(e)}
+                data-testid="star-icon2"
+              />
             )}
           </Button>
         </div>
