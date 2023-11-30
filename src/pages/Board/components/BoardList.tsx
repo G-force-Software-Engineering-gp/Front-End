@@ -482,6 +482,14 @@ export const AssignmentSubmenu = ({ cardId, setOpen, cardData, cardRefetch }: As
       cardRefetch();
     },
   });
+  // const mergeObject = useMemo(() => {
+  //   const mergedLabelsData = _.map(labelData?.labels, (label, index) => {
+  //     const assignedLabel = _.find(assigndata?.labels, { id: label?.id });
+  //     const assignedLabelIndex = _.findIndex(assigndata?.labels, { id: label?.id });
+  //     return assignedLabel
+  //       ? { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex]?.id, checked: true }
+  //       : { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex]?.id, checked: false };
+  //   });
   return (
     <DropdownMenuSubContent className="p-0">
       <Command>
