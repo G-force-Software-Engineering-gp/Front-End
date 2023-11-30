@@ -7,12 +7,11 @@ import AuthContext from '@/contexts/AuthContext'
 import { useContext } from 'react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import { CardDetail } from './cardDetail'
-import { Card } from "./types"
-
+import { useTheme } from '@/components/theme-provider'
 
 
 const Calendar = () => {
-
+  const { theme } = useTheme();
   let authTokens = useContext(AuthContext)?.authTokens
 
   const [modalOpen, setModalOpen] = useState(false)
@@ -42,7 +41,8 @@ const Calendar = () => {
       return {
         "id": data[event].id,
         "date": year + '-' + month + '-' + day,
-        "title": data[event].title
+        "title": data[event].title,
+        "labels": data[event].labels
       }
     })
     setCalendarEvents(calendarEvent)
@@ -58,13 +58,21 @@ const Calendar = () => {
     const handleClick = () => {
       const filterData = allEvents.filter((e: any) => e.id == eventInfo.event.id)
       setData(filterData[0])
-      console.log(filterData[0])
       setModalOpen(!modalOpen)
     }
+    console.log(eventInfo.event)
     return (
-      <Button onClick={() => handleClick()} className='text-sm font-bold p-1 w-full h-auto whitespace-normal'>
-        {eventInfo.event.title}
-      </Button>
+      <div>
+        {eventInfo.event.extendedProps.labels
+          .map((label: any) => (
+            <div className='h-fit w-fit m-1 p-1 rounded-full' style={{ backgroundColor: label.color }} key={label.id}>
+              <p style={{ color: theme === 'dark' ? '#020817' : '#ffffff' }} className='text-xs'>{label.title}</p>
+            </div>
+          ))}
+        <Button variant="secondary" onClick={() => handleClick()} className='rounded-none justify-start text-sm font-bold p-1 w-full h-auto whitespace-normal' >
+          {eventInfo.event.title}
+        </Button >
+      </div >
     )
   }
   return (
@@ -81,7 +89,8 @@ const Calendar = () => {
             center: "title",
             right: "dayGridMonth,dayGridWeek,dayGridDay",
           }}
-
+          eventBorderColor='black'
+          eventBackgroundColor={theme === 'dark' ? '#020817' : '#ffffff'}
         />
       </div >
       {data.length !== 0 && <CardDetail modalOpen={modalOpen} setModalOpen={setModalOpen} data={data} />}
