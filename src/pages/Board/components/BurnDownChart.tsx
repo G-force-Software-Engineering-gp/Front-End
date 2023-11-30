@@ -23,6 +23,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { object } from 'zod';
 import { useBurnDown } from '../hooks/useBurnDown';
+import { useMembers } from '../hooks/useMembers';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
@@ -60,28 +61,38 @@ function BurnDownChart() {
 
   type Person = Record<string, number>;
   const colQuery = useBurnDown(boardId);
-  console.log(colQuery);
   const [users, setusers] = useState<string[]>(['brd']);
-  const gettingColumns = async () => {
-    try {
-      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board-member/1`, {
-        method: 'GET',
-        headers: {
-          Authorization: `JWT ` + authTokens.access,
-        },
-      });
-      const data = await response.json();
-      console.log('Before', users);
-      setusers(data?.members.map((member: { user: { username: string } }) => member.user.username));
-      console.log('After', users); 
-    } catch (error) {
-      console.error('Error fetching data:', error);
-    }
-  };
-
+  const { data: membersData, isLoading } = useMembers(parseInt(boardId ? boardId : ''));
   useEffect(() => {
-    gettingColumns();
-  }, [boardId]);
+    if (membersData) {
+      setusers(membersData?.members.map((member: { user: { username: string } }) => member.user.username));
+    }
+  }, [membersData]);
+
+  console.log(colQuery);
+  // const gettingColumns = async () => {
+  //   try {
+  //     const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board-member/1`, {
+  //       method: 'GET',
+  //       headers: {
+  //         Authorization: `JWT ` + authTokens.access,
+  //       },
+  //     });
+  //     const data = await response.json();
+  //     console.log('Before', users);
+  //     setusers(data?.members.map((member: { user: { username: string } }) => member.user.username));
+  //     console.log('After', users);
+  //   } catch (error) {
+  //     console.error('Error fetching data:', error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   gettingColumns();
+  // }, [boardId]);
+  // useEffect(() => {
+  //   gettingColumns();
+  // }, []);
   // useEffect(() => {
   //   // Check if colQuery.data.members exists and is an array
   //   if (colQuery.data?.members && Array.isArray(colQuery.data.members)) {
@@ -134,7 +145,7 @@ function BurnDownChart() {
       });
     }
     return cols;
-  }, []);
+  }, [users]);
 
   const defaultColumn: Partial<ColumnDef<Person>> = {
     cell: function Cell({ getValue, row: { index }, column: { id }, table }) {
