@@ -58,10 +58,15 @@ export function CheckListPopover({ data }: CheckListPopoverProps) {
             <h4 className="text-center text-xs font-bold leading-none">Add checkList</h4>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="width" className="text-xs font-bold leading-none">
+            <Label htmlFor="checkListTitle" className="text-xs font-bold leading-none">
               Title
             </Label>
-            <Input defaultValue="CheckList" {...register('title', { required: true })} className="col-span-2 h-8" />
+            <Input
+              id="checkListTitle"
+              defaultValue="CheckList"
+              {...register('title', { required: true })}
+              className="col-span-2 h-8"
+            />
             <Button type="submit" className="mt-3 px-0">
               Add
             </Button>
