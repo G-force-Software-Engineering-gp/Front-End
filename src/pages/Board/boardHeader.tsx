@@ -8,9 +8,18 @@ import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import _ from 'lodash';
-import { ChevronDown, Eye, LineChart, ListFilter, Menu, MoreHorizontal, Star, Trello, UserPlus2 } from 'lucide-react';
+import { CalendarDays, LineChart, Menu} from 'lucide-react';
+import {
+  ChevronDown,
+  Eye,
+  ListFilter,
+  MoreHorizontal,
+  Star,
+  Trello,
+  UserPlus2,
+} from 'lucide-react';
 import React, { useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { BoardSidebar } from './boardSidebar';
 import AddImage from './components/AddImage';
 import { useBoard } from './hooks/useBoard';
@@ -53,10 +62,13 @@ interface Member {
 }
 
 const BoardHeader = () => {
+  const navigate = useNavigate();
   const { boardId } = useParams();
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
   const { data: boardData } = useBoard(parseInt(boardId ? boardId : ''));
-  const navigate = useNavigate();
+
+  const { pathname } = useLocation();
+  const isCalendarRoute = pathname.includes('/calendar');
 
   return (
     <div className="backdrop-blur">
@@ -131,7 +143,17 @@ const BoardHeader = () => {
             </div>
           </div>
           <div className="flex items-center justify-end space-x-2">
-            <Button data-testid="list filter" variant="secondary" className="h-8 w-8 p-0">
+            {isCalendarRoute &&
+              <Button onClick={() => navigate(``)} variant="secondary" className='h-8 w-8 p-0'>
+                <Trello className='h-4 w-4' />
+              </Button>
+            }
+            {!isCalendarRoute &&
+              <Button onClick={() => navigate(`calendar`)} variant="secondary" className='h-8 w-8 p-0'>
+                <CalendarDays className='h-4 w-4' />
+              </Button>
+            }
+            <Button data-testid='list filter' variant="secondary" className="h-8 w-8 p-0">
               <ListFilter className="h-4 w-4" />
             </Button>
             <div className=" flex -space-x-2 overflow-hidden">

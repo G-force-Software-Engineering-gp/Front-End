@@ -13,6 +13,8 @@ import Settings from './settingsPage';
 import Advanced from './settingsPage/advanced';
 import Cards from './settingsPage/cards';
 import Profile from './settingsPage/profile';
+import Calendar from './Board/calendar';
+import { KanbanBoard } from './Board/components/KanbanBoard';
 
 const Router = () => {
   return (
@@ -23,10 +25,12 @@ const Router = () => {
           <Route path="/register" element={<Register />} />
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<Home />} />
-            <Route path="/board" element={<Board />} />
+            <Route path='/board/:boardId' element={<Board />}>
+              <Route index element={<KanbanBoard />} />
+              <Route path='calendar' element={<Calendar />} />
+              <Route path="burndown" element={<BurnDownChart2 />} />
+            </Route>
             <Route path="/burndown" element={<BurnDownChart2 />} />
-            <Route path="/board/:boardId" element={<Board />} />
-            <Route path="/board/:boardId/burndown" element={<BurnDownPage />} />
             <Route path="/settings" element={<Settings />}>
               <Route index element={<Profile />} />
               <Route path="profile" element={<Profile />} />
@@ -36,7 +40,7 @@ const Router = () => {
           </Route>
         </Routes>
       </AuthProvider>
-    </div>
+    </div >
   );
 };
 
