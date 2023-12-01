@@ -22,11 +22,19 @@ jobs:
       #   name: Upgrade NPM
       #   run: npm install -g npm
       - run: npm i fsevents@latest -f --save-optional
-      - name: Install dependencies
+      #   - name: Install dependencies
 
-        # run: npm install
+      # run: npm install
+      #     run: npm ci
+      - name: clean cache
+        run: npm cache clean --force
+      - name: Setup CI env
         run: npm ci
+      - name: Install dependencies
+        run: npm install
       - name: Build project
+        env:
+          CI: false
         run: npm run build --if-present
       # -
       #   name: Install jsdom
