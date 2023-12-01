@@ -28,9 +28,11 @@ const Router = () => {
             <Route path='/board/:boardId' element={<Board />}>
               <Route index element={<KanbanBoard />} />
               <Route path='calendar' element={<Calendar />} />
-              <Route path="burndown" element={<BurnDownChart2 />} />
             </Route>
-            <Route path="/burndown" element={<BurnDownChart2 />} />
+            <Route path="/board/:boardId/burndown" element={<BurnDownPage />} />
+            <Route path="/burndown" element={<div className="flex overflow-x-auto">
+              <BurnDownChart />
+            </div>} />
             <Route path="/settings" element={<Settings />}>
               <Route index element={<Profile />} />
               <Route path="profile" element={<Profile />} />
