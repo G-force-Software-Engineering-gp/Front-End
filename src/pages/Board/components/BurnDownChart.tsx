@@ -24,6 +24,7 @@ import { useParams } from 'react-router-dom';
 import { object } from 'zod';
 import { useBurnDown } from '../hooks/useBurnDown';
 import { useMembers } from '../hooks/useMembers';
+import BurnDownChart2 from './BurnDownChart2';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
@@ -49,7 +50,7 @@ function BurnDownChart() {
       console.log(membersData.members);
       // setusers(membersData?.members.map((member: { user: { username: string } }) => member.user.username));
       let members: any[] = [];
-      for (let i = 0; i < membersData.members.length; i++) {
+      for (let i = 0; i < membersData.members?.length; i++) {
         members.push([membersData?.members[i].id, membersData?.members[i].user.username]);
       }
       setusers(members);
@@ -57,10 +58,10 @@ function BurnDownChart() {
     if (BurnDownData) {
       let initialData: any[] = [];
       // console.log(BurnDownData[0]?.data[0]);
-      for (let i = 0; i < BurnDownData.length; i++) {
+      for (let i = 0; i < BurnDownData?.length; i++) {
         var obj: LooseObject = {};
         obj['date'] = BurnDownData[i].date;
-        for (let j = 0; j < BurnDownData[i].data.length; j++) {
+        for (let j = 0; j < BurnDownData[i].data?.length; j++) {
           obj[`estimate${BurnDownData[i]?.data[j].username}`] = BurnDownData[i]?.data[j].estimate;
           obj[`done${BurnDownData[i]?.data[j].username}`] = BurnDownData[i]?.data[j].done;
         }
@@ -199,7 +200,7 @@ function BurnDownChart() {
     },
   });
   return (
-    <div className="p-2">
+    <div className="p-2 m-auto">
       <div className="h-2" />
       <T1>
         <TableHeader>
@@ -255,6 +256,7 @@ function BurnDownChart() {
         </TableFooter>
       </T1>
       <div className="h-2" />
+      <BurnDownChart2 />
     </div>
   );
 }
