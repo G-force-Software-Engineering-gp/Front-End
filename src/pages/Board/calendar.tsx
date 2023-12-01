@@ -66,7 +66,7 @@ const Calendar = () => {
         {eventInfo.event.extendedProps.labels
           .map((label: any) => (
             <div className='h-fit w-fit m-1 p-1 rounded-full' style={{ backgroundColor: label.color }} key={label.id}>
-              <p style={{ color: theme === 'dark' ? '#020817' : '#ffffff' }} className='text-xs'>{label.title}</p>
+              <p className='color-white text-xs'>{label.title}</p>
             </div>
           ))}
         <Button variant="secondary" onClick={() => handleClick()} className='rounded-none justify-start text-sm font-bold p-1 w-full h-auto whitespace-normal' >
