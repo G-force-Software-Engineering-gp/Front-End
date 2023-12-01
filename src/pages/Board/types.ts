@@ -27,7 +27,8 @@ export type Card = {
   duedate?: '2023-10-29T00:00:00Z';
   reminder?: '1 Day before';
   storypoint?: number;
-  setstimate?: number;
+  setestimate?: number;
+  description?:string;
 };
 export type Role = {
   id: number;
@@ -70,3 +71,23 @@ export type CheckListOption = {
   content: string;
   checked: boolean;
 };
+
+export type LabelItem = {
+  id: number;
+  title: string;
+  color: string;
+};
+export type LabelItems = {
+  id : number
+  labels?: LabelItem[]
+};
+interface Labelcard {
+  id: number;
+}
+
+export type LabelAssign = {
+  id : number
+  labels?: LabelItem[]
+  labelcard ?: Labelcard[]
+};
+

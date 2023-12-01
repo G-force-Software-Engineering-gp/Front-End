@@ -190,9 +190,6 @@ export function CheckListSection({ checkLists }: CheckListSectionProps) {
           <CheckSquare className="mb-1 mr-4 h-7 w-7" />
           <Label className="text-md font-semibold">All CheckLists</Label>
         </div>
-        <Button size="sm" variant="secondary" className="cursor-pointer rounded-sm px-2 text-sm">
-          Hide Details
-        </Button>
       </div>
       {checkLists?.checklists?.map((checkListArrary) => {
         return <CheckListPart checklist={checkListArrary} />;
