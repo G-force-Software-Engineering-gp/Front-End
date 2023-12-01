@@ -1,14 +1,14 @@
 name: CI/CD
 
 on:
+  #   push:
+  #     branches: ['main']
+  #   pull_request:
+  #     branches: ['main']
   push:
-    branches: ['main']
+    branches: ['develop', 'main']
   pull_request:
-    branches: ['main']
-  # push:
-  #   branches: ['develop']
-  # pull_request:
-  #   branches: ['develop']
+    branches: ['develop', 'main']
 
 jobs:
   build:

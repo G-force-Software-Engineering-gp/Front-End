@@ -1,6 +1,7 @@
 import jwt_decode from 'jwt-decode';
 import { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 export type AuthContextType = {
   user: any;
@@ -48,6 +49,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       localStorage.setItem('authTokens', JSON.stringify(data));
       Navigate('/');
     } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'No active account found with the given credentials!',
+        timer: 3000,
+      });
     }
   };
 
@@ -67,10 +74,45 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
     const reg_data = await reg_response.json();
     if (reg_response.status === 201) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Successful',
+        text: 'User registerd successfully',
+        timer: 3000,
+      });
       Navigate('/login');
     } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'user with this email already exists!',
+        timer: 3000,
+      });
     }
   };
+  // if (data.ok) {
+  //   Swal.fire({
+  //     icon: 'success',
+  //     title: 'Successful',
+  //     text: 'Workspace created successfully',
+  //     timer: 3000,
+  //   });
+  //   setname('');
+  //   setInterval(() => {
+  //     navigate(0);
+  //   }, 2000);
+  // } else {
+  //   Swal.fire({
+  //     icon: 'error',
+  //     title: 'Error',
+  //     text: 'Something went wrong!',
+  //     timer: 3000,
+  //   });
+  //   setname('');
+  //   setInterval(() => {
+  //     navigate(0);
+  //   }, 2000);
+  // }
 
   const logoutUser = () => {
     setAuthTokens(null);

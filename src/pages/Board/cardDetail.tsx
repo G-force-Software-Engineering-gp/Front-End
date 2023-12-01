@@ -8,24 +8,23 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { assign } from 'lodash';
 import {
   AlignJustify,
   AppWindow,
   Archive,
   ArrowLeftRight,
-  BookKey,
   Copy,
   LayoutTemplate,
   MenuSquare,
   Paperclip,
-  Pen,
   Rows,
   Share2,
-  Tag,
   User,
 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
@@ -33,10 +32,45 @@ import { DateRange } from 'react-day-picker';
 import { CheckListSection } from './components/checkListModal';
 import { CheckListPopover } from './components/checkListPopover';
 import { DatePickerModal } from './components/datePickerModal';
+import { DescriptionModalComponent } from './components/descriptionModal';
+import { LabelPopover } from './components/labelPopover';
+import { SetStimateComponent } from './components/setStimate';
 import { StoryPointComponent } from './components/storyPoint';
 import { useCheckList } from './hooks/useCheckList';
+import { useAssignedLabels, useBoardLabels } from './hooks/useLabel';
 import { Card } from './types';
 
+// const assigndata = {
+//   id: 3,
+//   labels: [
+//     {
+//       id: 1,
+//       title: 'label1',
+//       color: 'green',
+//     },
+//     {
+//       id: 2,
+//       title: 'label2',
+//       color: 'bb',
+//     },
+//     {
+//       id: 8,
+//       title: 'qmars',
+//       color: '#ba67c8',
+//     },
+//   ],
+//   labelcard: [
+//     {
+//       id: 6,
+//     },
+//     {
+//       id: 2,
+//     },
+//     {
+//       id: 8,
+//     },
+//   ],
+// };
 interface Props {
   modalOpen: boolean;
   setModalOpen: any;
@@ -52,7 +86,12 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   const [selectedValue, setSelectedValue] = React.useState(data?.reminder ? data?.reminder : 'None');
   // set for story point
   const [storyPoint, setStoryPoint] = useState(data.storypoint);
-  const { isLoading, data: checkListData } = useCheckList(data.id);
+  const [setStimate, setSetStimate] = useState(data.setestimate);
+  const [description, setDescription] = useState(data.description);
+  const [modalTitle, setModalTitle] = useState(data.title);
+  const { isLoading: checkListLoading, data: checkListData } = useCheckList(data.id);
+  const { isLoading: boardLabelLoading, data: boardLabelData } = useBoardLabels();
+  const { isLoading: assignLabelLoading, data: assignLabelData } = useAssignedLabels(data.id);
 
   let authTokens = useContext(AuthContext)?.authTokens;
   const queryClient = useQueryClient();
@@ -61,12 +100,14 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
     mutationFn: () => {
       let newCard_data = {
         id: data.id,
-        title: data.title,
+        title: modalTitle,
         list: data.list,
         startdate: mainDate?.from,
         duedate: mainDate?.to,
         reminder: selectedValue,
         storypoint: storyPoint,
+        setestimate: setStimate,
+        description: description,
       };
 
       return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/${data.id}/`, {
@@ -86,28 +127,23 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   });
   useEffect(() => {
     dateMutation.mutate();
-  }, [mainDate, selectedValue, storyPoint]);
+  }, [mainDate, selectedValue, storyPoint, setStimate, description, modalTitle]);
 
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
       <DialogContent className="h-5/6 max-w-[800px]">
         <div className="m-2 overflow-y-auto">
           <DialogHeader>
-            <div className="flex items-center">
+            <div className="mt-1 flex items-center">
               <Rows className="mb-1 mr-3 h-7 w-7" />
-              <DialogTitle>{data.title}</DialogTitle>
+              <Input value={modalTitle} onChange={(e) => setModalTitle(e.target.value)} className="w-5/6" />
+              {/* <DialogTitle>{data.title}</DialogTitle> */}
             </div>
             <DialogDescription className="ml-10">After getting api say name of lists</DialogDescription>
           </DialogHeader>
           <div className="grid md:flex">
             <div className="ml- w-3/4">
-              <div className="mt-6 flex items-center">
-                <AlignJustify className="mb-1 mr-3 h-7 w-7" />
-                <Label className="text-md font-semibold">Description</Label>
-              </div>
-              <div className="ml-10 cursor-pointer">
-                <Textarea placeholder="Add a more detailed description..." className="bg-secondary" />
-              </div>
+              <DescriptionModalComponent description={description} setDescription={setDescription} />
 
               {checkListData ? <CheckListSection checkLists={checkListData} /> : null}
               <div className="mt-6 flex items-center justify-between">
@@ -154,14 +190,15 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   <User className="mb-1 mr-1 h-4 w-4" />
                   Members
                 </Button>
-                <Button
+                {/* <Button
                   size="sm"
                   variant="secondary"
                   className="col-span-3 mx-4 mb-2 flex cursor-pointer justify-start rounded-sm px-4  text-sm md:col-span-6"
                 >
                   <Tag className="mb-1 mr-1 h-4 w-4" />
                   Labels
-                </Button>
+                </Button> */}
+                <LabelPopover cardData={data} labelData={boardLabelData} assigndata={assignLabelData} />
                 {/* <Button
                   size="sm"
                   variant="secondary"
@@ -197,14 +234,15 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
               </div>
               <div className="mx-4 mb-2 text-xs font-medium">Power-Ups</div>
               <div className="grid grid-cols-6 ">
-                <Button
+                {/* <Button
                   size="sm"
                   variant="secondary"
                   className="col-span-3 mx-4 mb-2 flex cursor-pointer justify-start rounded-sm px-4  text-sm md:col-span-6"
                 >
                   <BookKey className="mb-1 mr-1 h-4 w-4" />
                   Set Stimate
-                </Button>
+                </Button> */}
+                <SetStimateComponent setStimate={setStimate} setSetStimate={setSetStimate} />
                 {/* <Button
                   size="sm"
                   variant="secondary"

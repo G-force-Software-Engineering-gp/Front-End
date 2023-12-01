@@ -56,6 +56,7 @@ const HomePageDetails = () => {
 
   return (
     <div className=" px-6 pt-3" data-testid="homepageDetails">
+      {/* Recently Viewed */}
       <div>
         <div className="flex">
           <svg
@@ -87,7 +88,7 @@ const HomePageDetails = () => {
           ))}
         </div>
       </div>
-
+      {/* Starred */}
       <div>
         <div className="flex">
           <svg
@@ -118,7 +119,7 @@ const HomePageDetails = () => {
           ))}
         </div>
       </div>
-
+      {/* WlorkSpaces */}
       <div>
         <div className="flex">
           <svg
