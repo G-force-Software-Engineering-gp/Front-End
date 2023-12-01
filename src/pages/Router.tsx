@@ -4,6 +4,7 @@ import Board from './Board';
 import BurnDownPage from './Board/BurnDownPage';
 import BasicTable from './Board/components/BasicTable';
 import BurnDownChart from './Board/components/BurnDownChart';
+import BurnDownChart2 from './Board/components/BurnDownChart2';
 import Home from './HomePage/Home';
 import Login from './loginSignup/Login';
 import Register from './loginSignup/Register';
@@ -23,7 +24,7 @@ const Router = () => {
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<Home />} />
             <Route path="/board" element={<Board />} />
-            <Route path="/burndown" element={<BurnDownChart />} />
+            <Route path="/burndown" element={<BurnDownChart2 />} />
             <Route path="/board/:boardId" element={<Board />} />
             <Route path="/board/:boardId/burndown" element={<BurnDownPage />} />
             <Route path="/settings" element={<Settings />}>

@@ -36,87 +36,41 @@ interface LooseObject {
 
 function BurnDownChart() {
   const { boardId } = useParams();
-  console.log(boardId);
-  let authTokens = useContext(AuthContext)?.authTokens;
-  const gettingColumns1 = async () => {
-    const { data } = await axios
-      .get(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/burndown-chart/${boardId}`, {
-        headers: {
-          Authorization: `JWT ${authTokens?.access}`,
-        },
-      })
-      .then((response) => response);
-    console.log(data);
-  };
-  const gettingData = async () => {
-    const { data } = await axios
-      .get(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/burndown-chart/${boardId}`, {
-        headers: {
-          Authorization: `JWT ${authTokens?.access}`,
-        },
-      })
-      .then((response) => response);
-    console.log(data);
-  };
-
   type Person = Record<string, number>;
-  const colQuery = useBurnDown(boardId);
-  const [users, setusers] = useState<string[]>(['brd']);
+  const [users, setusers] = useState<string[]>([]);
+  const [data, setData] = useState<any[]>([]);
+
   const { data: membersData, isLoading } = useMembers(parseInt(boardId ? boardId : ''));
+  const { data: BurnDownData, isLoading: loadingBurndown } = useBurnDown(boardId);
+  // console.log(BurnDownData);
+  // const colQuery = useBurnDown(boardId);
   useEffect(() => {
     if (membersData) {
-      setusers(membersData?.members.map((member: { user: { username: string } }) => member.user.username));
-    }
-  }, [membersData]);
-
-  console.log(colQuery);
-  // const gettingColumns = async () => {
-  //   try {
-  //     const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board-member/1`, {
-  //       method: 'GET',
-  //       headers: {
-  //         Authorization: `JWT ` + authTokens.access,
-  //       },
-  //     });
-  //     const data = await response.json();
-  //     console.log('Before', users);
-  //     setusers(data?.members.map((member: { user: { username: string } }) => member.user.username));
-  //     console.log('After', users);
-  //   } catch (error) {
-  //     console.error('Error fetching data:', error);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   gettingColumns();
-  // }, [boardId]);
-  // useEffect(() => {
-  //   gettingColumns();
-  // }, []);
-  // useEffect(() => {
-  //   // Check if colQuery.data.members exists and is an array
-  //   if (colQuery.data?.members && Array.isArray(colQuery.data.members)) {
-  //     // Extract usernames and set the state
-  //     const usernames = colQuery.data.members.map((member: { user: { username: string } }) => member.user.username);
-  //     setusers(usernames);
-  //   } else {
-  //     console.log('API response or members array is missing or not an array:', colQuery.data);
-  //   }
-  // }, []);
-
-  const [defaultData, setDefaultData] = useState<any[]>(() => {
-    let initialData: any[] = [];
-    for (let i = 0; i < 3; i++) {
-      var obj: LooseObject = {};
-      obj['date'] = '2023/5/6';
-      for (let j = 0; j < users?.length; j++) {
-        obj[`estimate${users[j]}`] = 0;
-        obj[`done${users[j]}`] = 0;
+      console.log(membersData.members);
+      // setusers(membersData?.members.map((member: { user: { username: string } }) => member.user.username));
+      let members: any[] = [];
+      for (let i = 0; i < membersData.members.length; i++) {
+        members.push([membersData?.members[i].id, membersData?.members[i].user.username]);
       }
-      initialData.push(obj);
+      setusers(members);
     }
-    return initialData;
-  });
+    if (BurnDownData) {
+      let initialData: any[] = [];
+      // console.log(BurnDownData[0]?.data[0]);
+      for (let i = 0; i < BurnDownData.length; i++) {
+        var obj: LooseObject = {};
+        obj['date'] = BurnDownData[i].date;
+        for (let j = 0; j < BurnDownData[i].data.length; j++) {
+          obj[`estimate${BurnDownData[i]?.data[j].username}`] = BurnDownData[i]?.data[j].estimate;
+          obj[`done${BurnDownData[i]?.data[j].username}`] = BurnDownData[i]?.data[j].done;
+        }
+        initialData.push(obj);
+      }
+      setData(initialData);
+      // setData(defaultData);
+    }
+  }, [membersData, BurnDownData]);
+
   const columns = React.useMemo<ColumnDef<Person>[]>(() => {
     let cols = [];
     cols.push({
@@ -126,19 +80,19 @@ function BurnDownChart() {
     });
     for (let j = 0; j < users?.length; j++) {
       cols.push({
-        header: `${users[j]}`,
+        header: `${users[j][1]}`,
         // footer: (props) => props.column.id,
         columns: [
           {
-            accessorKey: `estimate${users[j]}`,
+            accessorKey: `estimate${users[j][1]}`,
             header: 'Estimate',
-            id: `e${users[j]}`,
+            id: `e${users[j][0]}`,
             footer: 'Total Estimate',
           },
           {
-            accessorKey: `done${users[j]}`,
+            accessorKey: `done${users[j][1]}`,
             header: 'Done',
-            id: `d${users[j]}`,
+            id: `d${users[j][0]}`,
             footer: 'Total Done',
           },
         ],
@@ -146,6 +100,40 @@ function BurnDownChart() {
     }
     return cols;
   }, [users]);
+  let authTokens = useContext(AuthContext)?.authTokens;
+  // console.log(authTokens);
+  const ChangeDone = async (boardId: string | undefined, done: string, member: string, date: string) => {
+    const data = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/burndown-chart/${boardId}/`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `JWT ` + authTokens.access,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: JSON.stringify({
+        board: boardId ? parseInt(boardId) : 1,
+        done: parseFloat(done),
+        member: parseInt(member),
+        date: date,
+      }),
+    });
+    console.log(data);
+  };
+  const ChangeEstimate = async (boardId: string | undefined, estimate: string, member: string, date: string) => {
+    const data = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/burndown-chart/${boardId}/`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `JWT ` + authTokens.access,
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: JSON.stringify({
+        board: boardId ? parseInt(boardId) : 1,
+        estimate: parseFloat(estimate),
+        member: parseInt(member),
+        date: date,
+      }),
+    });
+    console.log(data);
+  };
 
   const defaultColumn: Partial<ColumnDef<Person>> = {
     cell: function Cell({ getValue, row: { index }, column: { id }, table }) {
@@ -163,11 +151,13 @@ function BurnDownChart() {
 
       // Handle input change
       const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        // Log only if the input value changes
         if (e.target.value !== value) {
           const username = id.substring(1);
-          const state = id[0] === 'd' ? 'done' : 'estimate';
-          console.log('Row: ', defaultData[index]?.date);
+          const state =
+            id[0] === 'd'
+              ? ChangeDone(boardId, e.target.value, username, data[index]?.date)
+              : ChangeEstimate(boardId, e.target.value, username, data[index]?.date);
+          console.log('Row: ', data[index]?.date.replace(/-/g, '/'));
           console.log('New value: ', e.target.value);
           console.log('User: ', username);
           console.log('State: ', state);
@@ -183,7 +173,7 @@ function BurnDownChart() {
     },
   };
 
-  const [data, setData] = React.useState([...defaultData]);
+  // const [data, setData] = React.useState([...defaultData]);
   const table = useReactTable({
     data,
     columns,
