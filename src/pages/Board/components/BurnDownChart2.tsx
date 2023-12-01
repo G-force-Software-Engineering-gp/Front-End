@@ -1,4 +1,3 @@
-import Header from '@/components/Header';
 import { useTheme } from '@/components/theme-provider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import React from 'react';
@@ -48,14 +47,13 @@ const BurnDownChart2 = () => {
   const theme = themes.find((theme) => theme.name === config.theme);
   return (
     <div>
-      <Header />
-      <Card className=" w-[60vw]">
+      <Card className=" w-[80vw]  m-auto mt-10">
         <CardHeader>
-          <CardTitle>Exercise Minutes</CardTitle>
-          <CardDescription>Your exercise minutes are ahead of where you normally are.</CardDescription>
+          <CardTitle>BurnDownChart</CardTitle>
+          <CardDescription>Your working minutes are ahead of where you normally are.</CardDescription>
         </CardHeader>
         <CardContent className="pb-4">
-          <div className="h-[400px]">
+          <div className="h-[60vh]">
             <ResponsiveContainer width="100%" aspect={3}>
               <LineChart
                 data={data}
