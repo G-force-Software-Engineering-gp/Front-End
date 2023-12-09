@@ -45,9 +45,6 @@ const HomePageDetails = () => {
       .then((response) => response);
     setstarred(data);
   };
-  // console.log(recentlyBoards);
-  // console.log(workspaces);
-  // console.log(starred);
   useEffect(() => {
     gettingData();
     gettingRecentlyViewed();
@@ -147,12 +144,16 @@ const HomePageDetails = () => {
                   <div className="mb-4 flex items-center sm:mb-0">
                     <Avatar className="mr-2 h-8 w-8 rounded-sm ">
                       <AvatarImage className="rounded-sm " src="https://github.com/shadcn.png11" alt="@shadcn" />
-                      <AvatarFallback className="rounded-sm ">G</AvatarFallback>
+                      <AvatarFallback className="rounded-sm ">{item?.name[0].toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div>{item?.name}</div>
                   </div>
                   <div className="">
-                    <Button variant="secondary" className="mr-1 mt-1 p-2 sm:mt-0">
+                    <Button
+                      onClick={() => navigate(`/workspace/${item.id}/boards`)}
+                      variant="secondary"
+                      className="mr-1 mt-1 p-2 sm:mt-0"
+                    >
                       {' '}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
