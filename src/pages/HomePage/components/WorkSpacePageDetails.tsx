@@ -13,13 +13,13 @@ const capitalizeWords = (str: string) => {
 
 const WorkSpacePageDetails = () => {
   const { workspaceId } = useParams();
-  //   const { data } = useWorkSpaceBoards(parseInt(workspaceId ? workspaceId : ''));
   const { data } = useWorkSpaceBoards(parseInt(workspaceId ? workspaceId : ''));
   console.log(data);
   const capitalizedType = data?.type ? capitalizeWords(data.type) : '';
   return (
     <div>
       <div className="mt-4">
+        {/* Header */}
         <div className="m-auto ">
           <div className="flex h-40 items-center justify-center">
             <Avatar className="mr-2 h-24 w-24 rounded-sm ">
