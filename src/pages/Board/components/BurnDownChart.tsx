@@ -1,3 +1,5 @@
+import { useTheme } from '@/components/theme-provider';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import {
   Table as T1,
@@ -9,22 +11,17 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import AuthContext from '@/contexts/AuthContext';
-import { useQuery } from '@tanstack/react-query';
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  getPaginationRowModel,
-  RowData,
-  useReactTable,
-} from '@tanstack/react-table';
-import axios from 'axios';
+import { ColumnDef, flexRender, getCoreRowModel, RowData, useReactTable } from '@tanstack/react-table';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { object } from 'zod';
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { useBurnDown } from '../hooks/useBurnDown';
+import useBurnDownChartData from '../hooks/useBurnDownChartData';
+import { useBurnDownFooter } from '../hooks/useBurnDownFooter';
 import { useMembers } from '../hooks/useMembers';
 import BurnDownChart2 from './BurnDownChart2';
+import CreateBurnDown from './CreateBurnDown';
+import { themes } from './Themes';
 
 declare module '@tanstack/react-table' {
   interface TableMeta<TData extends RowData> {
@@ -40,15 +37,37 @@ function BurnDownChart() {
   type Person = Record<string, number>;
   const [users, setusers] = useState<string[]>([]);
   const [data, setData] = useState<any[]>([]);
+  const [footer, setFooter] = useState<{
+    estimate_total_sum: number;
+    done_total_sum: number;
+    members: { estimate_sum: number; out_of_estimate_sum: number; done_sum: number }[];
+  }>();
+  const [counter, setcounter] = useState(0);
 
   const { data: membersData, isLoading } = useMembers(parseInt(boardId ? boardId : ''));
-  const { data: BurnDownData, isLoading: loadingBurndown } = useBurnDown(boardId);
-  // console.log(BurnDownData);
-  // const colQuery = useBurnDown(boardId);
+  const { data: BurnDownData, isLoading: loadingBurndown, refetch: refetchBurnDown } = useBurnDown(boardId);
+  const {
+    data: BDFooter,
+    isLoading: loadingBurndownFooter,
+    refetch: refetchBurnDownFooter,
+  } = useBurnDownFooter(boardId);
+  const {
+    data: BurnDownDataChart,
+    isLoading: loadingBurndown1,
+    refetch: refetchBurnDownChart,
+  } = useBurnDownChartData(boardId);
+
+  const { theme: mode } = useTheme();
+  const config = {
+    style: 'default',
+    theme: 'zinc',
+    radius: 0.5,
+  };
+  const theme = themes.find((theme) => theme.name === config.theme);
+  const [data1, setdata1] = useState([{}]);
   useEffect(() => {
     if (membersData) {
-      console.log(membersData.members);
-      // setusers(membersData?.members.map((member: { user: { username: string } }) => member.user.username));
+      // console.log(membersData.members);
       let members: any[] = [];
       for (let i = 0; i < membersData.members?.length; i++) {
         members.push([membersData?.members[i].id, membersData?.members[i].user.username]);
@@ -64,43 +83,118 @@ function BurnDownChart() {
         for (let j = 0; j < BurnDownData[i].data?.length; j++) {
           obj[`estimate${BurnDownData[i]?.data[j].username}`] = BurnDownData[i]?.data[j].estimate;
           obj[`done${BurnDownData[i]?.data[j].username}`] = BurnDownData[i]?.data[j].done;
+          obj[`oof${BurnDownData[i]?.data[j].username}`] = BurnDownData[i]?.data[j].out_of_estimate;
         }
+        obj['estimateT'] = BurnDownData[i]?.estimate_sum;
+        obj['doneT'] = BurnDownData[i]?.done_sum;
+        obj['estimateB'] = BurnDownData[i]?.est_rem;
+        obj['doneB'] = BurnDownData[i]?.act_rem;
         initialData.push(obj);
       }
       setData(initialData);
       // setData(defaultData);
     }
-  }, [membersData, BurnDownData]);
-
+    if (BDFooter) {
+      setFooter(BDFooter);
+    }
+    if (BurnDownDataChart) {
+      console.log(BurnDownDataChart);
+      let est: any[] = [];
+      for (let i = 0; i < BurnDownDataChart?.length; i++) {
+        console.log(BurnDownDataChart[i]);
+        est.push({
+          date: BurnDownDataChart[i].date, // Adjust the date format as needed
+          EstimateRem: BurnDownDataChart[i].est_rem,
+          ActualRem: BurnDownDataChart[i].act_rem,
+        });
+      }
+      setdata1(est);
+    }
+  }, [membersData, BurnDownData, BDFooter, BurnDownDataChart]);
   const columns = React.useMemo<ColumnDef<Person>[]>(() => {
     let cols = [];
     cols.push({
       header: `Date`,
       accessorKey: `date`,
       id: `date`,
+      footer: 'Total',
     });
+    // while (!users) {
+    //   if (users == true) {
+    //     break;
+    //   }
+    // }
+    // while (!footer) {
+    //   if (footer == true) {
+    //     break;
+    //   }
+    // }
     for (let j = 0; j < users?.length; j++) {
+      // console.log('Footer ', footer?.members[j]);
       cols.push({
         header: `${users[j][1]}`,
-        // footer: (props) => props.column.id,
         columns: [
           {
             accessorKey: `estimate${users[j][1]}`,
             header: 'Estimate',
             id: `e${users[j][0]}`,
-            footer: 'Total Estimate',
+            footer: footer?.members[j]?.estimate_sum,
           },
           {
             accessorKey: `done${users[j][1]}`,
             header: 'Done',
             id: `d${users[j][0]}`,
-            footer: 'Total Done',
+            footer: footer?.members[j]?.done_sum,
+          },
+          {
+            accessorKey: `oof${users[j][1]}`,
+            header: 'Out Of Estimate',
+            id: `o${users[j][0]}`,
+            footer: footer?.members[j]?.out_of_estimate_sum,
           },
         ],
       });
     }
+    cols.push({
+      header: 'Total',
+      // footer: (props) => props.column.id,
+      columns: [
+        {
+          accessorKey: `estimateT`,
+          header: 'Estimate',
+          id: `totalE`,
+          footer: footer?.estimate_total_sum,
+        },
+        {
+          accessorKey: `doneT`,
+          header: 'Done',
+          id: `totalD`,
+          footer: footer?.done_total_sum,
+        },
+      ],
+    });
+
+    cols.push({
+      header: 'BurnDown',
+      // footer: (props) => props.column.id,
+      columns: [
+        {
+          accessorKey: `estimateB`,
+          header: 'Est Rem',
+          id: `burnE`,
+          // footer: 'Total Estimate',
+        },
+        {
+          accessorKey: `doneB`,
+          header: 'Act Rem',
+          id: `burnD`,
+          // footer: 'Total Done',
+        },
+      ],
+    });
     return cols;
-  }, [users]);
+  }, [users, footer]);
+
   let authTokens = useContext(AuthContext)?.authTokens;
   // console.log(authTokens);
   const ChangeDone = async (boardId: string | undefined, done: string, member: string, date: string) => {
@@ -117,7 +211,11 @@ function BurnDownChart() {
         date: date,
       }),
     });
+
     console.log(data);
+    refetchBurnDown();
+    refetchBurnDownFooter();
+    refetchBurnDownChart();
   };
   const ChangeEstimate = async (boardId: string | undefined, estimate: string, member: string, date: string) => {
     const data = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/burndown-chart/${boardId}/`, {
@@ -134,6 +232,9 @@ function BurnDownChart() {
       }),
     });
     console.log(data);
+    refetchBurnDown();
+    refetchBurnDownFooter();
+    refetchBurnDownChart();
   };
 
   const defaultColumn: Partial<ColumnDef<Person>> = {
@@ -152,39 +253,40 @@ function BurnDownChart() {
 
       // Handle input change
       const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.value !== value) {
+        if (e.target.value !== value && e.target.value !== '') {
           const username = id.substring(1);
-          const state =
-            id[0] === 'd'
-              ? ChangeDone(boardId, e.target.value, username, data[index]?.date)
-              : ChangeEstimate(boardId, e.target.value, username, data[index]?.date);
+          // const state = null;
+          if (id[0] === 'd') ChangeDone(boardId, e.target.value, username, data[index]?.date);
+          if (id[0] === 'e') ChangeEstimate(boardId, e.target.value, username, data[index]?.date);
           console.log('Row: ', data[index]?.date.replace(/-/g, '/'));
           console.log('New value: ', e.target.value);
           console.log('User: ', username);
-          console.log('State: ', state);
+          // console.log('State: ', state);
         }
         setValue(e.target.value);
       };
 
       return id === 'date' ? (
         <div>{value as string}</div>
+      ) : id[0] === 'o' ? (
+        <Input disabled value={value as string} onChange={handleChange} onBlur={onBlur} />
+      ) : id[0] === 't' ? (
+        <Input disabled value={value as string} onChange={handleChange} onBlur={onBlur} />
+      ) : id[0] === 'b' ? (
+        <Input disabled value={value as string} onChange={handleChange} onBlur={onBlur} />
       ) : (
         <Input value={value as string} onChange={handleChange} onBlur={onBlur} />
       );
     },
   };
 
-  // const [data, setData] = React.useState([...defaultData]);
   const table = useReactTable({
     data,
     columns,
     defaultColumn,
     getCoreRowModel: getCoreRowModel(),
-    // getPaginationRowModel: getPaginationRowModel(),
-    // Provide our updateData function to our table meta
     meta: {
       updateData: (rowIndex, columnId, value) => {
-        // Here we should do the api
         setData((old) =>
           old.map((row, index) => {
             if (index === rowIndex) {
@@ -200,7 +302,8 @@ function BurnDownChart() {
     },
   });
   return (
-    <div className="p-2 m-auto">
+    <div className="m-auto p-2">
+      <CreateBurnDown />
       <div className="h-2" />
       <T1>
         <TableHeader>
@@ -209,7 +312,7 @@ function BurnDownChart() {
             <TableRow key={headerGroup.id}>
               {headerGroup.headers.map((header) => {
                 return (
-                  <TableHead key={header.id} colSpan={header.colSpan}>
+                  <TableHead key={header.id} colSpan={header.colSpan} className=" text-md font-bold">
                     {header.isPlaceholder ? null : (
                       <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
                     )}
@@ -239,24 +342,110 @@ function BurnDownChart() {
         <TableFooter>
           <TableRow>
             {table.getFooterGroups()[0].headers.map((header) => (
-              <TableCell key={header.id} colSpan={header.colSpan}>
+              <TableCell
+                key={header.id}
+                colSpan={header.colSpan}
+                className=" border-r-2 pl-6 text-left text-base font-bold"
+              >
                 {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
               </TableCell>
             ))}
           </TableRow>
-          {/* {table.getFooterGroups().map((footerGroup) => (
-            <TableRow key={footerGroup.id}>
-              {footerGroup.headers.map((header) => (
-                <TableCell key={header.id} colSpan={header.colSpan}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
-                </TableCell>
-              ))}
-            </TableRow>
-          ))} */}
         </TableFooter>
       </T1>
       <div className="h-2" />
-      <BurnDownChart2 />
+      <div className="mb-10">
+        <Card className=" m-auto  mt-10 w-[80vw]">
+          <CardHeader>
+            <CardTitle>BurnDownChart</CardTitle>
+            <CardDescription>Your working minutes are ahead of where you normally are.</CardDescription>
+          </CardHeader>
+          <CardContent className="pb-4">
+            <div className="h-[60vh]">
+              <ResponsiveContainer width="100%" aspect={3}>
+                <LineChart
+                  data={data1}
+                  margin={{
+                    top: 5,
+                    right: 10,
+                    left: 10,
+                    bottom: 50,
+                  }}
+                >
+                  <XAxis
+                    dataKey="date" // Assuming "date" is the key for your x-axis data
+                    type="category" // Specify "category" type for string-based x-axis data
+                    label={{ position: 'bottom' }}
+                    tick={
+                      {
+                        angle: -45,
+                        textAnchor: 'end',
+                        interval: 0,
+                      } as any
+                    } // Explicitly define the type for the tick property
+                  />
+                  <YAxis label={{ value: 'Points', angle: -90, position: 'insideLeft' }} />
+
+                  <Tooltip
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="rounded-lg border bg-background p-2 shadow-sm">
+                            <div className="grid grid-cols-2 gap-2">
+                              <div className="flex flex-col">
+                                <span className="text-[0.70rem] uppercase text-muted-foreground">Estimate</span>
+                                <span className="font-bold text-muted-foreground">{payload[0].value}</span>
+                              </div>
+                              <div className="flex flex-col">
+                                <span className="text-[0.70rem] uppercase text-muted-foreground">Left</span>
+                                <span className="font-bold">{payload[1].value}</span>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+
+                      return null;
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    strokeWidth={3}
+                    dataKey="EstimateRem"
+                    activeDot={{
+                      r: 8,
+                      style: { fill: 'var(--theme-primary)', opacity: 0.25 },
+                    }}
+                    style={
+                      {
+                        stroke: 'var(--theme-primary)',
+                        opacity: 0.25,
+                        '--theme-primary': `hsl(${theme?.cssVars[mode === 'dark' ? 'dark' : 'light'].primary})`,
+                      } as React.CSSProperties
+                    }
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="ActualRem"
+                    strokeWidth={3}
+                    activeDot={{
+                      r: 8,
+                      style: { fill: 'var(--theme-primary)' },
+                    }}
+                    style={
+                      {
+                        stroke: 'var(--theme-primary)',
+                        opacity: 1,
+                        '--theme-primary': `hsl(${theme?.cssVars[mode === 'dark' ? 'dark' : 'light'].primary})`,
+                      } as React.CSSProperties
+                    }
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }
