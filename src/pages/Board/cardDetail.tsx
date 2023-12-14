@@ -40,37 +40,17 @@ import { useCheckList } from './hooks/useCheckList';
 import { useAssignedLabels, useBoardLabels } from './hooks/useLabel';
 import { Card } from './types';
 
-// const assigndata = {
-//   id: 3,
-//   labels: [
-//     {
-//       id: 1,
-//       title: 'label1',
-//       color: 'green',
-//     },
-//     {
-//       id: 2,
-//       title: 'label2',
-//       color: 'bb',
-//     },
-//     {
-//       id: 8,
-//       title: 'qmars',
-//       color: '#ba67c8',
-//     },
-//   ],
-//   labelcard: [
-//     {
-//       id: 6,
-//     },
-//     {
-//       id: 2,
-//     },
-//     {
-//       id: 8,
-//     },
-//   ],
-// };
+const colorBoxes: { [key: number]: string } = {
+  1: '#BAF3DB',
+  2: '#C6EDFB',
+  3: '#CCE0FF',
+  5: '#D3F1A7',
+  7: '#F8E6A0',
+  11: '#DFD8FD',
+  13: '#FEDEC8',
+  17: '#FDD0EC',
+  19: '#FDB8B4',
+};
 interface Props {
   modalOpen: boolean;
   setModalOpen: any;
@@ -139,7 +119,22 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
               <Input value={modalTitle} onChange={(e) => setModalTitle(e.target.value)} className="w-5/6" />
               {/* <DialogTitle>{data.title}</DialogTitle> */}
             </div>
-            <DialogDescription className="ml-10">After getting api say name of lists</DialogDescription>
+            <DialogDescription className="ml-10">
+              {storyPoint !== undefined && colorBoxes[storyPoint] ? (
+                <div className="grid grid-cols-6">
+                  <div className="col-span-1 cursor-pointer">
+                    <Label>Story Point:</Label>
+                    <div
+                      className={`m-1 w-2/3 rounded px-2 py-1 text-sm font-semibold text-foreground`}
+                      style={{ backgroundColor: colorBoxes[storyPoint] }}
+                      // onClick={() => <StoryPointComponent storyPoint={storyPoint} setStoryPoint={setStoryPoint} />}
+                    >
+                      {storyPoint}
+                    </div>
+                  </div>
+                </div>
+              ) : null}
+            </DialogDescription>
           </DialogHeader>
           <div className="grid md:flex">
             <div className="ml- w-3/4">
