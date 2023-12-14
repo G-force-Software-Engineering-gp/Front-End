@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { assign } from 'lodash';
+import _, { assign } from 'lodash';
 import {
   AlignJustify,
   AppWindow,
@@ -27,7 +27,7 @@ import {
   Share2,
   User,
 } from 'lucide-react';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { CheckListSection } from './components/checkListModal';
 import { CheckListPopover } from './components/checkListPopover';
@@ -62,7 +62,6 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
     from: data?.startdate ? new Date(data.startdate) : new Date(),
     to: data?.duedate ? new Date(data.duedate) : new Date(),
   });
-
   const [selectedValue, setSelectedValue] = React.useState(data?.reminder ? data?.reminder : 'None');
   // set for story point
   const [storyPoint, setStoryPoint] = useState(data.storypoint);
@@ -72,6 +71,22 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   const { isLoading: checkListLoading, data: checkListData } = useCheckList(data.id);
   const { isLoading: boardLabelLoading, data: boardLabelData } = useBoardLabels();
   const { isLoading: assignLabelLoading, data: assignLabelData } = useAssignedLabels(data.id);
+
+  // merge for finding assigned list in label
+  const mergeObject = useMemo(() => {
+    const mergedLabelsData = _.map(boardLabelData?.labels, (label, index) => {
+      const assignedLabel = _.find(assignLabelData?.labels, { id: label?.id });
+      const assignedLabelIndex = _.findIndex(assignLabelData?.labels, { id: label?.id });
+      return assignedLabel
+        ? { ...label, labelcard: assignLabelData?.labelcard?.[assignedLabelIndex]?.id, checked: true }
+        : { ...label, labelcard: assignLabelData?.labelcard?.[assignedLabelIndex]?.id, checked: false };
+    });
+    const mergedData = {
+      id: boardLabelData?.id || 11,
+      labels: mergedLabelsData,
+    };
+    return mergedData;
+  }, [boardLabelData, assignLabelData]);
 
   let authTokens = useContext(AuthContext)?.authTokens;
   const queryClient = useQueryClient();
@@ -120,20 +135,41 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
               {/* <DialogTitle>{data.title}</DialogTitle> */}
             </div>
             <DialogDescription className="ml-10">
-              {storyPoint !== undefined && colorBoxes[storyPoint] ? (
-                <div className="grid grid-cols-6">
-                  <div className="col-span-1 cursor-pointer">
-                    <Label>Story Point:</Label>
+              <div className="flex gap-5">
+                {storyPoint !== undefined && colorBoxes[storyPoint] ? (
+                  <div className="cursor-pointer">
+                    <Label className="text-xs font-bold">Story Point:</Label>
                     <div
-                      className={`m-1 w-2/3 rounded px-2 py-1 text-sm font-semibold text-foreground`}
+                      className={`mx-1 my-1 rounded px-2 py-1 text-sm font-semibold text-foreground`}
                       style={{ backgroundColor: colorBoxes[storyPoint] }}
                       // onClick={() => <StoryPointComponent storyPoint={storyPoint} setStoryPoint={setStoryPoint} />}
                     >
                       {storyPoint}
                     </div>
                   </div>
+                ) : null}
+                <div className="cursor-pointer">
+                  {mergeObject?.labels && mergeObject.labels.some((label) => label.checked) && (
+                    <Label className="text-xs font-bold">Labels:</Label>
+                  )}
+                  <div className="flex">
+                    {mergeObject?.labels?.map((label) => {
+                      if (label.checked) {
+                        return (
+                          <div
+                            key={label.id}
+                            className={`mx-1 my-1 w-full rounded px-2 py-1 text-sm font-semibold text-foreground`}
+                            style={{ backgroundColor: label?.color }}
+                          >
+                            {label.title}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
                 </div>
-              ) : null}
+              </div>
             </DialogDescription>
           </DialogHeader>
           <div className="grid md:flex">
@@ -193,7 +229,8 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   <Tag className="mb-1 mr-1 h-4 w-4" />
                   Labels
                 </Button> */}
-                <LabelPopover cardData={data} labelData={boardLabelData} assigndata={assignLabelData} />
+                {/* <LabelPopover cardData={data} labelData={boardLabelData} assigndata={assignLabelData} /> */}
+                <LabelPopover cardData={data} mergeObject={mergeObject} />
                 {/* <Button
                   size="sm"
                   variant="secondary"

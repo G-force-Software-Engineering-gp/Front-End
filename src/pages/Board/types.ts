@@ -91,3 +91,14 @@ export type LabelAssign = {
   labelcard ?: Labelcard[]
 };
 
+export type MergedLabel = {
+  id: number;
+  title: string;
+  color: string;
+  labelcard?: number;
+  checked: boolean;
+}
+export type MergedLabels = {
+  id: number;
+  labels?:MergedLabel[]
+}

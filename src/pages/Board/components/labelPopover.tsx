@@ -7,28 +7,28 @@ import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import _, { merge } from 'lodash';
 import { Pencil, Tag } from 'lucide-react';
-import { useContext, useEffect, useMemo, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import {
   Card,
-  LabelAssign as labelAssignType,
-  LabelItems as LabelItemsType,
   LabelItem as LabelItemType,
+  MergedLabels as MergedLabelsType,
+  MergedLabel as MergedLabelType,
 } from '../types';
 import { CreateLable } from './createLable';
 
-type mergeDataType = {
-  id: number;
-  labels: labelsType[];
-};
-type labelsType = {
-  labelcard: number | undefined;
-  checked: boolean;
-  id: number;
-  title: string;
-  color: string;
-};
+// type mergeDataType = {
+//   id: number;
+//   labels: labelsType[];
+// };
+// type labelsType = {
+//   labelcard: number | undefined;
+//   checked: boolean;
+//   id: number;
+//   title: string;
+//   color: string;
+// };
 const colorBoxes = [
   '#baf3db',
   '#f8e6a0',
@@ -89,8 +89,8 @@ const colorBoxes = [
 // };
 
 interface LabelItemProps {
-  item?: labelsType;
-  mergeData?: mergeDataType;
+  item?: MergedLabelType;
+  mergeData?: MergedLabelsType;
   cardData: Card;
   labelOpen: boolean;
   setLabelOpen: any;
@@ -137,7 +137,7 @@ const LabelItem = ({ item, mergeData, cardData, labelOpen, setLabelOpen }: Label
       queryClient.invalidateQueries({ queryKey: ['assignLabel', cardData.id] });
     },
   });
-  const handleCheckboxChange = (item: labelsType | undefined) => {
+  const handleCheckboxChange = (item: MergedLabelType | undefined) => {
     console.log(`Checkbox with id ${item?.id} changed`);
     console.log(item);
     if (item?.checked) {
@@ -169,32 +169,36 @@ const LabelItem = ({ item, mergeData, cardData, labelOpen, setLabelOpen }: Label
     </>
   );
 };
+// interface LabelPopoverProps {
+//   labelData?: LabelItemsType;
+//   assigndata?: labelAssignType;
+//   cardData: Card;
+// }
 interface LabelPopoverProps {
-  labelData?: LabelItemsType;
-  assigndata?: labelAssignType;
+  mergeObject: MergedLabelsType;
   cardData: Card;
 }
-export function LabelPopover({ labelData, assigndata, cardData }: LabelPopoverProps) {
+export function LabelPopover({ mergeObject, cardData }: LabelPopoverProps) {
   //   const [label, setLabel] = useState(data.labels);
   const [labelOpen, setLabelOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const mergeObject = useMemo(() => {
-    const mergedLabelsData = _.map(labelData?.labels, (label, index) => {
-      const assignedLabel = _.find(assigndata?.labels, { id: label?.id });
-      const assignedLabelIndex = _.findIndex(assigndata?.labels, { id: label?.id });
-      return assignedLabel
-        ? { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex]?.id, checked: true }
-        : { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex]?.id, checked: false };
-    });
-    const mergedData = {
-      id: labelData?.id || 11,
-      labels: mergedLabelsData,
-    };
-    return mergedData;
-  }, [labelData, assigndata]);
+  // const mergeObject = useMemo(() => {
+  //   const mergedLabelsData = _.map(labelData?.labels, (label, index) => {
+  //     const assignedLabel = _.find(assigndata?.labels, { id: label?.id });
+  //     const assignedLabelIndex = _.findIndex(assigndata?.labels, { id: label?.id });
+  //     return assignedLabel
+  //       ? { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex]?.id, checked: true }
+  //       : { ...label, labelcard: assigndata?.labelcard?.[assignedLabelIndex]?.id, checked: false };
+  //   });
+  //   const mergedData = {
+  //     id: labelData?.id || 11,
+  //     labels: mergedLabelsData,
+  //   };
+  //   return mergedData;
+  // }, [labelData, assigndata]);
   console.log(mergeObject);
-  const [filteredLabels, setFilteredLabels] = useState(mergeObject.labels);
+  const [filteredLabels, setFilteredLabels] = useState(mergeObject?.labels);
   useEffect(() => {
     handleSearch(searchQuery);
   }, [mergeObject]);
@@ -248,8 +252,8 @@ export function LabelPopover({ labelData, assigndata, cardData }: LabelPopoverPr
   );
 }
 interface LabelItemsProps {
-  mergedData?: mergeDataType;
-  filteredLabels?: labelsType[];
+  mergedData?: MergedLabelsType;
+  filteredLabels?: MergedLabelType[];
   cardData: Card;
   labelOpen: boolean;
   setLabelOpen: any;
