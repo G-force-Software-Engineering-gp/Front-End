@@ -33,6 +33,7 @@ import { CheckListSection } from './components/checkListModal';
 import { CheckListPopover } from './components/checkListPopover';
 import { DatePickerModal } from './components/datePickerModal';
 import { DescriptionModalComponent } from './components/descriptionModal';
+import { LabelHeaderPopover } from './components/labelHeaderPopover';
 import { LabelPopover } from './components/labelPopover';
 import { SetStimateComponent } from './components/setStimate';
 import { StoryPointComponent } from './components/storyPoint';
@@ -167,6 +168,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                       }
                       return null;
                     })}
+                    <LabelHeaderPopover cardData={data} mergeObject={mergeObject} />
                   </div>
                 </div>
               </div>
