@@ -16,6 +16,8 @@ import Settings from './settingsPage';
 import Advanced from './settingsPage/advanced';
 import Cards from './settingsPage/cards';
 import Profile from './settingsPage/profile';
+import WorkSpacePageDetails from './HomePage/components/WorkSpacePageDetails';
+import WorkSpaceMembers from './HomePage/WorkSpaceMembers';
 
 const Router = () => {
   return (
@@ -31,7 +33,10 @@ const Router = () => {
               <Route path="calendar" element={<Calendar />} />
             </Route>
             <Route path="/board/:boardId/burndown" element={<BurnDownPage />} />
-            <Route path="/workspace/:workspaceId/boards" element={<WorkSpacePage />} />
+            <Route path='/workspace/:workspaceId' element={<WorkSpacePage />}>
+              <Route index path="boards" element={<WorkSpacePageDetails />} />
+              <Route path="members" element={<WorkSpaceMembers />} />
+            </Route>
             <Route
               path="/burndown"
               element={
