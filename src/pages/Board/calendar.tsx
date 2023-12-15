@@ -131,11 +131,13 @@ const Calendar = () => {
       <div>
         {eventInfo.event.extendedProps.type === "calendarEvent" &&
           <div>
-            {eventInfo.event.extendedProps.labels.map((label: any) => (
-              <div className='h-fit w-fit m-1 p-1 rounded-full' style={{ backgroundColor: label.color }} key={label.id}>
-                <p className='color-white text-xs'>{label.title}</p>
-              </div>
-            ))}
+            <div className='flex flex-wrap'>
+              {eventInfo.event.extendedProps.labels.map((label: any) => (
+                <div className='h-fit w-fit m-1 p-1 rounded-full' style={{ backgroundColor: label.color }} key={label.id}>
+                  <p className='color-white text-xs'>{label.title}</p>
+                </div>
+              ))}
+            </div>
             <Button variant="secondary" onClick={() => handleClick()} className='rounded-none justify-start text-sm font-bold p-1 w-full h-auto whitespace-normal' >
               {eventInfo.event.title}
             </Button >
