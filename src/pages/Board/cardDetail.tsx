@@ -171,7 +171,9 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                       }
                       return null;
                     })}
-                    <LabelHeaderPopover cardData={data} mergeObject={mergeObject} />
+                    {mergeObject?.labels && mergeObject.labels.some((label) => label.checked) && (
+                      <LabelHeaderPopover cardData={data} mergeObject={mergeObject} />
+                    )}
                   </div>
                 </div>
               </div>
