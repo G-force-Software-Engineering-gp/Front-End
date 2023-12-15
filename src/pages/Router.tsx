@@ -5,7 +5,6 @@ import BurnDownPage from './Board/BurnDownPage';
 import Calendar from './Board/calendar';
 import BasicTable from './Board/components/BasicTable';
 import BurnDownChart from './Board/components/BurnDownChart';
-import BurnDownChart2 from './Board/components/BurnDownChart2';
 import { KanbanBoard } from './Board/components/KanbanBoard';
 import Home from './HomePage/Home';
 import WorkSpacePage from './HomePage/WorkSpacePage';
