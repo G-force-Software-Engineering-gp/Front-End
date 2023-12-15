@@ -7,13 +7,15 @@ import { format } from 'date-fns';
 import { CalendarIcon, Clock7 } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { DateRange } from 'react-day-picker';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const CreateBurnDown = () => {
   const [mainDate, setMainDate] = useState<DateRange | undefined>();
   const formatDateToString = (date: Date | undefined) => {
     return date ? date.toISOString().split('T')[0] : '';
   };
+  const navigate = useNavigate();
   const { boardId } = useParams();
   let authTokens = useContext(AuthContext)?.authTokens;
   const CreateBurnDown = async () => {
@@ -32,6 +34,27 @@ const CreateBurnDown = () => {
           }),
         }
       );
+      if (data.ok) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Successful',
+          text: 'BurnDown Chart and Table Created',
+          timer: 2000,
+        });
+        setInterval(() => {
+          navigate(0);
+        }, 3000);
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Something went wrong!',
+          timer: 2000,
+        });
+        setInterval(() => {
+          navigate(0);
+        }, 3000);
+      }
       console.log(data);
     }
   };

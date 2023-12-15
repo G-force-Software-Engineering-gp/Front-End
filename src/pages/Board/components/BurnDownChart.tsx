@@ -1,6 +1,7 @@
 import { useTheme } from '@/components/theme-provider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table as T1,
   TableBody,
@@ -19,7 +20,6 @@ import { useBurnDown } from '../hooks/useBurnDown';
 import useBurnDownChartData from '../hooks/useBurnDownChartData';
 import { useBurnDownFooter } from '../hooks/useBurnDownFooter';
 import { useMembers } from '../hooks/useMembers';
-import BurnDownChart2 from './BurnDownChart2';
 import CreateBurnDown from './CreateBurnDown';
 import { themes } from './Themes';
 
@@ -42,9 +42,7 @@ function BurnDownChart() {
     done_total_sum: number;
     members: { estimate_sum: number; out_of_estimate_sum: number; done_sum: number }[];
   }>();
-  const [counter, setcounter] = useState(0);
-
-  const { data: membersData, isLoading } = useMembers(parseInt(boardId ? boardId : ''));
+  const { data: membersData, isLoading: loadingMembers } = useMembers(parseInt(boardId ? boardId : ''));
   const { data: BurnDownData, isLoading: loadingBurndown, refetch: refetchBurnDown } = useBurnDown(boardId);
   const {
     data: BDFooter,
@@ -53,7 +51,7 @@ function BurnDownChart() {
   } = useBurnDownFooter(boardId);
   const {
     data: BurnDownDataChart,
-    isLoading: loadingBurndown1,
+    isLoading: loadingBurndownChart,
     refetch: refetchBurnDownChart,
   } = useBurnDownChartData(boardId);
 
@@ -130,7 +128,6 @@ function BurnDownChart() {
     //   }
     // }
     for (let j = 0; j < users?.length; j++) {
-      // console.log('Footer ', footer?.members[j]);
       cols.push({
         header: `${users[j][1]}`,
         columns: [
@@ -305,147 +302,161 @@ function BurnDownChart() {
     <div className="m-auto p-2">
       <CreateBurnDown />
       <div className="h-2" />
-      <T1>
-        <TableHeader>
-          {/* Header */}
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id}>
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id} colSpan={header.colSpan} className=" text-md font-bold">
-                    {header.isPlaceholder ? null : (
-                      <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
-                    )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody>
-          {/* Body */}
-          {table.getRowModel().rows.map((row) => {
-            return (
-              <TableRow key={row.id}>
-                {row.getVisibleCells().map((cell) => {
+      {loadingMembers || loadingBurndown || loadingBurndownFooter ? (
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">Loading the table</div>
+        </div>
+      ) : (
+        <T1 className="">
+          <TableHeader>
+            {/* Header */}
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => {
                   return (
-                    <TableCell className=" bg-inherit" key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </TableCell>
+                    <TableHead key={header.id} colSpan={header.colSpan} className=" text-md font-bold">
+                      {header.isPlaceholder ? null : (
+                        <div>{flexRender(header.column.columnDef.header, header.getContext())}</div>
+                      )}
+                    </TableHead>
                   );
                 })}
               </TableRow>
-            );
-          })}
-        </TableBody>
-        {/* Footer */}
-        <TableFooter>
-          <TableRow>
-            {table.getFooterGroups()[0].headers.map((header) => (
-              <TableCell
-                key={header.id}
-                colSpan={header.colSpan}
-                className=" border-r-2 pl-6 text-left text-base font-bold"
-              >
-                {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
-              </TableCell>
             ))}
-          </TableRow>
-        </TableFooter>
-      </T1>
-      <div className="h-2" />
-      <div className="mb-10">
-        <Card className=" m-auto  mt-10 w-[80vw]">
-          <CardHeader>
-            <CardTitle>BurnDownChart</CardTitle>
-            <CardDescription>Your working minutes are ahead of where you normally are.</CardDescription>
-          </CardHeader>
-          <CardContent className="pb-4">
-            <div className="h-[60vh]">
-              <ResponsiveContainer width="100%" aspect={3}>
-                <LineChart
-                  data={data1}
-                  margin={{
-                    top: 5,
-                    right: 10,
-                    left: 10,
-                    bottom: 50,
-                  }}
+          </TableHeader>
+          <TableBody>
+            {/* Body */}
+            {table.getRowModel().rows.map((row) => {
+              return (
+                <TableRow key={row.id}>
+                  {row.getVisibleCells().map((cell) => {
+                    return (
+                      <TableCell className=" bg-inherit" key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              );
+            })}
+          </TableBody>
+          {/* Footer */}
+          <TableFooter>
+            <TableRow>
+              {table.getFooterGroups()[0].headers.map((header) => (
+                <TableCell
+                  key={header.id}
+                  colSpan={header.colSpan}
+                  className=" border-r-2 pl-6 text-left text-base font-bold"
                 >
-                  <XAxis
-                    dataKey="date" // Assuming "date" is the key for your x-axis data
-                    type="category" // Specify "category" type for string-based x-axis data
-                    label={{ position: 'bottom' }}
-                    tick={
-                      {
-                        angle: -45,
-                        textAnchor: 'end',
-                        interval: 0,
-                      } as any
-                    } // Explicitly define the type for the tick property
-                  />
-                  <YAxis label={{ value: 'Points', angle: -90, position: 'insideLeft' }} />
+                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.footer, header.getContext())}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableFooter>
+        </T1>
+      )}{' '}
+      <div className="h-2" />
+      {loadingBurndownChart ? (
+        <div className="flex items-center space-x-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">Loading the chart</div>
+        </div>
+      ) : (
+        <div className="mb-10">
+          <Card className=" m-auto  mt-10 w-[80vw]">
+            <CardHeader>
+              <CardTitle>BurnDownChart</CardTitle>
+              <CardDescription>Your working minutes are ahead of where you normally are.</CardDescription>
+            </CardHeader>
+            <CardContent className="pb-4">
+              <div className="h-[60vh]">
+                <ResponsiveContainer width="100%" aspect={3}>
+                  <LineChart
+                    data={data1}
+                    margin={{
+                      top: 5,
+                      right: 10,
+                      left: 10,
+                      bottom: 50,
+                    }}
+                  >
+                    <XAxis
+                      dataKey="date" // Assuming "date" is the key for your x-axis data
+                      type="category" // Specify "category" type for string-based x-axis data
+                      label={{ position: 'bottom' }}
+                      tick={
+                        {
+                          angle: -45,
+                          textAnchor: 'end',
+                          interval: 0,
+                        } as any
+                      } // Explicitly define the type for the tick property
+                    />
+                    <YAxis label={{ value: 'Points', angle: -90, position: 'insideLeft' }} />
 
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        return (
-                          <div className="rounded-lg border bg-background p-2 shadow-sm">
-                            <div className="grid grid-cols-2 gap-2">
-                              <div className="flex flex-col">
-                                <span className="text-[0.70rem] uppercase text-muted-foreground">Estimate</span>
-                                <span className="font-bold text-muted-foreground">{payload[0].value}</span>
-                              </div>
-                              <div className="flex flex-col">
-                                <span className="text-[0.70rem] uppercase text-muted-foreground">Left</span>
-                                <span className="font-bold">{payload[1].value}</span>
+                    <Tooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <div className="rounded-lg border bg-background p-2 shadow-sm">
+                              <div className="grid grid-cols-2 gap-2">
+                                <div className="flex flex-col">
+                                  <span className="text-[0.70rem] uppercase text-muted-foreground">Estimate</span>
+                                  <span className="font-bold text-muted-foreground">{payload[0].value}</span>
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-[0.70rem] uppercase text-muted-foreground">Left</span>
+                                  <span className="font-bold">{payload[1].value}</span>
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        );
-                      }
+                          );
+                        }
 
-                      return null;
-                    }}
-                  />
-                  <Line
-                    type="monotone"
-                    strokeWidth={3}
-                    dataKey="EstimateRem"
-                    activeDot={{
-                      r: 8,
-                      style: { fill: 'var(--theme-primary)', opacity: 0.25 },
-                    }}
-                    style={
-                      {
-                        stroke: 'var(--theme-primary)',
-                        opacity: 0.25,
-                        '--theme-primary': `hsl(${theme?.cssVars[mode === 'dark' ? 'dark' : 'light'].primary})`,
-                      } as React.CSSProperties
-                    }
-                  />
-                  <Line
-                    type="monotone"
-                    dataKey="ActualRem"
-                    strokeWidth={3}
-                    activeDot={{
-                      r: 8,
-                      style: { fill: 'var(--theme-primary)' },
-                    }}
-                    style={
-                      {
-                        stroke: 'var(--theme-primary)',
-                        opacity: 1,
-                        '--theme-primary': `hsl(${theme?.cssVars[mode === 'dark' ? 'dark' : 'light'].primary})`,
-                      } as React.CSSProperties
-                    }
-                  />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                        return null;
+                      }}
+                    />
+                    <Line
+                      type="monotone"
+                      strokeWidth={3}
+                      dataKey="EstimateRem"
+                      activeDot={{
+                        r: 8,
+                        style: { fill: 'var(--theme-primary)', opacity: 0.25 },
+                      }}
+                      style={
+                        {
+                          stroke: 'var(--theme-primary)',
+                          opacity: 0.25,
+                          '--theme-primary': `hsl(${theme?.cssVars[mode === 'dark' ? 'dark' : 'light'].primary})`,
+                        } as React.CSSProperties
+                      }
+                    />
+                    <Line
+                      type="monotone"
+                      dataKey="ActualRem"
+                      strokeWidth={3}
+                      activeDot={{
+                        r: 8,
+                        style: { fill: 'var(--theme-primary)' },
+                      }}
+                      style={
+                        {
+                          stroke: 'var(--theme-primary)',
+                          opacity: 1,
+                          '--theme-primary': `hsl(${theme?.cssVars[mode === 'dark' ? 'dark' : 'light'].primary})`,
+                        } as React.CSSProperties
+                      }
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}{' '}
     </div>
   );
 }
