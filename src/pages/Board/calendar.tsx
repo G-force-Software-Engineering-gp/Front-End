@@ -64,11 +64,13 @@ const Calendar = () => {
       }
     })
     const Data = await res.json()
-    const calendar_event: any = Object.keys(Data).map((meeting) => {
+    const calendar_event: any = Object.keys(Data).map((meeting: any) => {
       let dayObject = new Date(Data[meeting].time)
       let day: any = dayObject.getUTCDate();
-      let month: any = dayObject.getUTCMonth();
+      let month: any = dayObject.getUTCMonth() + 1;
       const eventTime = dayObject.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+
       if (month < 10) {
         month = "0" + month
       }
@@ -105,7 +107,7 @@ const Calendar = () => {
   }
   function handleSubmit() {
     const meetingValues = {
-      member: membersData?.members[0]?.id,
+      member: membersData?.members[1]?.id,
       title: title,
       time: date
     }
@@ -153,7 +155,7 @@ const Calendar = () => {
   }
   return (
     <>
-      <div className='p-4 h-[100vh] w-full'>
+      <div className='p-4 h-[100vh] w-full backdrop-blur-md'>
         <FullCalendar
           plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
           initialView="dayGridMonth"
