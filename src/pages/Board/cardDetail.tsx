@@ -126,7 +126,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   });
   useEffect(() => {
     dateMutation.mutate();
-  }, [mainDate, selectedValue, storyPoint, setStimate, description, modalTitle]);
+  }, [mainDate, selectedValue, storyPoint, setStimate, description, modalTitle, comment]);
 
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>
