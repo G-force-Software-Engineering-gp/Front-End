@@ -1,56 +1,51 @@
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@radix-ui/react-label';
 import { AlignJustify, Dot } from 'lucide-react';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-interface DescriptionModalComponentProps {
-  description?: string;
-  setDescription: any;
+interface CommentModalComponentProps {
+  comment?: string;
+  setComment: any;
 }
 
-export function DescriptionModalComponent({ description, setDescription }: DescriptionModalComponentProps) {
+export function CommentModalComponent({ comment, setComment }: CommentModalComponentProps) {
   const [toggleButton, setToggleButton] = useState(true);
   const { register, handleSubmit, reset } = useForm();
 
-  const onSubmit = (newDescription: any) => {
-    console.log(newDescription);
-    setDescription(newDescription?.description);
+  const onSubmit = (newComment: any) => {
+    console.log(newComment);
+    setComment(newComment?.comment);
     setToggleButton(!toggleButton);
   };
   return (
     <div>
-      <div className="mt-6 flex items-center">
-        <AlignJustify className="mb-1 mr-3 h-7 w-7" />
-        <Label className="text-md font-semibold">Description</Label>
-      </div>
       {toggleButton ? (
         <>
           <div
-            className="w-6/7 ml-12 h-auto cursor-pointer  rounded-sm bg-secondary p-2 pb-8 text-sm"
+            className="w-6/7 h-auto cursor-pointer  rounded-sm bg-secondary p-2 pb-8 text-sm"
             onClick={() => setToggleButton(!toggleButton)}
           >
-            {description ? (
-              description.split('\n').map((item, index) => (
+            {comment ? (
+              comment.split('\n').map((item, index) => (
                 <div key={index} className="mb-1 flex">
                   <Dot />
                   {item}
                 </div>
               ))
             ) : (
-              <Label className="">Add a more detailed description...</Label>
+              <Label className="">Write a comment...</Label>
             )}
           </div>
         </>
       ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="w-full space-y-6">
-          <div className="ml-10 cursor-pointer">
+          <div className="cursor-pointer">
             <Textarea
-              defaultValue={description ? description : ''}
-              placeholder="Add a more detailed description..."
-              {...register('description', { required: true })}
+              defaultValue={comment ? comment : ''}
+              placeholder="Write a comment..."
+              {...register('comment', { required: true })}
               className="h-auto bg-secondary"
             />
           </div>

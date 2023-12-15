@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import AuthContext from '@/contexts/AuthContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { assign } from 'lodash';
+import _, { assign } from 'lodash';
 import {
   AlignJustify,
   AppWindow,
@@ -27,12 +27,14 @@ import {
   Share2,
   User,
 } from 'lucide-react';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { CheckListSection } from './components/checkListModal';
 import { CheckListPopover } from './components/checkListPopover';
+import { CommentModalComponent } from './components/commentModal';
 import { DatePickerModal } from './components/datePickerModal';
 import { DescriptionModalComponent } from './components/descriptionModal';
+import { LabelHeaderPopover } from './components/labelHeaderPopover';
 import { LabelPopover } from './components/labelPopover';
 import { SetStimateComponent } from './components/setStimate';
 import { StoryPointComponent } from './components/storyPoint';
@@ -40,37 +42,17 @@ import { useCheckList } from './hooks/useCheckList';
 import { useAssignedLabels, useBoardLabels } from './hooks/useLabel';
 import { Card } from './types';
 
-// const assigndata = {
-//   id: 3,
-//   labels: [
-//     {
-//       id: 1,
-//       title: 'label1',
-//       color: 'green',
-//     },
-//     {
-//       id: 2,
-//       title: 'label2',
-//       color: 'bb',
-//     },
-//     {
-//       id: 8,
-//       title: 'qmars',
-//       color: '#ba67c8',
-//     },
-//   ],
-//   labelcard: [
-//     {
-//       id: 6,
-//     },
-//     {
-//       id: 2,
-//     },
-//     {
-//       id: 8,
-//     },
-//   ],
-// };
+const colorBoxes: { [key: number]: string } = {
+  1: '#BAF3DB',
+  2: '#C6EDFB',
+  3: '#CCE0FF',
+  5: '#D3F1A7',
+  7: '#F8E6A0',
+  11: '#DFD8FD',
+  13: '#FEDEC8',
+  17: '#FDD0EC',
+  19: '#FDB8B4',
+};
 interface Props {
   modalOpen: boolean;
   setModalOpen: any;
@@ -82,16 +64,32 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
     from: data?.startdate ? new Date(data.startdate) : new Date(),
     to: data?.duedate ? new Date(data.duedate) : new Date(),
   });
-
   const [selectedValue, setSelectedValue] = React.useState(data?.reminder ? data?.reminder : 'None');
   // set for story point
   const [storyPoint, setStoryPoint] = useState(data.storypoint);
   const [setStimate, setSetStimate] = useState(data.setestimate);
   const [description, setDescription] = useState(data.description);
+  const [comment, setComment] = useState(data.comment);
   const [modalTitle, setModalTitle] = useState(data.title);
   const { isLoading: checkListLoading, data: checkListData } = useCheckList(data.id);
   const { isLoading: boardLabelLoading, data: boardLabelData } = useBoardLabels();
   const { isLoading: assignLabelLoading, data: assignLabelData } = useAssignedLabels(data.id);
+
+  // merge for finding assigned list in label
+  const mergeObject = useMemo(() => {
+    const mergedLabelsData = _.map(boardLabelData?.labels, (label, index) => {
+      const assignedLabel = _.find(assignLabelData?.labels, { id: label?.id });
+      const assignedLabelIndex = _.findIndex(assignLabelData?.labels, { id: label?.id });
+      return assignedLabel
+        ? { ...label, labelcard: assignLabelData?.labelcard?.[assignedLabelIndex]?.id, checked: true }
+        : { ...label, labelcard: assignLabelData?.labelcard?.[assignedLabelIndex]?.id, checked: false };
+    });
+    const mergedData = {
+      id: boardLabelData?.id || 11,
+      labels: mergedLabelsData,
+    };
+    return mergedData;
+  }, [boardLabelData, assignLabelData]);
 
   let authTokens = useContext(AuthContext)?.authTokens;
   const queryClient = useQueryClient();
@@ -108,6 +106,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
         storypoint: storyPoint,
         setestimate: setStimate,
         description: description,
+        comment: comment,
       };
 
       return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/${data.id}/`, {
@@ -139,7 +138,46 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
               <Input value={modalTitle} onChange={(e) => setModalTitle(e.target.value)} className="w-5/6" />
               {/* <DialogTitle>{data.title}</DialogTitle> */}
             </div>
-            <DialogDescription className="ml-10">After getting api say name of lists</DialogDescription>
+            <DialogDescription className="ml-10">
+              <div className="flex gap-5">
+                {storyPoint !== undefined && colorBoxes[storyPoint] ? (
+                  <div className="cursor-pointer">
+                    <Label className="text-xs font-bold">Story Point:</Label>
+                    <div
+                      className={`mx-1 my-1 rounded px-2 py-1 text-sm font-semibold text-foreground`}
+                      style={{ backgroundColor: colorBoxes[storyPoint] }}
+                      // onClick={() => <StoryPointComponent storyPoint={storyPoint} setStoryPoint={setStoryPoint} />}
+                    >
+                      {storyPoint}
+                    </div>
+                  </div>
+                ) : null}
+                <div className="cursor-pointer">
+                  {mergeObject?.labels && mergeObject.labels.some((label) => label.checked) && (
+                    <Label className="text-xs font-bold">Labels:</Label>
+                  )}
+                  <div className="flex">
+                    {mergeObject?.labels?.map((label) => {
+                      if (label.checked) {
+                        return (
+                          <div
+                            key={label.id}
+                            className={`mx-1 my-1 w-full rounded px-2 py-1 text-sm font-semibold text-foreground`}
+                            style={{ backgroundColor: label?.color }}
+                          >
+                            {label.title}
+                          </div>
+                        );
+                      }
+                      return null;
+                    })}
+                    {mergeObject?.labels && mergeObject.labels.some((label) => label.checked) && (
+                      <LabelHeaderPopover cardData={data} mergeObject={mergeObject} />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </DialogDescription>
           </DialogHeader>
           <div className="grid md:flex">
             <div className="ml- w-3/4">
@@ -163,7 +201,8 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                 </Avatar>
 
                 <div className="w-full py-1  text-sm">
-                  <Textarea placeholder="Write a comment..." />
+                  {/* <Textarea placeholder="Write a comment..." /> */}
+                  <CommentModalComponent comment={comment} setComment={setComment} />
                 </div>
               </div>
 
@@ -198,7 +237,8 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                   <Tag className="mb-1 mr-1 h-4 w-4" />
                   Labels
                 </Button> */}
-                <LabelPopover cardData={data} labelData={boardLabelData} assigndata={assignLabelData} />
+                {/* <LabelPopover cardData={data} labelData={boardLabelData} assigndata={assignLabelData} /> */}
+                <LabelPopover cardData={data} mergeObject={mergeObject} />
                 {/* <Button
                   size="sm"
                   variant="secondary"
