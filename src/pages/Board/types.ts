@@ -29,6 +29,7 @@ export type Card = {
   storypoint?: number;
   setestimate?: number;
   description?:string;
+  comment?:string;
 };
 export type Role = {
   id: number;

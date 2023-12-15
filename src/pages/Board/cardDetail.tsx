@@ -31,6 +31,7 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { CheckListSection } from './components/checkListModal';
 import { CheckListPopover } from './components/checkListPopover';
+import { CommentModalComponent } from './components/commentModal';
 import { DatePickerModal } from './components/datePickerModal';
 import { DescriptionModalComponent } from './components/descriptionModal';
 import { LabelHeaderPopover } from './components/labelHeaderPopover';
@@ -68,6 +69,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   const [storyPoint, setStoryPoint] = useState(data.storypoint);
   const [setStimate, setSetStimate] = useState(data.setestimate);
   const [description, setDescription] = useState(data.description);
+  const [comment, setComment] = useState(data.comment);
   const [modalTitle, setModalTitle] = useState(data.title);
   const { isLoading: checkListLoading, data: checkListData } = useCheckList(data.id);
   const { isLoading: boardLabelLoading, data: boardLabelData } = useBoardLabels();
@@ -104,6 +106,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
         storypoint: storyPoint,
         setestimate: setStimate,
         description: description,
+        comment: comment,
       };
 
       return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/${data.id}/`, {
@@ -196,7 +199,8 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
                 </Avatar>
 
                 <div className="w-full py-1  text-sm">
-                  <Textarea placeholder="Write a comment..." />
+                  {/* <Textarea placeholder="Write a comment..." /> */}
+                  <CommentModalComponent comment={comment} setComment={setComment} />
                 </div>
               </div>
 
