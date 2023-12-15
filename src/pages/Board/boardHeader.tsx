@@ -12,6 +12,7 @@ import {
   CalendarDays,
   ChevronDown,
   Eye,
+  GanttChartSquare,
   LineChart,
   ListFilter,
   Menu,
@@ -71,6 +72,7 @@ const BoardHeader = () => {
 
   const { pathname } = useLocation();
   const isCalendarRoute = pathname.includes('/calendar');
+  const isTimelineRoute = pathname.includes('/timeline');
 
   return (
     <div className="backdrop-blur" data-testid="boardHeader">
@@ -145,14 +147,19 @@ const BoardHeader = () => {
             </div>
           </div>
           <div className="flex items-center justify-end space-x-2">
-            {isCalendarRoute && (
-              <Button onClick={() => navigate(``)} variant="secondary" className="h-8 w-8 p-0">
+            {(isCalendarRoute || isTimelineRoute) && (
+              <Button onClick={() => navigate(-1)} variant="secondary" className="h-8 w-8 p-0">
                 <Trello className="h-4 w-4" />
               </Button>
             )}
             {!isCalendarRoute && (
               <Button onClick={() => navigate(`calendar`)} variant="secondary" className="h-8 w-8 p-0">
                 <CalendarDays className="h-4 w-4" />
+              </Button>
+            )}
+            {!isTimelineRoute && (
+              <Button onClick={() => navigate(`timeline`)} variant="secondary" className="h-8 w-8 p-0">
+                <GanttChartSquare className="h-4 w-4" />
               </Button>
             )}
             <Button data-testid="list filter" variant="secondary" className="h-8 w-8 p-0">
