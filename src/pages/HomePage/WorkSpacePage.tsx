@@ -65,6 +65,7 @@ const WorkSpacePage = () => {
             <div className="mt-4 grid sm:flex sm:items-center sm:justify-between">
               <div className="">
                 <Button
+                test-id="boardID"
                   onClick={() => navigate(`boards`)}
                   variant="secondary"
                   className="mr-1 mt-1 p-2 sm:mt-0"

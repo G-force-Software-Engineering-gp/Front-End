@@ -8,11 +8,13 @@ import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
 import _ from 'lodash';
-import { CalendarDays, LineChart, Menu} from 'lucide-react';
 import {
+  CalendarDays,
   ChevronDown,
   Eye,
+  LineChart,
   ListFilter,
+  Menu,
   MoreHorizontal,
   Star,
   Trello,
@@ -71,7 +73,7 @@ const BoardHeader = () => {
   const isCalendarRoute = pathname.includes('/calendar');
 
   return (
-    <div className="backdrop-blur">
+    <div className="backdrop-blur" data-testid="boardHeader">
       <>
         <div className="mt-4 flex flex-1 flex-col border-b-2 p-2 px-5 md:mt-0 md:flex-row md:items-center md:justify-between">
           <div className="pb-2 md:pb-0">
@@ -137,23 +139,23 @@ const BoardHeader = () => {
                 </Popover>
                 <AddImage />
                 <Button data-testid="star" variant="secondary" className="m-1 h-8 w-8 p-0">
-                  <LineChart className="h-4 w-4 " onClick={()=>navigate(`burndown`)} />
+                  <LineChart className="h-4 w-4 " onClick={() => navigate(`burndown`)} />
                 </Button>
               </>
             </div>
           </div>
           <div className="flex items-center justify-end space-x-2">
-            {isCalendarRoute &&
-              <Button onClick={() => navigate(``)} variant="secondary" className='h-8 w-8 p-0'>
-                <Trello className='h-4 w-4' />
+            {isCalendarRoute && (
+              <Button onClick={() => navigate(``)} variant="secondary" className="h-8 w-8 p-0">
+                <Trello className="h-4 w-4" />
               </Button>
-            }
-            {!isCalendarRoute &&
-              <Button onClick={() => navigate(`calendar`)} variant="secondary" className='h-8 w-8 p-0'>
-                <CalendarDays className='h-4 w-4' />
+            )}
+            {!isCalendarRoute && (
+              <Button onClick={() => navigate(`calendar`)} variant="secondary" className="h-8 w-8 p-0">
+                <CalendarDays className="h-4 w-4" />
               </Button>
-            }
-            <Button data-testid='list filter' variant="secondary" className="h-8 w-8 p-0">
+            )}
+            <Button data-testid="list filter" variant="secondary" className="h-8 w-8 p-0">
               <ListFilter className="h-4 w-4" />
             </Button>
             <div className=" flex -space-x-2 overflow-hidden">

@@ -59,7 +59,7 @@ const CreateBurnDown = () => {
     }
   };
   return (
-    <div className="flex border-b-2 py-5 pl-20">
+    <div className="flex border-b-2 py-5 pl-20" data-testid="createBurnDown">
       <Popover>
         <PopoverTrigger asChild>
           <Button variant={'outline'} className="w-[280px] justify-start text-left font-normal">

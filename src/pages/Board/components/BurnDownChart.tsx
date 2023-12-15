@@ -299,7 +299,7 @@ function BurnDownChart() {
     },
   });
   return (
-    <div className="m-auto p-2">
+    <div className="m-auto p-2" data-testid="burnDownChart">
       <CreateBurnDown />
       <div className="h-2" />
       {loadingMembers || loadingBurndown || loadingBurndownFooter ? (
@@ -308,7 +308,7 @@ function BurnDownChart() {
           <div className="space-y-2">Loading the table</div>
         </div>
       ) : (
-        <T1 className="">
+        <T1 className="" >
           <TableHeader>
             {/* Header */}
             {table.getHeaderGroups().map((headerGroup) => (
