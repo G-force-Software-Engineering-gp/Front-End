@@ -22,7 +22,7 @@ const HeaderResponsive = () => {
   const navigate = useNavigate();
 
   return (
-    <div>
+    <div data-testid="headerResponsive">
       <div className="flex-col border-b-2 lg:hidden">
         <div className="flex-1 p-2 px-5 ">
           <div className="flex items-center justify-between">

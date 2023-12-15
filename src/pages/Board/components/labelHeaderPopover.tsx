@@ -178,7 +178,7 @@ interface LabelPopoverProps {
   mergeObject: MergedLabelsType;
   cardData: Card;
 }
-export function LabelPopover({ mergeObject, cardData }: LabelPopoverProps) {
+export function LabelHeaderPopover({ mergeObject, cardData }: LabelPopoverProps) {
   //   const [label, setLabel] = useState(data.labels);
   const [labelOpen, setLabelOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -222,13 +222,8 @@ export function LabelPopover({ mergeObject, cardData }: LabelPopoverProps) {
   return (
     <Popover open={labelOpen} onOpenChange={setLabelOpen}>
       <PopoverTrigger asChild>
-        <Button
-          size="sm"
-          variant="secondary"
-          className="col-span-3 mx-4 mb-2 flex cursor-pointer justify-start rounded-sm px-4  text-sm md:col-span-6"
-        >
-          <Tag className="mb-1 mr-1 h-4 w-4" />
-          Labels
+        <Button size="sm" variant="secondary" className="rounded-full  p-3 text-lg">
+          +
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80">

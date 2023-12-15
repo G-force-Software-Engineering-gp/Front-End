@@ -89,21 +89,23 @@ export function CreateLable() {
           </div>
           <div className="space-y-2">
             <div className="mb-4">
-              <Label htmlFor="width" className="text-xs font-bold leading-none">
+              <Label htmlFor="creatLabelTitle" className="text-xs font-bold leading-none">
                 Title
               </Label>
               <Input
+                id="creatLabelTitle"
                 {...register('title', { required: true })}
                 onChange={(e) => setInputValue(e.target.value)}
                 className="col-span-2 h-8"
               />
             </div>
-            <Label htmlFor="width" className="col-span-5 text-xs font-bold leading-none">
+            <Label htmlFor="creatLabelColor" className="col-span-5 text-xs font-bold leading-none">
               Select color
             </Label>
             <div className="grid grid-cols-5 gap-2">
               {colorBoxes.map((color, index) => (
                 <div
+                  id="creatLabelColor"
                   onClick={() => setColorValue(color)}
                   key={index}
                   className="w-13 col-span-1 h-6 cursor-pointer rounded-sm"

@@ -29,6 +29,7 @@ export type Card = {
   storypoint?: number;
   setestimate?: number;
   description?:string;
+  comment?:string;
 };
 export type Role = {
   id: number;
@@ -91,3 +92,14 @@ export type LabelAssign = {
   labelcard ?: Labelcard[]
 };
 
+export type MergedLabel = {
+  id: number;
+  title: string;
+  color: string;
+  labelcard?: number;
+  checked: boolean;
+}
+export type MergedLabels = {
+  id: number;
+  labels?:MergedLabel[]
+}
