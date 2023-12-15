@@ -32,11 +32,6 @@ export function DescriptionModalComponent({ description, setDescription }: Descr
             className="w-6/7 ml-12 h-auto cursor-pointer  rounded-sm bg-secondary p-2 pb-8 text-sm"
             onClick={() => setToggleButton(!toggleButton)}
           >
-            {/* <div> {'description'}</div>
-            <div> {'description'}</div>
-            <div> {'description'}</div>
-            <div> {'description'}</div>
-            <div> {'description'}</div> */}
             {description ? (
               description.split('\n').map((item, index) => (
                 <div key={index} className="mb-1 flex">

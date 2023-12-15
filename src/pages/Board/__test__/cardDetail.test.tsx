@@ -18,6 +18,7 @@ describe('CardDetail', () => {
       storypoint: 5,
       setestimate: 8,
       description: 'This is a sample card description.',
+      comment: 'This is a sample card comment.',
     };
 
     const mockSetModalOpen = jest.fn();
@@ -30,10 +31,6 @@ describe('CardDetail', () => {
     const inputElement = screen.getByDisplayValue('Test Card');
     fireEvent.change(inputElement, { target: { value: 'Updated Modal Title' } });
     expect(inputElement).toHaveValue('Updated Modal Title');
-
-    // Interact with the component, adjust as needed
-    const commentInput = screen.getByPlaceholderText('Write a comment...');
-    userEvent.type(commentInput, 'A new comment');
 
     // Add more interactions as needed
 
