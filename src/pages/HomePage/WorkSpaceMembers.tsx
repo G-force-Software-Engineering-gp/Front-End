@@ -30,12 +30,12 @@ interface User {
 
 const WorkSpaceMembers = () => {
   let authTokens = useContext(AuthContext)?.authTokens;
-  const { BoardId } = useParams();
-
+  const { workspaceId } = useParams();
+  console.log(useParams())
   const [workspaceMembers, setWorkspaceMembers] = useState<Member[]>();
   useEffect(() => {
     const fetchWorkspaceUsers = async () => {
-      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspaces/1/members/`, {
+      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspaces/${workspaceId}/members/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ const WorkSpaceMembers = () => {
       setWorkspaceMembers(data[0]?.members);
     };
     fetchWorkspaceUsers();
-  }, [BoardId]);
+  }, [workspaceId]);
   useEffect(() => {
     console.log(workspaceMembers);
   }, []);
