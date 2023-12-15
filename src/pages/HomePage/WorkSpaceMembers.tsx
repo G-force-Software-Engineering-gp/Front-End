@@ -3,10 +3,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
-import { ClipboardList, Mail } from 'lucide-react';
-import React, { useContext, useEffect, useState } from 'react'
-import { useStarred } from './hooks/useStarred';
 import AuthContext from '@/contexts/AuthContext';
+import { ClipboardList, Mail } from 'lucide-react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import Board from '../Board';
+import { useStarred } from './hooks/useStarred';
 
 interface RootObject {
   id: number;
@@ -26,10 +28,9 @@ interface User {
   username: string;
 }
 
-
 const WorkSpaceMembers = () => {
-
   let authTokens = useContext(AuthContext)?.authTokens;
+  const { BoardId } = useParams();
 
   const [workspaceMembers, setWorkspaceMembers] = useState<Member[]>();
   useEffect(() => {
@@ -38,21 +39,21 @@ const WorkSpaceMembers = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `JWT ${authTokens.access}`
-        }
-      })
-      const data = await response.json()
-      setWorkspaceMembers(data[0]?.members)
-    }
-    fetchWorkspaceUsers()
-  }, [])
+          Authorization: `JWT ${authTokens.access}`,
+        },
+      });
+      const data = await response.json();
+      setWorkspaceMembers(data[0]?.members);
+    };
+    fetchWorkspaceUsers();
+  }, [BoardId]);
   useEffect(() => {
-    console.log(workspaceMembers)
-  }, [])
+    console.log(workspaceMembers);
+  }, []);
 
   return (
     <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
-      {workspaceMembers?.map(member => (
+      {workspaceMembers?.map((member) => (
         <div className="space-y-6">
           <Card className="w-full">
             <CardHeader>
@@ -60,9 +61,7 @@ const WorkSpaceMembers = () => {
                 <div className="flex flex-row">
                   <Avatar className="mr-3 h-12 w-12 rounded-full">
                     <AvatarImage className="rounded-full" alt="Avatar" src={member?.profimage} />
-                    <AvatarFallback className="rounded-full">
-                      {member ? member.user.first_name[0] : ''}
-                    </AvatarFallback>
+                    <AvatarFallback className="rounded-full">{member ? member.user.first_name[0] : ''}</AvatarFallback>
                   </Avatar>
                   <div className="flex flex-col">
                     <span className="text-xl">{member?.user.first_name}</span>
@@ -84,7 +83,7 @@ const WorkSpaceMembers = () => {
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default WorkSpaceMembers
+export default WorkSpaceMembers;
