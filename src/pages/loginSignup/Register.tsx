@@ -10,6 +10,8 @@ import React, { useContext, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
+import signupDark from '../../pics/signupDark.png';
+import signupLight from '../../pics/signupLight.png';
 
 const registrationSchema = z.object({
   firstName: z.string().min(1, 'First Name is required'),
@@ -51,13 +53,9 @@ const Register: React.FC = () => {
   return (
     <div className="flex items-center justify-center gap-5">
       {theme === 'dark' ? (
-        <img className="hidden h-[620px] w-1/2 border-4 md:block  " src={require('../../pics/signupDark.png')} alt="" />
+        <img className="hidden h-[620px] w-1/2 border-4 md:block  " src={signupDark} alt="" />
       ) : (
-        <img
-          className="hidden h-[620px] w-1/2 border-4 md:block  "
-          src={require('../../pics/signupLight.png')}
-          alt=""
-        />
+        <img className="hidden h-[620px] w-1/2 border-4 md:block  " src={signupLight} alt="" />
       )}
       <div className="flex h-screen flex-col items-center justify-center">
         <Label className="mb-12 text-center text-2xl font-semibold">Logo</Label>

@@ -10,6 +10,8 @@ import React, { useContext, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { z } from 'zod';
+import loginDark from '../../pics/loginDark.png';
+import loginLight from '../../pics/loginLight.png';
 
 const loginSchema = z.object({
   email: z.string().email('Invalid email format').min(1, 'Email is required'),
@@ -49,9 +51,9 @@ const Login: React.FC = () => {
   return (
     <div className="flex items-center justify-center gap-5">
       {theme === 'dark' ? (
-        <img className="hidden h-[450px] w-1/2 border-4 md:block  " src={require('../../pics/loginDark.png')} alt="" />
+        <img className="hidden h-[450px] w-1/2 border-4 md:block  " src={loginDark} alt="" />
       ) : (
-        <img className="hidden h-[450px] w-1/2 border-4 md:block  " src={require('../../pics/loginLight.png')} alt="" />
+        <img className="hidden h-[450px] w-1/2 border-4 md:block  " src={loginLight} alt="" />
       )}
       <div className="flex h-screen flex-col items-center justify-center">
         <Label className="mb-12 text-center text-2xl font-semibold">Logo</Label>
