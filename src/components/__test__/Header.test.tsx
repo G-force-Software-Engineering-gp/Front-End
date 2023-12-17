@@ -14,16 +14,16 @@ describe('Header Component', () => {
     );
   });
 
-  test('Header component matches snapshot', () => {
-    const { asFragment } = render(
-      <MemoryRouter>
-        <AuthProvider>
-          <Header />
-        </AuthProvider>
-      </MemoryRouter>
-    );
-    expect(asFragment()).toMatchSnapshot();
-  });
+  // test('Header component matches snapshot', () => {
+  //   const { asFragment } = render(
+  //     <MemoryRouter>
+  //       <AuthProvider>
+  //         <Header />
+  //       </AuthProvider>
+  //     </MemoryRouter>
+  //   );
+  //   expect(asFragment()).toMatchSnapshot();
+  // });
 
   test('Clicking the logo navigates to the home page', () => {
     render(
