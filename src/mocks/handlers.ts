@@ -4,6 +4,26 @@ const allPosts = new Map();
 
 export const handlers = [
   http.get('/todos', ({ cookies }) => {
+    return HttpResponse.json(
+      [
+        {
+          userId: 1,
+          title: 'Wave hello!',
+          completed: false,
+          id: 1,
+        },
+        {
+          userId: 1,
+          title: 'Get Coffee!',
+          completed: false,
+          id: 2,
+        },
+      ],
+
+      { status: 200 }
+    );
+  }),
+  http.get('/tpdos', ({ cookies }) => {
     const { session } = cookies;
 
     if (!session) {

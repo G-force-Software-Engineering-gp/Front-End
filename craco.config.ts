@@ -1,7 +1,7 @@
 /* craco.config.js */
-const path = require(`path`);
+import path from 'path';
 
-module.exports = {
+const cracoConfig = {
   babel: {
     plugins: [
       [
@@ -38,6 +38,7 @@ module.exports = {
     },
   },
 };
+export default cracoConfig;
 
 // /* craco.config.js */
 // const path = require(`path`);
