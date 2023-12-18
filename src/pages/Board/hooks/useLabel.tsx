@@ -13,7 +13,7 @@ export const useBoardLabels = () => {
       const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board-labels/${boardId}/`, {
         method: 'GET',
         headers: {
-          Authorization: `JWT ` + authTokens.access,
+          Authorization: `JWT ` + authTokens?.access,
         },
       });
       if (response.status === 404) {

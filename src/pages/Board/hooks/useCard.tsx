@@ -16,7 +16,7 @@ export const useCard = (cardId: number) => {
         {
           method: 'GET',
           headers: {
-            Authorization: `JWT ` + authTokens.access,
+            Authorization: `JWT ` + authTokens?.access,
           },
         }
       );

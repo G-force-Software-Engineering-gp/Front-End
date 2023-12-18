@@ -36,59 +36,59 @@ describe('BoradCard Component', () => {
   //     </MemoryRouter>
   //   );
   //   expect(asFragment()).toMatchSnapshot();
-  });
-  test('clicking on the card triggers navigation', () => {
-    const mockProps = {
-      id: 1,
-      title: 'Test Board',
-      backgroundImage: 'test-image-url',
-      has_star: false,
-    };
-    render(
-      <MemoryRouter>
-        <AuthProvider>
-          <BoardCard {...mockProps} />
-        </AuthProvider>
-      </MemoryRouter>
-    );
-    fireEvent.click(screen.getByText('Test Board'));
-    // Add assertions based on the expected behavior after clicking the card
-  });
-  test('renders with correct star state', () => {
-    const mockPropsWithStar = {
-      id: 1,
-      title: 'Test Board',
-      backgroundImage: 'test-image-url',
-      has_star: true,
-    };
-    const mockPropsWithoutStar = {
-      id: 2,
-      title: 'Another Board',
-      backgroundImage: 'another-image-url',
-      has_star: false,
-    };
+});
+test('clicking on the card triggers navigation', () => {
+  const mockProps = {
+    id: 1,
+    title: 'Test Board',
+    backgroundImage: 'test-image-url',
+    has_star: false,
+  };
+  render(
+    <MemoryRouter>
+      <AuthProvider>
+        <BoardCard {...mockProps} />
+      </AuthProvider>
+    </MemoryRouter>
+  );
+  fireEvent.click(screen.getByText('Test Board'));
+  // Add assertions based on the expected behavior after clicking the card
+});
+test('renders with correct star state', () => {
+  const mockPropsWithStar = {
+    id: 1,
+    title: 'Test Board',
+    backgroundImage: 'test-image-url',
+    has_star: true,
+  };
+  const mockPropsWithoutStar = {
+    id: 2,
+    title: 'Another Board',
+    backgroundImage: 'another-image-url',
+    has_star: false,
+  };
 
-    const { getByTestId: getByTestIdWithStar } = render(
-      <MemoryRouter>
-        <AuthProvider>
-          <BoardCard {...mockPropsWithStar} />
-        </AuthProvider>
-      </MemoryRouter>
-    );
-    const { getByTestId: getByTestIdWithoutStar } = render(
-      <MemoryRouter>
-        <AuthProvider>
-          <BoardCard {...mockPropsWithoutStar} />
-        </AuthProvider>
-      </MemoryRouter>
-    );
+  const { getByTestId: getByTestIdWithStar } = render(
+    <MemoryRouter>
+      <AuthProvider>
+        <BoardCard {...mockPropsWithStar} />
+      </AuthProvider>
+    </MemoryRouter>
+  );
+  const { getByTestId: getByTestIdWithoutStar } = render(
+    <MemoryRouter>
+      <AuthProvider>
+        <BoardCard {...mockPropsWithoutStar} />
+      </AuthProvider>
+    </MemoryRouter>
+  );
 
-    const starIconWithStar = getByTestIdWithStar('star-icon1');
-    const starIconWithoutStar = getByTestIdWithoutStar('star-icon2');
+  const starIconWithStar = getByTestIdWithStar('star-icon1');
+  const starIconWithoutStar = getByTestIdWithoutStar('star-icon2');
 
-    expect(starIconWithStar).toBeInTheDocument();
-    expect(starIconWithoutStar).toBeInTheDocument();
-  });
+  expect(starIconWithStar).toBeInTheDocument();
+  expect(starIconWithoutStar).toBeInTheDocument();
+});
 
 //   test('clicking on the star icon calls SetStarOrNot function', () => {
 //     const mockProps = {
@@ -113,4 +113,4 @@ describe('BoradCard Component', () => {
 //     expect(setStarOrNotMock).toHaveBeenCalledWith(expect.any(Object));
 //     // Add assertions based on the expected behavior after clicking the star icon
 //   });
-});
+// });

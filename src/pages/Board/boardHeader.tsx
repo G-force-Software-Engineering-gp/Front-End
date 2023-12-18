@@ -166,8 +166,8 @@ const BoardHeader = () => {
               <ListFilter className="h-4 w-4" />
             </Button>
             <div className=" flex -space-x-2 overflow-hidden">
-              {membersData?.members?.slice(0, 3).map((member) => (
-                <Popover>
+              {membersData?.members?.slice(0, 3).map((member, index) => (
+                <Popover key={index}>
                   <PopoverTrigger>
                     <Avatar>
                       <AvatarImage src={member.profimage} />

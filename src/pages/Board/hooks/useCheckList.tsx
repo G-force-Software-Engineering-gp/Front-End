@@ -11,7 +11,7 @@ export const useCheckList = (cardId: number) => {
       const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/checklist/${cardId}/`, {
         method: 'GET',
         headers: {
-          Authorization: `JWT ` + authTokens.access,
+          Authorization: `JWT ` + authTokens?.access,
         },
       });
       if (response.status === 404) {
