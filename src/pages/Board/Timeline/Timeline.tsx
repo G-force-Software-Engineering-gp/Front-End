@@ -6,20 +6,20 @@ import { buildTimebar, buildTrack } from './builders';
 import { NUM_OF_TRACKS, NUM_OF_YEARS, START_YEAR } from './constants';
 import { fill } from './utils';
 
-const now = new Date('2021-01-01');
-
-const timebar = buildTimebar();
-
 // eslint-disable-next-line no-alert
-const clickElement = (element: any) => alert(`Clicked element\n${JSON.stringify(element, null, 2)}`);
+const clickElement = () => null;
+// const clickElement = (element: any) => alert(`Clicked element\n${JSON.stringify(element, null, 2)}`);
+const timebar = buildTimebar();
 
 const MIN_ZOOM = 2;
 const MAX_ZOOM = 20;
 
 const BoardTimeline = () => {
+  const now = new Date('2021-01-01');
   const [open, setOpen] = useState(false);
   const [zoom, setZoom] = useState(2);
 
+  
   const tracksById = fill(NUM_OF_TRACKS).reduce((acc: any, i: any) => {
     const track = buildTrack(i + 1);
     acc[track.id] = track;
@@ -79,9 +79,9 @@ const BoardTimeline = () => {
           // eslint-disable-next-line no-alert
           alert(JSON.stringify(track));
         }}
-        timebar={timebar}
         tracks={tracks}
-        now={now}
+        timebar={timebar}
+        // now={now}
         toggleTrackOpen={handleToggleTrackOpen}
         enableSticky
         scrollToNow

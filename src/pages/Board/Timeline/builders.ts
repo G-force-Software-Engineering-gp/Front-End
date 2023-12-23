@@ -12,7 +12,11 @@ import {
   QUARTERS_PER_YEAR,
   START_YEAR,
 } from './constants';
-import { addMonthsToYear, addMonthsToYearAsDate, colourIsLight, fill, hexToRgb, nextColor, randomTitle } from './utils';
+import { addMonthsToYear, addMonthsToYearAsDate, colourIsLight, fill, hexToRgb, nextColor } from './utils';
+
+// Checked
+
+// Checking
 
 export const buildQuarterCells = () => {
   const v = [];
@@ -30,6 +34,7 @@ export const buildQuarterCells = () => {
   }
   return v;
 };
+
 
 export const buildMonthCells = () => {
   const v = [];
@@ -68,7 +73,7 @@ export const buildElement = ({ trackId, start, end, i }: any) => {
   const color = colourIsLight(hexToRgb(bgColor)[0], hexToRgb(bgColor)[1], hexToRgb(bgColor)[2]) ? '#000000' : '#ffffff';
   return {
     id: `t-${trackId}-el-${i}`,
-    title: randomTitle(),
+    title: 'Matin Mahmoodkhani',
     start,
     end,
     style: {
@@ -127,8 +132,6 @@ export const buildTrack = (trackId: any) => {
     title: `Track ${trackId}`,
     elements: buildElements(trackId),
     tracks,
-    // hasButton: true,
-    // link: 'www.google.com',
     isOpen: false,
   };
 };
