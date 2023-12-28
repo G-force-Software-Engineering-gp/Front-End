@@ -11,7 +11,7 @@ const Board = () => {
   const [bg, setbg] = useState();
   let authTokens = useContext(AuthContext)?.authTokens;
   const gettingData = async () => {
-    const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board/${boardId}`, {
+    const response = await fetch(`tascrum/board/${boardId}`, {
       method: 'GET',
       headers: {
         Authorization: `JWT ` + authTokens.access,

@@ -1,3 +1,4 @@
+import { BaseURL } from '@/pages/baseURL';
 import jwt_decode from 'jwt-decode';
 import { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -32,7 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const Navigate = useNavigate();
 
   const loginUser = async (values: any) => {
-    const response = await fetch('https://amirmohammadkomijani.pythonanywhere.com/auth/jwt/create/', {
+    const response = await fetch(BaseURL + 'auth/jwt/create/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -59,7 +60,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const registerUser = async (values: any) => {
-    const reg_response = await fetch('https://amirmohammadkomijani.pythonanywhere.com/auth/users/', {
+    const reg_response = await fetch(BaseURL + 'auth/users/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -25,6 +25,7 @@ import _ from 'lodash';
 import { CalendarDays, Check, ChevronRight, Plus, Settings, Trash2, Trello, Users2 } from 'lucide-react';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { BaseURL } from '../baseURL';
 import { useBoard } from './hooks/useBoard';
 
 interface User {
@@ -50,7 +51,7 @@ export function BoardSidebar({ className }: any) {
         return { member: item.id, board: boardId };
       })
       .map((item) => {
-        return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/invite/`, {
+        return fetch(BaseURL + `tascrum/invite/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -83,14 +84,11 @@ export function BoardSidebar({ className }: any) {
   useEffect(() => {
     if (deferredQuery !== '') {
       axios
-        .get(
-          `https://amirmohammadkomijani.pythonanywhere.com/tascrum/user-search/?board=${boardId}&search=${deferredQuery}`,
-          {
-            headers: {
-              Authorization: `JWT ${authTokens.access}`,
-            },
-          }
-        )
+        .get(BaseURL + `tascrum/user-search/?board=${boardId}&search=${deferredQuery}`, {
+          headers: {
+            Authorization: `JWT ${authTokens.access}`,
+          },
+        })
         .then((res) => {
           const fetchedUsers: User[] = res.data;
           setUsers(fetchedUsers);
