@@ -1,4 +1,5 @@
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import {
   Active,
   closestCorners,
@@ -194,7 +195,7 @@ export const KanbanBoard = () => {
       cardId: number | undefined;
     }) => {
       // console.log(list, order, cardId);
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/dnd/${cardId}/`, {
+      return fetch(BaseURL + `tascrum/dnd/${cardId}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

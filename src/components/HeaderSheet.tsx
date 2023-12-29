@@ -1,4 +1,5 @@
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import AddWorkSapceHeader from '@/pages/HomePage/components/AddWorkSapceHeader';
 import AddWorkSpace from '@/pages/HomePage/components/AddWorkSpace';
 import axios from 'axios';
@@ -35,7 +36,7 @@ const HeaderSheet = () => {
   const [workspaces, setworkspaces] = useState<any[]>([]);
   const gettingData = async () => {
     const { data } = await axios
-      .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
+      .get(BaseURL + 'tascrum/workspace/', {
         headers: {
           Authorization: `JWT ${authTokens?.access}`,
         },

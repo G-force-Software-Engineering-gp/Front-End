@@ -10,6 +10,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { ImagePlus } from 'lucide-react';
 import React, { useContext, useState } from 'react';
@@ -34,7 +35,7 @@ const AddImage = () => {
       const formData = new FormData();
       formData.append('backgroundImage', selectedImage);
 
-      const data = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board-bgimage/${boardId}/`, {
+      const data = await fetch(BaseURL + `tascrum/board-bgimage/${boardId}/`, {
         method: 'PUT',
         headers: {
           Authorization: `JWT ${authTokens.access}`,

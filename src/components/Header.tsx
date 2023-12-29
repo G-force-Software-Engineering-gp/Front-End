@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import AuthContext from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { BaseURL } from '@/pages/baseURL';
 import AddWorkSapceHeader from '@/pages/HomePage/components/AddWorkSapceHeader';
 import axios from 'axios';
 import { BellDot, HelpCircle, User2 } from 'lucide-react';
@@ -80,7 +81,7 @@ const Header = () => {
   const [workspaces, setworkspaces] = useState<any[]>([]);
   const gettingData = async () => {
     const { data } = await axios
-      .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
+      .get(BaseURL + 'tascrum/workspace/', {
         headers: {
           Authorization: `JWT ${authTokens?.access}`,
         },

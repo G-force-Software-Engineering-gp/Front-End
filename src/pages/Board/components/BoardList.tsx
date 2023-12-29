@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { Active, DataRef, Over, useDndContext, type UniqueIdentifier } from '@dnd-kit/core';
 import { SortableContext, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
@@ -62,7 +63,7 @@ export const BoardList = ({ listId, columns, boardId, isOverlay }: Props) => {
   let authTokens = useContext(AuthContext)?.authTokens;
   const deleteList = useMutation({
     mutationFn: () => {
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/list/${listId}/`, {
+      return fetch(BaseURL + `tascrum/list/${listId}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -190,7 +191,7 @@ export const ListCard = ({ cardId, columns, listId, isOverlay }: CardProps) => {
   const parsedBoardId = parseInt(boardId ? boardId : '');
   const deleteTask = useMutation({
     mutationFn: () => {
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/card/${cardId}/?board=${parsedBoardId}`, {
+      return fetch(BaseURL + `tascrum/card/${cardId}/?board=${parsedBoardId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -446,7 +447,7 @@ export const AssignmentSubmenu = ({ cardId, setOpen, cardData, cardRefetch }: As
   let authTokens = useContext(AuthContext)?.authTokens;
   const createAssignee = useMutation({
     mutationFn: (formData: any) => {
-      return fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/assign/', {
+      return fetch(BaseURL + 'tascrum/assign/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -466,7 +467,7 @@ export const AssignmentSubmenu = ({ cardId, setOpen, cardData, cardRefetch }: As
       const roleId = formData.role;
       delete formData.role;
 
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/assign/${roleId}`, {
+      return fetch(BaseURL + `tascrum/assign/${roleId}`, {
         method: 'delete',
         headers: {
           'Content-Type': 'application/json',

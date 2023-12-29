@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '../../components/ui/button';
+import { BaseURL } from '../baseURL';
 import AddWorkSpace from './components/AddWorkSpace';
 
 export function HomeSideBar() {
@@ -14,7 +15,7 @@ export function HomeSideBar() {
   const [workspaces, setworkspaces] = useState<any[]>([]);
   const gettingData = async () => {
     const { data } = await axios
-      .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
+      .get(BaseURL + 'tascrum/workspace/', {
         headers: {
           Authorization: `JWT ${authTokens?.access}`,
         },

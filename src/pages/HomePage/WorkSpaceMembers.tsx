@@ -7,6 +7,7 @@ import AuthContext from '@/contexts/AuthContext';
 import { ClipboardList, Mail } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { BaseURL } from '../baseURL';
 import Board from '../Board';
 import { useStarred } from './hooks/useStarred';
 
@@ -31,11 +32,11 @@ interface User {
 const WorkSpaceMembers = () => {
   let authTokens = useContext(AuthContext)?.authTokens;
   const { workspaceId } = useParams();
-  console.log(useParams())
+  console.log(useParams());
   const [workspaceMembers, setWorkspaceMembers] = useState<Member[]>();
   useEffect(() => {
     const fetchWorkspaceUsers = async () => {
-      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspaces/${workspaceId}/members/`, {
+      const response = await fetch(BaseURL + `tascrum/workspaces/${workspaceId}/members/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

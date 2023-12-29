@@ -26,6 +26,7 @@ import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { BoardSidebar } from './boardSidebar';
 import AddImage from './components/AddImage';
+import { FilterCard } from './components/filterCards';
 import { useBoard } from './hooks/useBoard';
 import { useMembers } from './hooks/useMembers';
 import { Toggle } from '@/components/ui/toggle';
@@ -167,9 +168,10 @@ const BoardHeader = () => {
                 <GanttChartSquare className="h-4 w-4" />
               </Button>
             )}
-            <Button data-testid="list filter" variant="secondary" className="h-8 w-8 p-0">
+            {/* <Button data-testid="list filter" variant="secondary" className="h-8 w-8 p-0">
               <ListFilter className="h-4 w-4" />
-            </Button>
+            </Button> */}
+            <FilterCard />
             <div className=" flex -space-x-2 overflow-hidden">
               {membersData?.members?.slice(0, 3).map((member) => (
                 <Popover>

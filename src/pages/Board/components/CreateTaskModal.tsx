@@ -11,6 +11,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Plus } from 'lucide-react';
@@ -41,7 +42,7 @@ function CreateTaskModal({ listId }: TaskModalProps) {
   let authTokens = useContext(AuthContext)?.authTokens;
   const createTask = useMutation({
     mutationFn: (formData: TaskFormData) => {
-      return fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/', {
+      return fetch(BaseURL + 'tascrum/crcard/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,10 +51,8 @@ function CreateTaskModal({ listId }: TaskModalProps) {
         body: JSON.stringify(formData),
       });
     },
-    onError: (error, variables, context) => {
-    },
-    onSuccess: (data, variables, context) => {
-    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
     onSettled: (data, error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['list', listId], exact: true });
     },
