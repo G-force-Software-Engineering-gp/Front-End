@@ -52,18 +52,18 @@ const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWit
 );
 ListItem.displayName = 'ListItem';
 
-interface User {
-  id: number;
-  username: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  member: Member[];
-}
+// interface User {
+//   id: number;
+//   username: string;
+//   first_name: string;
+//   last_name: string;
+//   email: string;
+//   member: Member[];
+// }
 
-interface Member {
-  profimage: string;
-}
+// interface Member {
+//   profimage: string;
+// }
 
 const BoardHeader = () => {
   const navigate = useNavigate();
@@ -166,7 +166,7 @@ const BoardHeader = () => {
             {/* <Button data-testid="list filter" variant="secondary" className="h-8 w-8 p-0">
               <ListFilter className="h-4 w-4" />
             </Button> */}
-            <FilterCard />
+            <FilterCard membersData={membersData} />
             <div className=" flex -space-x-2 overflow-hidden">
               {membersData?.members?.slice(0, 3).map((member) => (
                 <Popover>

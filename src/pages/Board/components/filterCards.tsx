@@ -14,6 +14,93 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { CalendarDays, CircleUserRound, Clock4, ListFilter, Tag } from 'lucide-react';
+import { Members } from '../types';
+
+// const mockMembers = {
+//   id: 1,
+//   members: [
+//     {
+//       id: 2,
+//       user: {
+//         first_name: 'John',
+//         last_name: 'Doe',
+//         email: 'johndoe@email.com',
+//         username: 'johndoe',
+//       },
+//       profimage: 'https://example.com/johndoe.jpg',
+//     },
+//     {
+//       id: 3,
+//       user: {
+//         first_name: 'Jane',
+//         last_name: 'Smith',
+//         email: 'janesmith@email.com',
+//         username: 'janesmith',
+//       },
+//       profimage: 'https://example.com/janesmith.jpg',
+//     },
+//     {
+//       id: 5,
+//       user: {
+//         first_name: 'Peter',
+//         last_name: 'Jones',
+//         email: 'peterjones@email.com',
+//         username: 'peterjones',
+//       },
+//       profimage: 'https://example.com/peterjones.jpg',
+//     },
+//     {
+//       id: 6,
+//       user: {
+//         first_name: 'Mary',
+//         last_name: 'Brown',
+//         email: 'marybrown@email.com',
+//         username: 'marybrown',
+//       },
+//       profimage: 'https://example.com/marybrown.jpg',
+//     },
+//     {
+//       id: 7,
+//       user: {
+//         first_name: 'Mary',
+//         last_name: 'Brown',
+//         email: 'marybrown@email.com',
+//         username: 'marybrown',
+//       },
+//       profimage: 'https://example.com/marybrown.jpg',
+//     },
+//     {
+//       id: 8,
+//       user: {
+//         first_name: 'Mary',
+//         last_name: 'Brown',
+//         email: 'marybrown@email.com',
+//         username: 'marybrown',
+//       },
+//       profimage: 'https://example.com/marybrown.jpg',
+//     },
+//     {
+//       id: 9,
+//       user: {
+//         first_name: 'Mary',
+//         last_name: 'Brown',
+//         email: 'marybrown@email.com',
+//         username: 'marybrown',
+//       },
+//       profimage: 'https://example.com/marybrown.jpg',
+//     },
+//     {
+//       id: 10,
+//       user: {
+//         first_name: 'Mary',
+//         last_name: 'Brown',
+//         email: 'marybrown@email.com',
+//         username: 'marybrown',
+//       },
+//       profimage: 'https://example.com/marybrown.jpg',
+//     },
+//   ],
+// };
 
 const data = {
   id: 6,
@@ -45,8 +132,11 @@ const data = {
     },
   ],
 };
+interface FilterCardProps {
+  membersData?: Members;
+}
 
-export function FilterCard() {
+export function FilterCard({ membersData }: FilterCardProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -104,13 +194,36 @@ export function FilterCard() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      <SelectLabel>select members</SelectLabel>
+                      {/* <SelectLabel>select members</SelectLabel>
                       <SelectItem value="None">None</SelectItem>
                       <SelectItem value="hosein">hosein</SelectItem>
                       <SelectItem value="mamad">mamad</SelectItem>
                       <SelectItem value="ali">ali</SelectItem>
                       <SelectItem value="arian">arian</SelectItem>
-                      <SelectItem value="komij">komij</SelectItem>
+                      <SelectItem value="komij">komij</SelectItem> */}
+                      {membersData?.members?.map((member) => (
+                        <div className="ml-5 flex gap-3 p-2">
+                          <div className="flex gap-2">
+                            <Checkbox
+                            // checked={assigndata?.labelcard?.some((assignedItem) => assignedItem.id === item?.id)}
+                            //   checked={item?.checked}
+                            //   onClick={() => handleCheckboxChange(item)}
+                            />
+                            <Avatar className="-mt-2 h-7 w-7">
+                              <AvatarImage src={member.profimage} />
+                              <AvatarFallback>
+                                {member.user.first_name[0]}
+                                {member.user.last_name[0]}
+                              </AvatarFallback>
+                            </Avatar>
+                          </div>
+                          <div className="">
+                            <h4 className="text-xs font-light">
+                              {member.user.first_name} {member.user.last_name}
+                            </h4>
+                          </div>
+                        </div>
+                      ))}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
