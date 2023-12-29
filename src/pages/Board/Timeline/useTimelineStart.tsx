@@ -1,15 +1,14 @@
 import AuthContext from '@/contexts/AuthContext';
 import { BaseURL } from '@/pages/baseURL';
 import { useQuery } from '@tanstack/react-query';
-import { useContext } from 'react';
-import { Board } from '../types';
+import React, { useContext } from 'react';
 
-export const useTimeline = (boardId: number) => {
+export const useTimelineStart = (boardId: number) => {
   let authTokens = useContext(AuthContext)?.authTokens;
   const queryRs = useQuery({
-    queryKey: ['Timeline', boardId],
+    queryKey: ['Timeline Start', boardId],
     queryFn: async () => {
-      const response = await fetch(BaseURL + `tascrum/member-tl/${boardId}/`, {
+      const response = await fetch(BaseURL + `tascrum/boards/${boardId}/start-tl/`, {
         method: 'GET',
         headers: {
           Authorization: `JWT ` + authTokens.access,

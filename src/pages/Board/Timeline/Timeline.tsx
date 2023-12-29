@@ -6,6 +6,8 @@ import { useParams } from 'react-router';
 import { buildTimebar } from './builders';
 import { NUM_OF_TRACKS, NUM_OF_YEARS, START_YEAR } from './constants';
 import { useTimeline } from './useTimeline';
+import { useTimelineEnd } from './useTimelineEnd';
+import { useTimelineStart } from './useTimelineStart';
 import { colourIsLight, fill, hexToRgb, nextColor } from './utils';
 
 // eslint-disable-next-line no-alert
@@ -19,7 +21,9 @@ const MAX_ZOOM = 20;
 
 const BoardTimeline = () => {
   const { boardId } = useParams();
-  const { data: TimelineData } = useTimeline(boardId);
+  const { data: TimelineData, isLoading: loadingTable } = useTimeline(boardId);
+  const { data: TimelineDataStart, isLoading: loadingStart } = useTimelineStart(boardId);
+  const { data: TimelineDataEnd, isLoading: loadingEnd } = useTimelineEnd(boardId);
   // Setting Arrays
 
   useEffect(() => {
@@ -38,7 +42,20 @@ const BoardTimeline = () => {
 
       setTracks(Object.values(updatedTracks));
     }
-  }, [TimelineData]);
+    if (TimelineDataStart && TimelineDataEnd) {
+      console.log(TimelineDataStart);
+      console.log(TimelineDataEnd);
+      const start1 = new Date(TimelineDataStart[0].startdate);
+      const end1 = new Date(TimelineDataEnd[0].duedate);
+      if (start1.getFullYear() === end1.getFullYear()) {
+        setstart(new Date(`${start1.getFullYear()}`));
+        setend(new Date(`${start1.getFullYear() + 1}`));
+      } else {
+        setstart(new Date(`${start1.getFullYear()}`));
+        setend(new Date(`${end1.getFullYear()}`));
+      }
+    }
+  }, [TimelineData, TimelineDataStart, TimelineDataEnd]);
   // No Change
   const handleToggleOpen = () => {
     setOpen((prevOpen: any) => !prevOpen);
@@ -132,34 +149,38 @@ const BoardTimeline = () => {
   const [zoom, setZoom] = useState(2);
   const [tracks, setTracks] = useState([]);
 
-  const start = new Date(`${2020}`);
-  const end = new Date(`${2024}`);
+  const [start, setstart] = useState(new Date(`${2022}`));
+  const [end, setend] = useState(new Date(`${2024}`));
 
   return (
     <div className="w-full p-8">
-      <Timeline
-        scale={{
-          start,
-          end,
-          zoom,
-          zoomMin: MIN_ZOOM,
-          zoomMax: MAX_ZOOM,
-        }}
-        isOpen={open}
-        toggleOpen={handleToggleOpen}
-        zoomIn={handleZoomIn}
-        zoomOut={handleZoomOut}
-        clickElement={clickElement}
-        clickTrackButton={(track: any) => {
-          // eslint-disable-next-line no-alert
-          alert(JSON.stringify(track));
-        }}
-        tracks={tracks}
-        timebar={timebar}
-        toggleTrackOpen={handleToggleTrackOpen}
-        enableSticky
-        scrollToNow
-      />
+      {loadingTable || loadingStart || loadingEnd ? (
+        'loading'
+      ) : (
+        <Timeline
+          scale={{
+            start,
+            end,
+            zoom,
+            zoomMin: MIN_ZOOM,
+            zoomMax: MAX_ZOOM,
+          }}
+          isOpen={open}
+          toggleOpen={handleToggleOpen}
+          zoomIn={handleZoomIn}
+          zoomOut={handleZoomOut}
+          clickElement={clickElement}
+          clickTrackButton={(track: any) => {
+            // eslint-disable-next-line no-alert
+            alert(JSON.stringify(track));
+          }}
+          tracks={tracks}
+          timebar={timebar}
+          toggleTrackOpen={handleToggleTrackOpen}
+          enableSticky
+          scrollToNow
+        />
+      )}
     </div>
   );
 };
