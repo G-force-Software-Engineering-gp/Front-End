@@ -7,7 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { cn } from '@/lib/utils';
-import _ from 'lodash';
+import _, { create } from 'lodash';
 import {
   CalendarDays,
   ChevronDown,
@@ -20,14 +20,17 @@ import {
   Star,
   Trello,
   UserPlus2,
+  Bot
 } from 'lucide-react';
-import React, { useRef, useState } from 'react';
+import React, { createContext, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { BoardSidebar } from './boardSidebar';
 import AddImage from './components/AddImage';
 import { FilterCard } from './components/filterCards';
 import { useBoard } from './hooks/useBoard';
 import { useMembers } from './hooks/useMembers';
+import { Toggle } from '@/components/ui/toggle';
+import { useContext } from 'react';
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -65,7 +68,9 @@ interface Member {
   profimage: string;
 }
 
-const BoardHeader = () => {
+
+const BoardHeader = ({ appearBot, setAppearBot }: any) => {
+
   const navigate = useNavigate();
   const { boardId } = useParams();
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
@@ -75,7 +80,9 @@ const BoardHeader = () => {
   const isCalendarRoute = pathname.includes('/calendar');
   const isTimelineRoute = pathname.includes('/timeline');
 
+
   return (
+
     <div className="backdrop-blur" data-testid="boardHeader">
       <>
         <div className="mt-4 flex flex-1 flex-col border-b-2 p-2 px-5 md:mt-0 md:flex-row md:items-center md:justify-between">
@@ -148,6 +155,13 @@ const BoardHeader = () => {
             </div>
           </div>
           <div className="flex items-center justify-end space-x-2">
+            <Toggle onClick={() => setAppearBot(!appearBot)} variant="outline" className='h-8 w-8 p-0 relative'>
+              <span className="absolute top-1 right-1 transform translate-y-[-50%] translate-x-[50%] flex h-3 w-3">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+              </span>
+              <Bot className=" h-4 w-4" />
+            </Toggle>
             {(isCalendarRoute || isTimelineRoute) && (
               <Button onClick={() => navigate(-1)} variant="secondary" className="h-8 w-8 p-0">
                 <Trello className="h-4 w-4" />
@@ -260,6 +274,7 @@ const BoardHeader = () => {
         </div>
       </>
     </div>
+
   );
 };
 
