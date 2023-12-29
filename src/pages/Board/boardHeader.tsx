@@ -20,6 +20,7 @@ import {
   Star,
   Trello,
   UserPlus2,
+  Bot
 } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
@@ -27,6 +28,7 @@ import { BoardSidebar } from './boardSidebar';
 import AddImage from './components/AddImage';
 import { useBoard } from './hooks/useBoard';
 import { useMembers } from './hooks/useMembers';
+import { Toggle } from '@/components/ui/toggle';
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -147,6 +149,9 @@ const BoardHeader = () => {
             </div>
           </div>
           <div className="flex items-center justify-end space-x-2">
+            <Toggle variant="outline" className='h-8 w-8 p-0'>
+              <Bot className="h-4 w-4" />
+            </Toggle>
             {(isCalendarRoute || isTimelineRoute) && (
               <Button onClick={() => navigate(-1)} variant="secondary" className="h-8 w-8 p-0">
                 <Trello className="h-4 w-4" />
