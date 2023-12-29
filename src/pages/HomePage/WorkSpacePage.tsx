@@ -1,15 +1,14 @@
 import Header from '@/components/Header';
 import HeaderResponsive from '@/components/HeaderResponsive';
-import { HomeSideBar } from './HomeSideBar';
-import { Outlet, useNavigate } from 'react-router-dom';
 import { AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Avatar } from '@radix-ui/react-avatar';
 import React from 'react';
-import { useParams } from 'react-router-dom';
-import useWorkSpaceBoards from './hooks/useWorkSpaceBoards';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import AddBoard from './components/AddBoard';
 import BoardCard from './components/BoardCard';
+import { HomeSideBar } from './HomeSideBar';
+import useWorkSpaceBoards from './hooks/useWorkSpaceBoards';
 
 const capitalizeWords = (str: string) => {
   return str.replace(/\b\w/g, (match: string) => match.toUpperCase());
@@ -50,9 +49,9 @@ const WorkSpacePage = () => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                   className="lucide lucide-shapes mr-2"
                 >
                   <path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z" />
@@ -65,7 +64,7 @@ const WorkSpacePage = () => {
             <div className="mt-4 grid sm:flex sm:items-center sm:justify-between">
               <div className="">
                 <Button
-                test-id="boardID"
+                  test-id="boardID"
                   onClick={() => navigate(`boards`)}
                   variant="secondary"
                   className="mr-1 mt-1 p-2 sm:mt-0"
@@ -169,7 +168,6 @@ const WorkSpacePage = () => {
                 </Button>
               </div>
             </div>
-
           </div>
           <Outlet />
         </div>

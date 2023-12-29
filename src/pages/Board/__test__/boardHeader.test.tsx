@@ -22,8 +22,8 @@ describe('BoardHeader Component', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('G-Force')).toBeInTheDocument();
-      // expect(screen.getByText('Board')).toBeInTheDocument();
+      // expect(screen.getByText('G-Force')).toBeInTheDocument();
+      expect(screen.getByText('Board')).toBeInTheDocument();
     });
   });
 

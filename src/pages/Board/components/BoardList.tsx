@@ -382,8 +382,8 @@ export const ListCard = ({ cardId, columns, listId, isOverlay }: CardProps) => {
         <CardFooter className="flex items-end justify-between pt-1">
           <div className="flex flex-wrap -space-x-1.5">
             {data?.members?.length != 0 &&
-              data?.members?.map((member) => (
-                <Avatar className="h-6 w-6 hover:z-10 hover:bg-primary">
+              data?.members?.map((member, index) => (
+                <Avatar key={member.id} className="h-6 w-6 hover:z-10 hover:bg-primary">
                   <AvatarFallback className="text-xs hover:bg-primary hover:text-primary-foreground">
                     {member.user.first_name[0]}
                     {member.user.last_name[0]}

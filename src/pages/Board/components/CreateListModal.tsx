@@ -50,10 +50,8 @@ function CreateListModal({ boardId }: ListModalProps) {
         body: JSON.stringify(formData),
       });
     },
-    onError: (error, variables, context) => {
-    },
-    onSuccess: (data, variables, context) => {
-    },
+    onError: (error, variables, context) => {},
+    onSuccess: (data, variables, context) => {},
     onSettled: (data, error, variables, context) => {
       queryClient.invalidateQueries({ queryKey: ['board', boardId], exact: true });
     },

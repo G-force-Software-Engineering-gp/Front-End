@@ -18,15 +18,19 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export default AuthContext;
 type AuthProviderProps = {
   children: React.ReactNode;
+  defaultUser?: any;
+  defaultAuthTokens?: any;
 };
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children, defaultUser, defaultAuthTokens }) => {
   const [authTokens, setAuthTokens] = useState<any>(
-    localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')!) : null
+    defaultAuthTokens || (localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')!) : null)
   );
+
   const [user, setUser] = useState<any>(
-    localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')!) : null
+    defaultUser || (localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')!) : null)
   );
+
   const [loading, setloading] = useState(true);
 
   const Navigate = useNavigate();

@@ -105,9 +105,9 @@ const AddWorkSpace = () => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
             className="lucide lucide-plus"
           >
             <path d="M5 12h14" />
@@ -150,7 +150,7 @@ const AddWorkSpace = () => {
                 aria-labelledby="typeLabel"
                 className={`col-span-3 ${selError && selectedValue === null ? 'border-red-500' : ''}`}
               >
-                <SelectValue placeholder="Select The Type" data-testId="selectClicking"/>
+                <SelectValue placeholder="Select The Type" data-testId="selectClicking" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
