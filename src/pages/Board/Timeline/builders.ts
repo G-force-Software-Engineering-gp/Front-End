@@ -1,12 +1,5 @@
-import {
-  MONTH_NAMES,
-  MONTHS_PER_QUARTER,
-  MONTHS_PER_YEAR,
-  NUM_OF_YEARS,
-  QUARTERS_PER_YEAR,
-  START_YEAR,
-} from './constants';
-import { addMonthsToYear, addMonthsToYearAsDate, colourIsLight, hexToRgb, nextColor } from './utils';
+import { MONTH_NAMES, MONTHS_PER_QUARTER, MONTHS_PER_YEAR, QUARTERS_PER_YEAR, START_YEAR } from './constants';
+import { addMonthsToYear, addMonthsToYearAsDate } from './utils';
 
 // For Creating TimeBars
 
