@@ -7,7 +7,7 @@ export const buildQuarterCells = () => {
   // No change
 
   const v = [];
-  for (let i = 0; i < QUARTERS_PER_YEAR * 4; i += 1) {
+  for (let i = 0; i < QUARTERS_PER_YEAR * 8; i += 1) {
     const quarter = (i % 4) + 1;
     const startMonth = i * MONTHS_PER_QUARTER;
     const s = addMonthsToYear(START_YEAR, startMonth);
@@ -25,8 +25,9 @@ export const buildQuarterCells = () => {
 export const buildMonthCells = () => {
   // No change
   const v = [];
-  for (let i = 0; i < MONTHS_PER_YEAR * 4; i += 1) {
+  for (let i = 0; i < MONTHS_PER_YEAR * 8; i += 1) {
     const startMonth = i;
+    console.log(startMonth)
     const start = addMonthsToYearAsDate(START_YEAR, startMonth);
     const end = addMonthsToYearAsDate(START_YEAR, startMonth + 1);
     v.push({
