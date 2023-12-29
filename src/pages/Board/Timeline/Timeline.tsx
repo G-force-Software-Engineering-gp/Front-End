@@ -4,7 +4,6 @@ import Timeline from 'react-timelines';
 import 'react-timelines/lib/css/style.css';
 import { useParams } from 'react-router';
 import { buildTimebar } from './builders';
-import { NUM_OF_TRACKS, NUM_OF_YEARS, START_YEAR } from './constants';
 import { useTimeline } from './useTimeline';
 import { useTimelineEnd } from './useTimelineEnd';
 import { useTimelineStart } from './useTimelineStart';
@@ -43,8 +42,6 @@ const BoardTimeline = () => {
       setTracks(Object.values(updatedTracks));
     }
     if (TimelineDataStart && TimelineDataEnd) {
-      console.log(TimelineDataStart);
-      console.log(TimelineDataEnd);
       const start1 = new Date(TimelineDataStart[0].startdate);
       const end1 = new Date(TimelineDataEnd[0].duedate);
       if (start1.getFullYear() === end1.getFullYear()) {
@@ -52,7 +49,7 @@ const BoardTimeline = () => {
         setend(new Date(`${start1.getFullYear() + 1}`));
       } else {
         setstart(new Date(`${start1.getFullYear()}`));
-        setend(new Date(`${end1.getFullYear()}`));
+        setend(new Date(`${end1.getFullYear() + 1}`));
       }
     }
   }, [TimelineData, TimelineDataStart, TimelineDataEnd]);
@@ -112,11 +109,9 @@ const BoardTimeline = () => {
   const buildElements = (trackId: any, TimelineData: any) => {
     console.log(trackId);
     const v: any[] = [];
-    const w: any[] = [];
     const cards = TimelineData.members[trackId - 1].cards;
+    console.log(cards);
     for (let i = 0; i < cards.length; i++) {
-      console.log('start: ', cards[i].startdate);
-      console.log('end: ', cards[i].duedate);
       const start = new Date(cards[i].startdate);
       const end = new Date(cards[i].duedate);
       if (cards[i].startdate != null) {
@@ -133,14 +128,12 @@ const BoardTimeline = () => {
     }
     return v;
   };
-
   const buildTrack = (trackId: any, username: string) => {
-    // const tracks = fill(Math.floor(Math.random() * MAX_NUM_OF_SUBTRACKS) + 1).map((i) => buildSubtrack(trackId, i + 1));
     return {
       id: `track-${trackId}`,
       title: username, // Name of the user
       elements: buildElements(trackId, TimelineData),
-      // tracks,
+      // tracks: tracks1,
       isOpen: false,
     };
   };
@@ -150,7 +143,7 @@ const BoardTimeline = () => {
   const [tracks, setTracks] = useState([]);
 
   const [start, setstart] = useState(new Date(`${2022}`));
-  const [end, setend] = useState(new Date(`${2024}`));
+  const [end, setend] = useState(new Date(`${2028}`));
 
   return (
     <div className="w-full p-8">
@@ -171,7 +164,6 @@ const BoardTimeline = () => {
           zoomOut={handleZoomOut}
           clickElement={clickElement}
           clickTrackButton={(track: any) => {
-            // eslint-disable-next-line no-alert
             alert(JSON.stringify(track));
           }}
           tracks={tracks}
