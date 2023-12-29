@@ -4,6 +4,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import _, { merge } from 'lodash';
 import { Pencil, Tag } from 'lucide-react';
@@ -104,7 +105,7 @@ const LabelItem = ({ item, mergeData, cardData, labelOpen, setLabelOpen }: Label
     mutationFn: (formData: any) => {
       formData.card = cardData.id;
       console.log(formData);
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard-labels/`, {
+      return fetch(BaseURL + `tascrum/crcard-labels/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -122,7 +123,7 @@ const LabelItem = ({ item, mergeData, cardData, labelOpen, setLabelOpen }: Label
   const deleteLabel = useMutation({
     mutationFn: (formData: any) => {
       console.log(formData);
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard-labels/${formData.id}/`, {
+      return fetch(BaseURL + `tascrum/crcard-labels/${formData.id}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -272,7 +273,7 @@ const LabelItems = ({ filteredLabels, cardData, labelOpen, setLabelOpen, mergedD
   //     formData.checklist = checkList?.id;
   //     formData.checked = false;
   //     console.log(formData);
-  //     return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/critem/`, {
+  //     return fetch(BaseURL +`tascrum/critem/`, {
   //       method: 'POST',
   //       headers: {
   //         'Content-Type': 'application/json',
@@ -354,7 +355,7 @@ export function EditLable({ item }: EditLableProps) {
       formData.board = boardId;
       formData.color = colorValue;
       console.log(formData);
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com//tascrum/crlabel/${item?.id}/`, {
+      return fetch(BaseURL + `tascrum/crlabel/${item?.id}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -378,7 +379,7 @@ export function EditLable({ item }: EditLableProps) {
   };
   const deleteLabel = useMutation({
     mutationFn: (formData: any) => {
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com//tascrum/crlabel/${formData?.id}/`, {
+      return fetch(BaseURL + `tascrum/crlabel/${formData?.id}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

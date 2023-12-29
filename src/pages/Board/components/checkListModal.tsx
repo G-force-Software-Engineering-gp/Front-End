@@ -3,6 +3,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { Label } from '@radix-ui/react-label';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import _ from 'lodash';
@@ -99,7 +100,7 @@ const CheckListOptions = ({ checkList }: CheckListOptionsProps) => {
       formData.checklist = checkList?.id;
       formData.checked = false;
       console.log(formData);
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/critem/`, {
+      return fetch(BaseURL + `tascrum/critem/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -217,7 +218,7 @@ export const CheckListItem = ({ item, checklist, setChecklist, checkListId }: ch
       formData.checklist = checkListId;
       formData.id = item?.id;
       console.log(formData);
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/critem/${item.id}/`, {
+      return fetch(BaseURL + `tascrum/critem/${item.id}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

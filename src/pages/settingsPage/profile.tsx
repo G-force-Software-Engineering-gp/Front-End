@@ -15,6 +15,7 @@ import { ClipboardList, Mail } from 'lucide-react';
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { BaseURL } from '../baseURL';
 
 const profileFormSchema = z.object({
   username: z
@@ -91,7 +92,7 @@ const Profile = () => {
   const [id, setID] = useState();
 
   const fetchProfileData = async () => {
-    const response = await fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/profile/', {
+    const response = await fetch(BaseURL + 'tascrum/profile/', {
       method: 'GET',
       headers: {
         Authorization: `JWT ${authTokens.access}`,
@@ -109,7 +110,7 @@ const Profile = () => {
   };
 
   const editProfileData = async (profileInfo: any) => {
-    const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/profile/${id}/`, {
+    const response = await fetch(BaseURL + `tascrum/profile/${id}/`, {
       method: 'PUT',
       headers: {
         Authorization: `JWT ${authTokens.access}`,

@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
+import { BaseURL } from '../baseURL';
 import { CheckListSection } from './components/checkListModal';
 import { CheckListPopover } from './components/checkListPopover';
 import { CommentModalComponent } from './components/commentModal';
@@ -109,7 +110,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
         comment: comment,
       };
 
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/${data.id}/`, {
+      return fetch(BaseURL + `tascrum/crcard/${data.id}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

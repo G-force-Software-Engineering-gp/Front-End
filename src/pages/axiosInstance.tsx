@@ -2,8 +2,9 @@ import { AuthContextType } from '@/contexts/AuthContext';
 import axios, { AxiosInstance } from 'axios';
 import dayjs from 'dayjs';
 import jwt_decode from 'jwt-decode';
+import { BaseURL } from './baseURL';
 
-const baseURL = 'https://amirmohammadkomijani.pythonanywhere.com';
+const baseURL = BaseURL;
 
 let authTokens: AuthContextType['authTokens'] | null = localStorage.getItem('authTokens')
   ? JSON.parse(localStorage.getItem('authTokens')!)

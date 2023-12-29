@@ -3,8 +3,9 @@ import axios, { AxiosInstance } from 'axios';
 import dayjs from 'dayjs';
 import jwt_decode from 'jwt-decode';
 import { useContext } from 'react';
+import { BaseURL } from './baseURL';
 
-const baseURL = 'https://amirmohammadkomijani.pythonanywhere.com';
+const baseURL = BaseURL;
 const useAxios = () => {
   const authContext = useContext<AuthContextType | null>(AuthContext);
   if (!authContext) {

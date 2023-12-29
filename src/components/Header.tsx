@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import AuthContext from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { BaseURL } from '@/pages/baseURL';
 import AddWorkSapceHeader from '@/pages/HomePage/components/AddWorkSapceHeader';
 import { useRecentlyViewed } from '@/pages/HomePage/hooks/useRecentlyViewed';
 import axios from 'axios';
@@ -83,7 +84,7 @@ const Header = () => {
   console.log(recently);
   const gettingData = async () => {
     const { data } = await axios
-      .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
+      .get(BaseURL + 'tascrum/workspace/', {
         headers: {
           Authorization: `JWT ${authTokens?.access}`,
         },

@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -48,7 +49,7 @@ export function CreateLable() {
     mutationFn: (formData: any) => {
       formData.board = boardId;
       formData.color = colorValue;
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crlabel/`, {
+      return fetch(BaseURL + `tascrum/crlabel/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

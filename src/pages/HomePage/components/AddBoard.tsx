@@ -12,6 +12,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { DialogClose } from '@radix-ui/react-dialog';
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -28,7 +29,7 @@ const AddBoard: React.FC<AddBoardProps> = ({ workspaceId }) => {
   let authTokens = useContext(AuthContext)?.authTokens;
   const navigate = useNavigate();
   const CreateWorkspace = async () => {
-    const data = await fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/crboard/', {
+    const data = await fetch(BaseURL + 'tascrum/crboard/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

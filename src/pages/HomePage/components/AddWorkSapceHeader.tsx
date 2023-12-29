@@ -21,6 +21,7 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { DialogClose } from '@radix-ui/react-dialog';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -41,7 +42,7 @@ const AddWorkSapceHeader = () => {
   let authTokens = useContext(AuthContext)?.authTokens;
   const navigate = useNavigate();
   const CreateWorkspace = async () => {
-    const data = await fetch('https://amirmohammadkomijani.pythonanywhere.com/tascrum/crworkspace/', {
+    const data = await fetch(BaseURL + 'tascrum/crworkspace/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
