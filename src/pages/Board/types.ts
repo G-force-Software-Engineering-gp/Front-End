@@ -23,13 +23,15 @@ export type Card = {
   order?: number;
   members?: Assignee[];
   role?: Role[];
+  labels?: LabelItem[];
   startdate?: null;
   duedate?: '2023-10-29T00:00:00Z';
   reminder?: '1 Day before';
   storypoint?: number;
   setestimate?: number;
-  description?:string;
-  comment?:string;
+  description?: string;
+  comment?: string;
+  filtered?: boolean;
 };
 export type Role = {
   id: number;
@@ -47,6 +49,7 @@ export type Member = {
   id: number;
   user: User;
   profimage?: string;
+  checked?: boolean;
 };
 
 export type User = {
@@ -77,19 +80,20 @@ export type LabelItem = {
   id: number;
   title: string;
   color: string;
+  checked?: boolean;
 };
 export type LabelItems = {
-  id : number
-  labels?: LabelItem[]
+  id: number;
+  labels?: LabelItem[];
 };
 interface Labelcard {
   id: number;
 }
 
 export type LabelAssign = {
-  id : number
-  labels?: LabelItem[]
-  labelcard ?: Labelcard[]
+  id: number;
+  labels?: LabelItem[];
+  labelcard?: Labelcard[];
 };
 
 export type MergedLabel = {
@@ -98,8 +102,8 @@ export type MergedLabel = {
   color: string;
   labelcard?: number;
   checked: boolean;
-}
+};
 export type MergedLabels = {
   id: number;
-  labels?:MergedLabel[]
-}
+  labels?: MergedLabel[];
+};

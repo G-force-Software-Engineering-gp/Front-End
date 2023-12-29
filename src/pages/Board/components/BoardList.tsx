@@ -241,7 +241,9 @@ export const ListCard = ({ cardId, columns, listId, isOverlay }: CardProps) => {
   //     </CardHeader>
   //   </Card>;
   // }
-
+  if (data?.filtered) {
+    return <div></div>;
+  }
   return (
     <>
       <Card
