@@ -282,7 +282,7 @@ export function FilterCard({ membersData }: FilterCardProps) {
                   </label>
                 </div>
               </div>
-              {data?.labels?.map((item) => (
+              {data?.labels?.slice(0, 3).map((item) => (
                 <div key={item.id} className="col-span-3 ml-2 flex space-x-4">
                   {/* onCheckedChange={() => handleCheckChange(item.id)} */}
                   <Checkbox
