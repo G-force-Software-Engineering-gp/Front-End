@@ -28,6 +28,7 @@ import { BoardSidebar } from './boardSidebar';
 import AddImage from './components/AddImage';
 import { FilterCard } from './components/filterCards';
 import { useBoard } from './hooks/useBoard';
+import { useBoardLabels } from './hooks/useLabel';
 import { useMembers } from './hooks/useMembers';
 import { Toggle } from '@/components/ui/toggle';
 import { useContext } from 'react';
@@ -55,18 +56,18 @@ const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWit
 );
 ListItem.displayName = 'ListItem';
 
-interface User {
-  id: number;
-  username: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  member: Member[];
-}
+// interface User {
+//   id: number;
+//   username: string;
+//   first_name: string;
+//   last_name: string;
+//   email: string;
+//   member: Member[];
+// }
 
-interface Member {
-  profimage: string;
-}
+// interface Member {
+//   profimage: string;
+// }
 
 
 const BoardHeader = ({ appearBot, setAppearBot }: any) => {
@@ -75,6 +76,7 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
   const { boardId } = useParams();
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
   const { data: boardData } = useBoard(parseInt(boardId ? boardId : ''));
+  const { isLoading: boardLabelLoading, data: boardLabelData } = useBoardLabels();
 
   const { pathname } = useLocation();
   const isCalendarRoute = pathname.includes('/calendar');
@@ -180,7 +182,7 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
             {/* <Button data-testid="list filter" variant="secondary" className="h-8 w-8 p-0">
               <ListFilter className="h-4 w-4" />
             </Button> */}
-            <FilterCard />
+            <FilterCard membersData={membersData} boardLabelData={boardLabelData} />
             <div className=" flex -space-x-2 overflow-hidden">
               {membersData?.members?.slice(0, 3).map((member) => (
                 <Popover>
