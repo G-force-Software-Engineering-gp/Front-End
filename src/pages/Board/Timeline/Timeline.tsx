@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import Timeline from 'react-timelines';
 import 'react-timelines/lib/css/style.css';
+import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useParams } from 'react-router';
 import { buildTimebar } from './builders';
 import { useTimeline } from './useTimeline';
@@ -144,9 +146,36 @@ const BoardTimeline = () => {
 
   const [start, setstart] = useState(new Date(`${2022}`));
   const [end, setend] = useState(new Date(`${2028}`));
+  const [selectedValue, setSelectedValue] = useState('Members');
+
+  const getRadio = (event: any) => {
+    setSelectedValue(event.target.value);
+  };
+  // console.log(selectedValue);
 
   return (
     <div className="w-full p-8">
+      <span>Show the Timeline based on: </span>
+      <RadioGroup defaultValue="Members" className=" mb-4 flex">
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem value="Members" id="r1" onClick={(e) => getRadio(e)} />
+          <Label htmlFor="r1" className=" text-lg font-bold">
+            Members{' '}
+          </Label>
+        </div>
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem value="Labels" id="r2" onClick={(e) => getRadio(e)} />
+          <Label htmlFor="r2" className=" text-lg font-bold">
+            Labels
+          </Label>
+        </div>
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem value="Lists" id="r3" onClick={(e) => getRadio(e)} />
+          <Label htmlFor="r3" className=" text-lg font-bold">
+            Lists{' '}
+          </Label>
+        </div>
+      </RadioGroup>
       {loadingTable || loadingStart || loadingEnd ? (
         'loading'
       ) : (

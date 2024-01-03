@@ -27,7 +27,7 @@ export const buildMonthCells = () => {
   const v = [];
   for (let i = 0; i < MONTHS_PER_YEAR * 8; i += 1) {
     const startMonth = i;
-    console.log(startMonth)
+    // console.log(startMonth)
     const start = addMonthsToYearAsDate(START_YEAR, startMonth);
     const end = addMonthsToYearAsDate(START_YEAR, startMonth + 1);
     v.push({
