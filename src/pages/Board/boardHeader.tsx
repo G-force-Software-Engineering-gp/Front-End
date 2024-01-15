@@ -184,8 +184,8 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
             </Button> */}
             <FilterCard membersData={membersData} boardLabelData={boardLabelData} />
             <div className=" flex -space-x-2 overflow-hidden">
-              {membersData?.members?.slice(0, 3).map((member) => (
-                <Popover>
+              {membersData?.members?.slice(0, 3).map((member, index) => (
+                <Popover key={index}>
                   <PopoverTrigger>
                     <Avatar>
                       <AvatarImage src={member.profimage} />

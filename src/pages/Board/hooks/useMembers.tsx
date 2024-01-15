@@ -12,7 +12,7 @@ export const useMembers = (boardId: number) => {
       const response = await fetch(BaseURL + `tascrum/board-member/${boardId}/`, {
         method: 'GET',
         headers: {
-          Authorization: `JWT ` + authTokens.access,
+          Authorization: `JWT ` + authTokens?.access,
         },
       });
       const data = await response.json();

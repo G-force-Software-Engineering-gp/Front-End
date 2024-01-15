@@ -12,7 +12,7 @@ export const useList = (listId: number) => {
       const response = await fetch(BaseURL + `tascrum/list/${listId}`, {
         method: 'GET',
         headers: {
-          Authorization: `JWT ` + authTokens.access,
+          Authorization: `JWT ` + authTokens?.access,
         },
       });
       const data = await response.json();

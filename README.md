@@ -1,54 +1,62 @@
-# Front-end side of Project for Software Engineering Course at IUST 
-## How to run 
-1. Install Dependencies
-   ```bash
-   npm i
-   ```
-2. Run Project
-   ```bash
-   npm run dev
-   ```
+import jwt_decode from 'jwt-decode';
+import { createContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
+
+export type AuthContextType = {
+  user: any;
+  setUser: React.Dispatch<React.SetStateAction<any>>;
+  authTokens: any;
+  setAuthTokens: React.Dispatch<React.SetStateAction<any>>;
+  loginUser: (values: any) => Promise<void>;
+  registerUser: (values: any) => Promise<void>;
+  logoutUser: () => void;
+};
+
+const AuthContext = createContext<AuthContextType | null>(null);
+
+export default AuthContext;
+type AuthProviderProps = {
+  children: React.ReactNode;
+};
+
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const [authTokens, setAuthTokens] = useState<any>(
+    localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')!) : null
+  );
+  const [user, setUser] = useState<any>(
+    localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')!) : null
+  );
+  const [loading, setloading] = useState(true);
+
+  const Navigate = useNavigate();
+
+  const loginUser = async (values: any) => {
+  };
+
+  const registerUser = async (values: any) => {
+  };
 
 
-## Available Scripts
+  const logoutUser = () => {
+  };
 
-In the project directory, you can run:
+  const contextData: AuthContextType = {
+    user,
+    setUser,
+    authTokens,
+    setAuthTokens,
+    loginUser,
+    registerUser,
+    logoutUser,
+  };
 
-### `npm start`
+  useEffect(() => {
+    if (authTokens) {
+      setUser(jwt_decode(authTokens.access));
+    }
+    setloading(false);
+  }, [authTokens, loading]);
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more about Create-React-App in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+  return <AuthContext.Provider value={contextData}>{children}</AuthContext.Provider>;
+};

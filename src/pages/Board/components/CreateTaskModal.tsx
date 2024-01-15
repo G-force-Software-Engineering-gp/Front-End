@@ -81,7 +81,7 @@ function CreateTaskModal({ listId }: TaskModalProps) {
         <DialogContent className="sm:max-w-[425px]">
           <form onSubmit={handleSubmit(onSubmit)}>
             <DialogHeader>
-              <DialogTitle>Add Task</DialogTitle>
+              <DialogTitle>Add New Task</DialogTitle>
               <DialogDescription>Enter your task title here.</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">

@@ -1,6 +1,7 @@
 import AuthContext, { AuthContextType, AuthProvider } from '@/contexts/AuthContext';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { MemoryRouter } from 'react-router-dom';
@@ -49,7 +50,7 @@ describe('Login', () => {
     const loginButton = screen.getByRole('button', { name: 'Login' });
 
     // Mock form submission
-    fireEvent.click(loginButton);
+    userEvent.click(loginButton);
 
     // Expectations
     await waitFor(() => {
