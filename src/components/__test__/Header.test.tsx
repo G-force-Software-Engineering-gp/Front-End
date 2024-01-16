@@ -1,15 +1,25 @@
 import { AuthProvider } from '@/contexts/AuthContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Header from '../Header'; // Import your Header component
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 describe('Header Component', () => {
   test('should render without errors', () => {
     render(
       <MemoryRouter>
-        <AuthProvider>
-          <Header />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Header />
+          </AuthProvider>
+        </QueryClientProvider>
       </MemoryRouter>
     );
   });
@@ -28,9 +38,11 @@ describe('Header Component', () => {
   test('Clicking the logo navigates to the home page', () => {
     render(
       <MemoryRouter>
-        <AuthProvider>
-          <Header />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Header />
+          </AuthProvider>
+        </QueryClientProvider>
       </MemoryRouter>
     );
     const LogoElement = screen.getByText('Logo and Name');
@@ -40,9 +52,11 @@ describe('Header Component', () => {
   test('Clicking the User2 icon navigates to the settings page', () => {
     render(
       <MemoryRouter>
-        <AuthProvider>
-          <Header />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Header />
+          </AuthProvider>
+        </QueryClientProvider>
       </MemoryRouter>
     );
     const LogoElement = screen.getByTestId('user-icon');
@@ -52,9 +66,11 @@ describe('Header Component', () => {
   test('Typing into the search input updates its value', () => {
     render(
       <MemoryRouter>
-        <AuthProvider>
-          <Header />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Header />
+          </AuthProvider>
+        </QueryClientProvider>
       </MemoryRouter>
     );
     const input = screen.getByPlaceholderText('Search') as HTMLInputElement;
@@ -65,9 +81,11 @@ describe('Header Component', () => {
   test('Hides user information when not authenticated', () => {
     render(
       <MemoryRouter>
-        <AuthProvider>
-          <Header />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Header />
+          </AuthProvider>
+        </QueryClientProvider>
       </MemoryRouter>
     );
     expect(screen.queryByText('User2')).toBeNull();
