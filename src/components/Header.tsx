@@ -13,7 +13,7 @@ import { BaseURL } from '@/pages/baseURL';
 import AddWorkSapceHeader from '@/pages/HomePage/components/AddWorkSapceHeader';
 import { useRecentlyViewed } from '@/pages/HomePage/hooks/useRecentlyViewed';
 import axios from 'axios';
-import { BellDot, CalendarDays, ClipboardList, HelpCircle, Layers, User2 } from 'lucide-react';
+import { BellDot, Calendar, CalendarDays, CheckCircle, ClipboardList, GanttChartSquare, HelpCircle, Layers, LineChart, User2 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -290,7 +290,7 @@ const Header = () => {
                     <div className="mb-4 flex justify-between space-x-4">
                       <Avatar>
                         <AvatarImage src="https://github.com/vercel.png1" />
-                        <AvatarFallback>VC</AvatarFallback>
+                        <AvatarFallback><CheckCircle /></AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <h4 className="text-sm font-semibold">Task Assignment</h4>
@@ -303,7 +303,7 @@ const Header = () => {
                     <div className="mb-4 flex justify-between space-x-4">
                       <Avatar>
                         <AvatarImage src="https://github.com/vercel.png1" />
-                        <AvatarFallback>VC</AvatarFallback>
+                        <AvatarFallback><Calendar /></AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <h4 className="text-sm font-semibold">Calendar Integration</h4>
@@ -316,7 +316,7 @@ const Header = () => {
                     <div className="flex justify-between space-x-4">
                       <Avatar>
                         <AvatarImage src="https://github.com/vercel.png1" />
-                        <AvatarFallback>VC</AvatarFallback>
+                        <AvatarFallback><LineChart /></AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <h4 className="text-sm font-semibold">Burndown Chart</h4>
@@ -329,7 +329,7 @@ const Header = () => {
                     <div className="flex justify-between space-x-4">
                       <Avatar>
                         <AvatarImage src="https://github.com/vercel.png1" />
-                        <AvatarFallback>VC</AvatarFallback>
+                        <AvatarFallback><GanttChartSquare /></AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <h4 className="text-sm font-semibold">Timeline View</h4>
