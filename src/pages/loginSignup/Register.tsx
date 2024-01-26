@@ -60,8 +60,10 @@ const Register: React.FC = () => {
         />
       )}
       <div className="flex h-screen flex-col items-center justify-center">
-        <Label className="mb-12 text-center text-2xl font-semibold">Logo</Label>
-        <Label className="mb-9 text-2xl font-semibold">Register</Label>
+        {/* <Label className="text-center"> */}
+        <img className="h-12 mb-9 !font-mono" src={require('../../pics/logo.png')} alt="" />
+        {/* </Label> */}
+        {/* <Label className="mb-4 text-xl">Register</Label> */}
         <Card className="w-96 bg-secondary px-12 py-14">
           <form onSubmit={handleSubmit(onSubmit)} className="grid">
             <Label className="relative mb-4 flex">

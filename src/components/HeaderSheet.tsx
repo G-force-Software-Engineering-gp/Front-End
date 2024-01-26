@@ -66,7 +66,7 @@ const HeaderSheet = () => {
                         navigate('/');
                       }}
                     >
-                      Logo and Name
+                      <img className="h-6 mb-2" src={require('../pics/logo.png')} alt="" />
                     </SheetTitle>
                   </span>
                 </NavigationMenu>
