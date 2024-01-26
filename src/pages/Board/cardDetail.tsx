@@ -114,7 +114,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `JWT ` + authTokens.access,
+          Authorization: `JWT ` + authTokens?.access,
         },
         body: JSON.stringify(newCard_data),
       });

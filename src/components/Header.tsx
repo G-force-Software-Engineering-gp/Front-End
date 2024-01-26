@@ -151,9 +151,9 @@ const Header = () => {
                                       y2="192"
                                       fill="none"
                                       stroke="currentColor"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="16"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="16"
                                     ></line>
                                   </svg>
                                   <div className="mb-2 mt-4 text-lg font-medium">Workspaces</div>
@@ -202,9 +202,9 @@ const Header = () => {
                                       y2="192"
                                       fill="none"
                                       stroke="currentColor"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="16"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="16"
                                     ></line>
                                   </svg>
                                   <div className="mb-2 mt-4 text-lg font-medium">Recent Workspaces</div>

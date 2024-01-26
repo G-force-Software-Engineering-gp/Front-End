@@ -68,9 +68,11 @@ describe('CreateLabel', () => {
     const createButton = screen.getByText('Create');
 
     userEvent.type(titleInput, 'New Label Title');
-    fireEvent.click(createButton);
+    userEvent.click(createButton);
+    // await new Promise(process.nextTick);
 
-    // not working correctly
-    // await expect(screen.queryByText('Create label')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText('Create label')).not.toBeInTheDocument();
+    });
   });
 });

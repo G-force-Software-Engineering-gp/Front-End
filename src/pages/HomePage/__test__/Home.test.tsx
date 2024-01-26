@@ -1,15 +1,25 @@
 import { AuthProvider } from '@/contexts/AuthContext';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Home from '../Home';
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+    },
+  },
+});
 describe('Home Component', () => {
   test('renders without errors', () => {
     render(
       <MemoryRouter>
-        <AuthProvider>
-          <Home />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Home />
+          </AuthProvider>
+        </QueryClientProvider>
       </MemoryRouter>
     );
   });
@@ -17,9 +27,11 @@ describe('Home Component', () => {
   test('displays a Header component', () => {
     render(
       <MemoryRouter>
-        <AuthProvider>
-          <Home />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Home />
+          </AuthProvider>
+        </QueryClientProvider>
       </MemoryRouter>
     );
     expect(screen.getByTestId('header')).toBeInTheDocument();
@@ -28,9 +40,11 @@ describe('Home Component', () => {
   test('displays a HomeSideBar component', () => {
     render(
       <MemoryRouter>
-        <AuthProvider>
-          <Home />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Home />
+          </AuthProvider>
+        </QueryClientProvider>
       </MemoryRouter>
     );
     expect(screen.getByTestId('homepageSidebar')).toBeInTheDocument();
@@ -39,9 +53,11 @@ describe('Home Component', () => {
   test('displays a HomePageDetails component', () => {
     render(
       <MemoryRouter>
-        <AuthProvider>
-          <Home />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Home />
+          </AuthProvider>
+        </QueryClientProvider>
       </MemoryRouter>
     );
     expect(screen.getByTestId('homepageDetails')).toBeInTheDocument();
@@ -50,9 +66,11 @@ describe('Home Component', () => {
   it('correctly positions the components', () => {
     render(
       <MemoryRouter>
-        <AuthProvider>
-          <Home />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <Home />
+          </AuthProvider>
+        </QueryClientProvider>
       </MemoryRouter>
     );
     const header = screen.getByTestId('header');
