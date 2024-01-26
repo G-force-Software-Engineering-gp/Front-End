@@ -238,7 +238,7 @@ const HomePageDetails = () => {
                       Members
                     </Button>
 
-                    <Button variant="secondary" className="mt-1 p-2 sm:mt-0">
+                    <Button variant="secondary" className="mt-1 p-2 sm:mt-1 md:mt-0">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
