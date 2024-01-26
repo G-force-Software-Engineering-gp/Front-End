@@ -113,7 +113,7 @@ const Header = () => {
                               navigate('/');
                             }}
                           >
-                            Logo and Name
+                            <img className="-mb-5 h-12" src={require('../pics/logo.png')} alt="" />
                           </NavigationMenuLink>
                         </span>
                       </NavigationMenuItem>
