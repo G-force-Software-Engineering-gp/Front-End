@@ -84,7 +84,7 @@ const Header = () => {
   let authTokens = useContext(AuthContext)?.authTokens;
   const [workspaces, setworkspaces] = useState<any[]>([]);
   const { data: recently } = useRecentlyViewed();
-  console.log(recently);
+  // console.log(recently);
   const gettingData = async () => {
     const { data } = await axios
       .get(BaseURL + 'tascrum/workspace/', {
