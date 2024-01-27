@@ -1,1 +1,1 @@
-export const BaseURL = 'https://wonderful-sammet-5-1sbsqxi.iran.liara.run/';
+export const BaseURL = 'http://141.11.182.93:8001/';
