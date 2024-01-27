@@ -61,7 +61,7 @@ const Register: React.FC = () => {
       )}
       <div className="flex h-screen flex-col items-center justify-center">
         {/* <Label className="text-center"> */}
-        <img className="h-12 mb-9 !font-mono" src={require('../../pics/logo.png')} alt="" />
+        <img className="mb-9 h-12 !font-mono" src={require('../../pics/logo.png')} alt="" />
         {/* </Label> */}
         {/* <Label className="mb-4 text-xl">Register</Label> */}
         <Card className="w-96 bg-secondary px-12 py-14">
@@ -138,7 +138,7 @@ const Register: React.FC = () => {
           </form>
           <div className="mt-4 flex justify-center gap-2 text-sm">
             <Label>Already have an account? </Label>
-            <Link className="hover:text-primary" to={'/login'}>
+            <Link className="underline hover:text-primary" to={'/login'}>
               Log In
             </Link>
           </div>
