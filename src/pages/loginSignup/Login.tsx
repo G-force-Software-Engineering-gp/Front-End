@@ -54,8 +54,10 @@ const Login: React.FC = () => {
         <img className="hidden h-[450px] w-1/2 border-4 md:block  " src={require('../../pics/loginLight.png')} alt="" />
       )}
       <div className="flex h-screen flex-col items-center justify-center">
-        <Label className="mb-12 text-center text-2xl font-semibold">Logo</Label>
-        <Label className="mb-9 text-2xl font-semibold">Login</Label>
+        {/* <Label className="text-center"> */}
+        <img className="mb-9 h-12 !font-mono" src={require('../../pics/logo.png')} alt="" />
+        {/* </Label> */}
+        {/* <Label className="mb-4 text-xl">Login</Label> */}
         <Card className="w-96 bg-secondary px-12 py-14">
           <form onSubmit={handleSubmit(onSubmit)} className="grid">
             <Label className="relative mb-4 flex">
@@ -94,7 +96,7 @@ const Login: React.FC = () => {
           </form>
           <div className="mt-4 flex justify-center gap-2 text-sm">
             <Label>Dont have Account? </Label>
-            <Link className="hover:text-primary" to={'/register'}>
+            <Link className="underline hover:text-primary" to={'/register'}>
               Create account
             </Link>
           </div>
