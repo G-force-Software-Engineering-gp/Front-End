@@ -1,4 +1,5 @@
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { useQuery } from '@tanstack/react-query';
 import { useContext } from 'react';
 
@@ -7,7 +8,7 @@ const useWorkSpaceBoards = (workspaceId: number) => {
   const queryRs = useQuery({
     queryKey: ['workspacePage', workspaceId],
     queryFn: async () => {
-      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/${workspaceId}`, {
+      const response = await fetch(BaseURL + `tascrum/workspace/${workspaceId}`, {
         method: 'GET',
         headers: {
           Authorization: `JWT ` + authTokens.access,

@@ -10,7 +10,9 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { DialogClose } from '@radix-ui/react-dialog';
+import axios from 'axios';
 import { ImagePlus } from 'lucide-react';
 import React, { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -34,37 +36,41 @@ const AddImage = () => {
       const formData = new FormData();
       formData.append('backgroundImage', selectedImage);
 
-      const data = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board-bgimage/${boardId}/`, {
-        method: 'PUT',
-        headers: {
-          Authorization: `JWT ${authTokens.access}`,
-        },
-        body: formData,
-      }).then((response) => response);
-      if (data.ok) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Successful',
-          text: 'Picture uploaded completely',
-          timer: 3000,
+      try {
+        const response = await axios.put(BaseURL + `tascrum/board-bgimage/${boardId}/`, formData, {
+          headers: {
+            Authorization: `JWT ${authTokens?.access}`,
+            'Content-Type': 'multipart/form-data', // Important for file uploads
+          },
         });
-        setInterval(() => {
-          navigate(0);
-        }, 2000);
-      } else {
+
+        if (response.status === 200) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Successful',
+            text: 'Picture uploaded completely',
+            timer: 3000,
+          });
+          setTimeout(() => {
+            navigate(0);
+          }, 2000);
+        } else {
+          throw new Error('Something went wrong!');
+        }
+      } catch (error) {
+        console.error(error);
         Swal.fire({
           icon: 'error',
           title: 'Error',
           text: 'Something went wrong!',
           timer: 3000,
         });
-        setInterval(() => {
+        setTimeout(() => {
           navigate(0);
         }, 2000);
       }
     }
   };
-
   return (
     <>
       <Dialog>
@@ -80,6 +86,9 @@ const AddImage = () => {
             <DialogDescription>You can select only .jpg and .png files</DialogDescription>
           </DialogHeader>
           <div className="grid w-full max-w-sm items-center gap-1.5">
+            <label htmlFor="picture" className="hidden cursor-pointer">
+              Select Images
+            </label>
             <Input
               id="picture"
               type="file"
@@ -87,6 +96,7 @@ const AddImage = () => {
               accept=".jpg, .jpeg, .png"
               onChange={handleFileChange}
               placeholder="Image"
+              name="picture"
             />
           </div>
           <DialogFooter className="sm:justify-start">

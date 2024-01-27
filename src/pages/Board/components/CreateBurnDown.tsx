@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import AuthContext from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { BaseURL } from '@/pages/baseURL';
 import { format } from 'date-fns';
 import { CalendarIcon, Clock7 } from 'lucide-react';
 import { useContext, useState } from 'react';
@@ -20,20 +21,17 @@ const CreateBurnDown = () => {
   let authTokens = useContext(AuthContext)?.authTokens;
   const CreateBurnDown = async () => {
     if (mainDate) {
-      const data = await fetch(
-        `https://amirmohammadkomijani.pythonanywhere.com/tascrum/burndown-chart-create/${boardId}/create_burndown/`,
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `JWT ` + authTokens.access,
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: JSON.stringify({
-            start: formatDateToString(mainDate?.from),
-            end: formatDateToString(mainDate?.to),
-          }),
-        }
-      );
+      const data = await fetch(BaseURL + `tascrum/burndown-chart-create/${boardId}/create_burndown/`, {
+        method: 'POST',
+        headers: {
+          Authorization: `JWT ` + authTokens.access,
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: JSON.stringify({
+          start: formatDateToString(mainDate?.from),
+          end: formatDateToString(mainDate?.to),
+        }),
+      });
       if (data.ok) {
         Swal.fire({
           icon: 'success',

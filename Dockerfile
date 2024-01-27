@@ -1,14 +1,17 @@
-#Stage 1
-FROM node:17-alpine as builder
+# Stage 1
+FROM node:20-alpine as builder
 WORKDIR /app
-COPY package.json .
-COPY package-lock.json .
-RUN npm install --force
+
 COPY . .
-RUN npm run build
-#Stage 2
-FROM nginx:1.24.0
-WORKDIR /usr/share/nginx/html
-RUN rm -rf ./*
-COPY --from=builder /app/dist .
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+RUN rm package-lock.json
+RUN yarn install --frozen-lockfile
+RUN yarn build
+
+# Stage
+FROM nginx:stable-alpine
+
+COPY --from=builder /app/build /usr/share/nginx/html
+COPY default.conf /etc/nginx/conf.d/default.conf
+
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]

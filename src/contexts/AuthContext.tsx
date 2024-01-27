@@ -1,3 +1,4 @@
+import { BaseURL } from '@/pages/baseURL';
 import jwt_decode from 'jwt-decode';
 import { createContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -18,21 +19,25 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export default AuthContext;
 type AuthProviderProps = {
   children: React.ReactNode;
+  defaultUser?: any;
+  defaultAuthTokens?: any;
 };
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+export const AuthProvider: React.FC<AuthProviderProps> = ({ children, defaultUser, defaultAuthTokens }) => {
   const [authTokens, setAuthTokens] = useState<any>(
-    localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')!) : null
+    defaultAuthTokens || (localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')!) : null)
   );
+
   const [user, setUser] = useState<any>(
-    localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')!) : null
+    defaultUser || (localStorage.getItem('authTokens') ? jwt_decode(localStorage.getItem('authTokens')!) : null)
   );
+
   const [loading, setloading] = useState(true);
 
   const Navigate = useNavigate();
 
   const loginUser = async (values: any) => {
-    const response = await fetch('https://amirmohammadkomijani.pythonanywhere.com/auth/jwt/create/', {
+    const response = await fetch(BaseURL + 'auth/jwt/create/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -59,7 +64,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const registerUser = async (values: any) => {
-    const reg_response = await fetch('https://amirmohammadkomijani.pythonanywhere.com/auth/users/', {
+    const reg_response = await fetch(BaseURL + 'auth/users/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

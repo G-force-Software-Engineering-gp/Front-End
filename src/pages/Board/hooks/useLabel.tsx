@@ -1,4 +1,5 @@
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { useQuery } from '@tanstack/react-query';
 import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
@@ -10,10 +11,10 @@ export const useBoardLabels = () => {
   const queryRs = useQuery<LabelItems, Error>({
     queryKey: ['label', boardId],
     queryFn: async () => {
-      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board-labels/${boardId}/`, {
+      const response = await fetch(BaseURL + `tascrum/board-labels/${boardId}/`, {
         method: 'GET',
         headers: {
-          Authorization: `JWT ` + authTokens.access,
+          Authorization: `JWT ` + authTokens?.access,
         },
       });
       if (response.status === 404) {
@@ -35,10 +36,10 @@ export const useAssignedLabels = (cardId: number) => {
   const queryRs = useQuery<LabelAssign, Error>({
     queryKey: ['assignLabel', cardId],
     queryFn: async () => {
-      const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/card-labels/${cardId}`, {
+      const response = await fetch(BaseURL + `tascrum/card-labels/${cardId}`, {
         method: 'GET',
         headers: {
-          Authorization: `JWT ` + authTokens.access,
+          Authorization: `JWT ` + authTokens?.access,
         },
       });
       const data = await response.json();

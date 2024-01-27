@@ -1,4 +1,5 @@
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { useQuery } from '@tanstack/react-query';
 import { useContext } from 'react';
 import { useParams } from 'react-router-dom';
@@ -11,15 +12,12 @@ export const useCard = (cardId: number) => {
   const queryRs = useQuery<Card, Error>({
     queryKey: ['card', cardId],
     queryFn: async () => {
-      const response = await fetch(
-        `https://amirmohammadkomijani.pythonanywhere.com/tascrum/card/${cardId}/?board=${parsedBoardId}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `JWT ` + authTokens.access,
-          },
-        }
-      );
+      const response = await fetch(BaseURL + `tascrum/card/${cardId}/?board=${parsedBoardId}`, {
+        method: 'GET',
+        headers: {
+          Authorization: `JWT ` + authTokens.access,
+        },
+      });
       const data = await response.json();
 
       return data;

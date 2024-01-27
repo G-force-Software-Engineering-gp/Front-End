@@ -5,13 +5,15 @@ import { useContext, useEffect, useState } from 'react';
 import { Outlet, useParams } from 'react-router-dom';
 import BoardHeader from './boardHeader';
 import { KanbanBoard } from './components/KanbanBoard';
+import ChatBot from './components/chatBot';
+
 
 const Board = () => {
   const { boardId } = useParams();
   const [bg, setbg] = useState();
   let authTokens = useContext(AuthContext)?.authTokens;
   const gettingData = async () => {
-    const response = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/board/${boardId}`, {
+    const response = await fetch(`tascrum/board/${boardId}`, {
       method: 'GET',
       headers: {
         Authorization: `JWT ` + authTokens.access,
@@ -24,11 +26,13 @@ const Board = () => {
     gettingData();
   }, []);
 
+  const [appearBot, setAppearBot] = useState(false);
+
   return (
     <div className="h-[calc(100vh-8.5rem)">
       <Header />
       <HeaderResponsive />
-      <BoardHeader />
+      <BoardHeader appearBot={appearBot} setAppearBot={setAppearBot} />
       <div
         className="flex overflow-x-auto"
         style={{
@@ -38,6 +42,9 @@ const Board = () => {
         }}
       >
         <Outlet />
+      </div>
+      <div className={`fixed right-3 bottom-3 transform transition-transform duration-300 ease-in-out ${appearBot ? '' : 'translate-x-[110%]'}`}>
+        <ChatBot />
       </div>
     </div>
   );

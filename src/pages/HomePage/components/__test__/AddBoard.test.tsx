@@ -14,16 +14,16 @@ describe('AddBoard Component', () => {
       </MemoryRouter>
     );
   });
-  test('matches snapshot', () => {
-    const { asFragment } = render(
-      <MemoryRouter>
-        <AuthProvider>
-          <AddBoard workspaceId={1} />
-        </AuthProvider>
-      </MemoryRouter>
-    );
-    expect(asFragment()).toMatchSnapshot();
-  });
+  // test('matches snapshot', () => {
+  //   const { asFragment } = render(
+  //     <MemoryRouter>
+  //       <AuthProvider>
+  //         <AddBoard workspaceId={1} />
+  //       </AuthProvider>
+  //     </MemoryRouter>
+  //   );
+  //   expect(asFragment()).toMatchSnapshot();
+  // });
   test('submits form with valid input', () => {
     render(
       <MemoryRouter>

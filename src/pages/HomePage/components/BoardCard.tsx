@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { Sparkles, StarIcon, StarOff } from 'lucide-react';
 import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +20,7 @@ const BoardCard: React.FC<BoardCardProps> = ({ id, title, backgroundImage, has_s
   let authTokens = useContext(AuthContext)?.authTokens;
   const SetStarOrNot = async (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     e.stopPropagation();
-    const data = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/star/${id}/`, {
+    const data = await fetch(BaseURL + `tascrum/star/${id}/`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

@@ -12,6 +12,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import AuthContext from '@/contexts/AuthContext';
+import { BaseURL } from '@/pages/baseURL';
 import { ColumnDef, flexRender, getCoreRowModel, RowData, useReactTable } from '@tanstack/react-table';
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -195,7 +196,7 @@ function BurnDownChart() {
   let authTokens = useContext(AuthContext)?.authTokens;
   // console.log(authTokens);
   const ChangeDone = async (boardId: string | undefined, done: string, member: string, date: string) => {
-    const data = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/burndown-chart/${boardId}/`, {
+    const data = await fetch(BaseURL + `tascrum/burndown-chart/${boardId}/`, {
       method: 'PUT',
       headers: {
         Authorization: `JWT ` + authTokens.access,
@@ -215,7 +216,7 @@ function BurnDownChart() {
     refetchBurnDownChart();
   };
   const ChangeEstimate = async (boardId: string | undefined, estimate: string, member: string, date: string) => {
-    const data = await fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/burndown-chart/${boardId}/`, {
+    const data = await fetch(BaseURL + `tascrum/burndown-chart/${boardId}/`, {
       method: 'PUT',
       headers: {
         Authorization: `JWT ` + authTokens.access,
@@ -308,7 +309,7 @@ function BurnDownChart() {
           <div className="space-y-2">Loading the table</div>
         </div>
       ) : (
-        <T1 className="" >
+        <T1 className="">
           <TableHeader>
             {/* Header */}
             {table.getHeaderGroups().map((headerGroup) => (

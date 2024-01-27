@@ -10,19 +10,19 @@ describe('DescriptionModalComponent', () => {
     expect(screen.getByText('Default description')).toBeInTheDocument();
   });
 
-  it('toggles between view and edit modes', () => {
+  it('toggles between view and edit modes', async () => {
     render(<DescriptionModalComponent description="Default description" setDescription={() => {}} />);
 
     // Check if the component is initially in view mode
     expect(screen.getByText('Default description')).toBeInTheDocument();
 
     // Click to switch to edit mode
-    userEvent.click(screen.getByText('Default description'));
+    await userEvent.click(screen.getByText('Default description'));
 
     // Check if the textarea is rendered in edit mode
     expect(screen.getByPlaceholderText('Add a more detailed description...')).toBeInTheDocument();
 
-    userEvent.click(screen.getByText('Cancel'));
+    await userEvent.click(screen.getByText('Cancel'));
 
     expect(screen.getByText('Default description')).toBeInTheDocument();
   });
@@ -35,14 +35,13 @@ describe('DescriptionModalComponent', () => {
     userEvent.click(screen.getByText('Default description'));
 
     const textarea = screen.getByPlaceholderText('Add a more detailed description...');
-    userEvent.type(textarea, 'New description');
+    await userEvent.type(textarea, 'New description');
 
-    fireEvent.click(screen.getByText('Save'));
+    await userEvent.click(screen.getByText('Save'));
 
     // await waitFor(() => {
-    //   expect(setDescriptionMock).toHaveBeenCalledWith('New description');
+    // expect(setDescriptionMock).toHaveBeenCalledWith('New description');
     // });
-
     // expect(screen.getByText('New description')).toBeInTheDocument();
   });
 });

@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { DateRange } from 'react-day-picker';
+import { BaseURL } from '../baseURL';
 import { CheckListSection } from './components/checkListModal';
 import { CheckListPopover } from './components/checkListPopover';
 import { CommentModalComponent } from './components/commentModal';
@@ -109,11 +110,11 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
         comment: comment,
       };
 
-      return fetch(`https://amirmohammadkomijani.pythonanywhere.com/tascrum/crcard/${data.id}/`, {
+      return fetch(BaseURL + `tascrum/crcard/${data.id}/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `JWT ` + authTokens.access,
+          Authorization: `JWT ` + authTokens?.access,
         },
         body: JSON.stringify(newCard_data),
       });
@@ -126,7 +127,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   });
   useEffect(() => {
     dateMutation.mutate();
-  }, [mainDate, selectedValue, storyPoint, setStimate, description, modalTitle]);
+  }, [mainDate, selectedValue, storyPoint, setStimate, description, modalTitle, comment]);
 
   return (
     <Dialog open={modalOpen} onOpenChange={setModalOpen}>

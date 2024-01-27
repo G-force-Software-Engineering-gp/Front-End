@@ -9,9 +9,11 @@ import {
 } from '@/components/ui/navigation-menu';
 import AuthContext from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { BaseURL } from '@/pages/baseURL';
 import AddWorkSapceHeader from '@/pages/HomePage/components/AddWorkSapceHeader';
+import { useRecentlyViewed } from '@/pages/HomePage/hooks/useRecentlyViewed';
 import axios from 'axios';
-import { BellDot, HelpCircle, User2 } from 'lucide-react';
+import { BellDot, ClipboardList, HelpCircle, User2 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input } from './ui/input';
@@ -78,9 +80,11 @@ const Header = () => {
   ];
   let authTokens = useContext(AuthContext)?.authTokens;
   const [workspaces, setworkspaces] = useState<any[]>([]);
+  const { data: recently } = useRecentlyViewed();
+  console.log(recently);
   const gettingData = async () => {
     const { data } = await axios
-      .get('https://amirmohammadkomijani.pythonanywhere.com/tascrum/workspace/', {
+      .get(BaseURL + 'tascrum/workspace/', {
         headers: {
           Authorization: `JWT ${authTokens?.access}`,
         },
@@ -144,9 +148,9 @@ const Header = () => {
                                       y2="192"
                                       fill="none"
                                       stroke="currentColor"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="16"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="16"
                                     ></line>
                                   </svg>
                                   <div className="mb-2 mt-4 text-lg font-medium">Workspaces</div>
@@ -195,9 +199,9 @@ const Header = () => {
                                       y2="192"
                                       fill="none"
                                       stroke="currentColor"
-                                      stroke-linecap="round"
-                                      stroke-linejoin="round"
-                                      stroke-width="16"
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      strokeWidth="16"
                                     ></line>
                                   </svg>
                                   <div className="mb-2 mt-4 text-lg font-medium">Recent Workspaces</div>
@@ -207,9 +211,21 @@ const Header = () => {
                                 </a>
                               </NavigationMenuLink>
                             </li>
-                            <ListItem title="Recent 1">You can see your recent workspace</ListItem>
-                            <ListItem title="Recent 1">You can see your recent workspace</ListItem>
-                            <ListItem title="Recent 1">You can see your recent workspace</ListItem>
+                            <li>
+                              {recently
+                                ? recently.map((item: any) => (
+                                    <ListItem className="!flex">
+                                      <div
+                                        className="flex cursor-pointer items-center gap-2"
+                                        onClick={() => navigate(`/board/${item.id}`)}
+                                      >
+                                        <ClipboardList className="h-8 w-8" />
+                                        <div className=" text-base">{item.title}</div>
+                                      </div>
+                                    </ListItem>
+                                  ))
+                                : ''}
+                            </li>
                           </ul>
                         </NavigationMenuContent>
                       </NavigationMenuItem>
