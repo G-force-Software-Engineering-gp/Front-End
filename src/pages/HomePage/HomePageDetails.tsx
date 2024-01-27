@@ -75,12 +75,12 @@ const HomePageDetails = () => {
           <h2>Recently viewed</h2>
         </div>
         <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
-          {recentlyBoards?.map((item: { id: number; title: string; backgroundImage: any; has_star: boolean }) => (
+          {recentlyBoards?.map((item: { id: number; title: string; backgroundimage: any; has_star: boolean }) => (
             <BoardCard
               key={item.id} // Make sure to include a key prop if the list is dynamic
               id={item.id}
               title={item.title}
-              backgroundImage={item.backgroundImage}
+              backgroundImage={item.backgroundimage}
               has_star={item.has_star}
             />
           ))}
@@ -106,12 +106,12 @@ const HomePageDetails = () => {
           <h2>Starred Workspaces</h2>
         </div>
         <div className="mb-8 mt-4 grid auto-rows-fr gap-2  sm:grid-cols-2 md:grid-cols-3">
-          {starred?.map((item: { id: number; title: string; backgroundImage: any; has_star: boolean }) => (
+          {starred?.map((item: { id: number; title: string; backgroundimage: any; has_star: boolean }) => (
             <BoardCard
               key={item.id} // Make sure to include a key prop if the list is dynamic
               id={item.id}
               title={item.title}
-              backgroundImage={item.backgroundImage}
+              backgroundImage={item.backgroundimage}
               has_star={item.has_star}
             />
           ))}
@@ -272,12 +272,12 @@ const HomePageDetails = () => {
                 </div>
 
                 <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
-                  {item?.boards.map((item1: { id: number; title: string; backgroundImage: any; has_star: boolean }) => (
+                  {item?.boards.map((item1: { id: number; title: string; backgroundimage: any; has_star: boolean }) => (
                     <BoardCard
                       key={item1.id} // Make sure to include a key prop if the list is dynamic
                       id={item1.id}
                       title={item1.title}
-                      backgroundImage={item1.backgroundImage}
+                      backgroundImage={item1.backgroundimage}
                       has_star={item1.has_star}
                     />
                   ))}

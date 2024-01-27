@@ -14,12 +14,12 @@ const WorkSpacePageDetails = () => {
   return (
 
     <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
-      {data?.boards.map((item1: { id: number; title: string; backgroundImage: any; has_star: boolean }) => (
+      {data?.boards.map((item1: { id: number; title: string; backgroundimage: any; has_star: boolean }) => (
         <BoardCard
           key={item1.id} // Make sure to include a key prop if the list is dynamic
           id={item1.id}
           title={item1.title}
-          backgroundImage={item1.backgroundImage}
+          backgroundImage={item1.backgroundimage}
           has_star={item1.has_star}
         />
       ))}

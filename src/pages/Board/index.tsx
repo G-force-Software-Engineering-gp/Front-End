@@ -3,24 +3,24 @@ import HeaderResponsive from '@/components/HeaderResponsive';
 import AuthContext from '@/contexts/AuthContext';
 import { useContext, useEffect, useState } from 'react';
 import { Outlet, useParams } from 'react-router-dom';
+import { BaseURL } from '../baseURL';
 import BoardHeader from './boardHeader';
-import { KanbanBoard } from './components/KanbanBoard';
 import ChatBot from './components/chatBot';
-
+import { KanbanBoard } from './components/KanbanBoard';
 
 const Board = () => {
   const { boardId } = useParams();
   const [bg, setbg] = useState();
   let authTokens = useContext(AuthContext)?.authTokens;
   const gettingData = async () => {
-    const response = await fetch(`tascrum/board/${boardId}`, {
+    const response = await fetch(BaseURL + `tascrum/board/${boardId}`, {
       method: 'GET',
       headers: {
         Authorization: `JWT ` + authTokens.access,
       },
     });
     const data = await response.json();
-    setbg(data?.backgroundImage);
+    setbg(data?.backgroundimage);
   };
   useEffect(() => {
     gettingData();
@@ -43,7 +43,11 @@ const Board = () => {
       >
         <Outlet />
       </div>
-      <div className={`fixed right-3 bottom-3 transform transition-transform duration-300 ease-in-out ${appearBot ? '' : 'translate-x-[110%]'}`}>
+      <div
+        className={`fixed bottom-3 right-3 transform transition-transform duration-300 ease-in-out ${
+          appearBot ? '' : 'translate-x-[110%]'
+        }`}
+      >
         <ChatBot />
       </div>
     </div>

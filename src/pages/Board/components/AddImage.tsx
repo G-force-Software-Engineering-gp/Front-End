@@ -34,7 +34,7 @@ const AddImage = () => {
   const handleUpload = async () => {
     if (selectedImage) {
       const formData = new FormData();
-      formData.append('backgroundImage', selectedImage);
+      formData.append('backgroundimage', selectedImage);
 
       try {
         const response = await axios.put(BaseURL + `tascrum/board-bgimage/${boardId}/`, formData, {
@@ -43,7 +43,7 @@ const AddImage = () => {
             'Content-Type': 'multipart/form-data', // Important for file uploads
           },
         });
-
+        console.log(response);
         if (response.status === 200) {
           Swal.fire({
             icon: 'success',
@@ -51,9 +51,9 @@ const AddImage = () => {
             text: 'Picture uploaded completely',
             timer: 3000,
           });
-          setTimeout(() => {
-            navigate(0);
-          }, 2000);
+          // setTimeout(() => {
+          //   navigate(0);
+          // }, 2000);
         } else {
           throw new Error('Something went wrong!');
         }
@@ -65,9 +65,9 @@ const AddImage = () => {
           text: 'Something went wrong!',
           timer: 3000,
         });
-        setTimeout(() => {
-          navigate(0);
-        }, 2000);
+        // setTimeout(() => {
+        //   navigate(0);
+        // }, 2000);
       }
     }
   };
