@@ -89,7 +89,7 @@ const WorkSpacePage = () => {
                   Boards
                 </Button>
 
-                <Button variant="secondary" className="mr-1 mt-1 p-2 sm:mt-0">
+                <Button variant="secondary" onClick={() => navigate(`highlight`)}  className="mr-1 mt-1 p-2 sm:mt-0">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -107,7 +107,7 @@ const WorkSpacePage = () => {
                   Highlights
                 </Button>
 
-                <Button variant="secondary" className="mr-1 mt-1 p-2 sm:mt-0">
+                <Button variant="secondary"onClick={() => navigate(`view`)}  className="mr-1 mt-1 p-2 sm:mt-0">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"
@@ -148,7 +148,7 @@ const WorkSpacePage = () => {
                   Members
                 </Button>
 
-                <Button variant="secondary" className="mt-1 p-2 sm:mt-0">
+                <Button variant="secondary" onClick={() => navigate(`setting`)} className="mt-1 p-2 sm:mt-0">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="24"

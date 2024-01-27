@@ -137,7 +137,11 @@ export function HomeSideBar() {
                           Boards
                         </Button>
 
-                        <Button variant="ghost" className="w-full justify-start">
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start"
+                          onClick={() => navigate(`/workspace/${item.id}/highlight`)}
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -155,7 +159,11 @@ export function HomeSideBar() {
                           Highlights
                         </Button>
 
-                        <Button variant="ghost" className="w-full justify-start">
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start"
+                          onClick={() => navigate(`/workspace/${item.id}/view`)}
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -200,7 +208,11 @@ export function HomeSideBar() {
                           Members
                         </Button>
 
-                        <Button variant="ghost" className="w-full justify-start">
+                        <Button
+                          variant="ghost"
+                          className="w-full justify-start"
+                          onClick={() => navigate(`/workspace/${item.id}/setting`)}
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"

@@ -18,6 +18,9 @@ import Settings from './settingsPage';
 import Advanced from './settingsPage/advanced';
 import Cards from './settingsPage/cards';
 import Profile from './settingsPage/profile';
+import WorkSpsceSettings from './HomePage/WorkSpsceSettings';
+import WorkSpaceHighlights from './HomePage/WorkSpaceHighlights';
+import WorkSpaceView from './HomePage/WorkSpaceView';
 
 const Router = () => {
   return (
@@ -37,6 +40,9 @@ const Router = () => {
             <Route path="/workspace/:workspaceId" element={<WorkSpacePage />}>
               <Route index path="boards" element={<WorkSpacePageDetails />} />
               <Route path="members" element={<WorkSpaceMembers />} />
+              <Route path="setting" element={<WorkSpsceSettings />} />
+              <Route path="highlight" element={<WorkSpaceHighlights />} />
+              <Route path="view" element={<WorkSpaceView />} />
             </Route>
             <Route
               path="/burndown"

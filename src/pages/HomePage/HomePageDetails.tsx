@@ -175,7 +175,11 @@ const HomePageDetails = () => {
                       Boards
                     </Button>
 
-                    <Button variant="secondary" className="mr-1 mt-1 p-2 sm:mt-0">
+                    <Button
+                      variant="secondary"
+                      className="mr-1 mt-1 p-2 sm:mt-0"
+                      onClick={() => navigate(`/workspace/${item.id}/highlight`)}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -193,7 +197,11 @@ const HomePageDetails = () => {
                       Highlights
                     </Button>
 
-                    <Button variant="secondary" className="mr-1 mt-1 p-2 sm:mt-0">
+                    <Button
+                      variant="secondary"
+                      className="mr-1 mt-1 p-2 sm:mt-0"
+                      onClick={() => navigate(`/workspace/${item.id}/view`)}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
@@ -238,7 +246,11 @@ const HomePageDetails = () => {
                       Members
                     </Button>
 
-                    <Button variant="secondary" className="mt-1 p-2 sm:mt-1 md:mt-0">
+                    <Button
+                      variant="secondary"
+                      className="mt-1 p-2 sm:mt-1 md:mt-0"
+                      onClick={() => navigate(`/workspace/${item.id}/setting`)}
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
