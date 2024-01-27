@@ -8,7 +8,7 @@ const useWorkSpaceView = (workspaceId: number) => {
   const queryRs = useQuery({
     queryKey: ['workspaceViews', workspaceId],
     queryFn: async () => {
-      const response = await fetch(BaseURL + `tascrum/workspace/${workspaceId}`, {
+      const response = await fetch(BaseURL + `tascrum/boards/${workspaceId}/boardview/`, {
         method: 'GET',
         headers: {
           Authorization: `JWT ` + authTokens.access,

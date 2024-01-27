@@ -56,6 +56,7 @@ const WorkSpsceSettings = () => {
         description: description,
       }),
     }).then((response) => response);
+    console.log(data)
     if (data.ok) {
       Swal.fire({
         icon: 'success',
@@ -106,7 +107,7 @@ const WorkSpsceSettings = () => {
           <Input
             placeholder="Write name of your workspace"
             value={name}
-            className={`col-span-9 ${nameError && name.length === 0 ? 'border-red-500' : ''}`}
+            className={`md:col-span-9 col-span-10 ${nameError && name.length === 0 ? 'border-red-500' : ''}`}
             onChange={(e) => setname(e.target.value)}
           />
         </div>
@@ -117,7 +118,7 @@ const WorkSpsceSettings = () => {
           <Textarea
             value={description}
             placeholder="Type your message here."
-            className={`col-span-9 h-20 ${desError && description.length === 0 ? 'border-red-500' : ''}`}
+            className={`md:col-span-9 col-span-10 h-20 ${desError && description.length === 0 ? 'border-red-500' : ''}`}
             onChange={(e) => setdescription(e.target.value)}
           />
         </div>
@@ -128,7 +129,7 @@ const WorkSpsceSettings = () => {
           <Select onValueChange={(e) => handleSelectChange(e)}>
             <SelectTrigger
               aria-labelledby="typeLabel"
-              className={`col-span-9 ${selError && selectedValue === null ? 'border-red-500' : ''}`}
+              className={`md:col-span-9 col-span-10 ${selError && selectedValue === null ? 'border-red-500' : ''}`}
             >
               <SelectValue placeholder={!selectedValue? "Select The Type" : selectedValue} data-testId="selectClicking">
                 {/* {selectedValue || 'Select The Type'} Update this line */}
