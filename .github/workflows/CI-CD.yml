@@ -83,7 +83,7 @@ jobs:
         with:
           node-version: '18'
       - name: remove unneccessary config files
-        run: find . -type f \( -name "docker-compose.yml" -o -name ".dockerignore" -o -name "Dockerfile" \) -exec rm -f {} +
+        run: find . -type f \( -name "docker-compose.yml" -o -name ".dockerignore" -o -name "default.conf" -o -name "Dockerfile" \) -exec rm -f {} +
       - name: update server & deliver last version
         env:
           LIARA_TOKEN: ${{ secrets.LIARA_API_TOKEN }}
