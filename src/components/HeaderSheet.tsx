@@ -6,6 +6,7 @@ import axios from 'axios';
 import { AlignLeft } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Search from './Search';
 import { useTheme } from './theme-provider';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './ui/accordion';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
@@ -66,13 +67,13 @@ const HeaderSheet = () => {
                         navigate('/');
                       }}
                     >
-                      <img className="h-6 mb-2" src={require('../pics/logo.png')} alt="" />
+                      <img className="mb-2 h-6" src={require('../pics/logo.png')} alt="" />
                     </SheetTitle>
                   </span>
                 </NavigationMenu>
               </div>
             </div>
-            <Input type="text" placeholder="Search" />
+            {/* <Input type="text" placeholder="Search" /> */}
           </SheetHeader>
           <div className="grid gap-4 py-1">
             <div className="pt-2">
@@ -140,7 +141,10 @@ const HeaderSheet = () => {
             <div className="">
               <div className="mb-2 flex items-center justify-between">
                 <h2 className="px-4 text-lg font-semibold tracking-tight">Workspaces</h2>
-                <AddWorkSpace />
+                <div className=' flex'>
+                  <Search />
+                  <AddWorkSpace />
+                </div>
               </div>
               <div className="space-y-1">
                 <Accordion type="single" collapsible className="w-full">
