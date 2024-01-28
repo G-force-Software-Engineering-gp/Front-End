@@ -14,7 +14,7 @@ interface BoardCardProps {
   has_star: boolean;
 }
 
-const BoardCard: React.FC<BoardCardProps> = ({ id, title, backgroundImage, has_star }) => {
+const BoardCardSearch: React.FC<BoardCardProps> = ({ id, title, backgroundImage, has_star }) => {
   const navigate = useNavigate();
   const [Star, setStar] = useState(has_star);
   let authTokens = useContext(AuthContext)?.authTokens;
@@ -91,4 +91,4 @@ const BoardCard: React.FC<BoardCardProps> = ({ id, title, backgroundImage, has_s
   );
 };
 
-export default BoardCard;
+export default BoardCardSearch;
