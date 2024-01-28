@@ -51,9 +51,9 @@ const AddImage = () => {
             text: 'Picture uploaded completely',
             timer: 3000,
           });
-          // setTimeout(() => {
-          //   navigate(0);
-          // }, 2000);
+          setTimeout(() => {
+            navigate(0);
+          }, 2000);
         } else {
           throw new Error('Something went wrong!');
         }
@@ -65,9 +65,9 @@ const AddImage = () => {
           text: 'Something went wrong!',
           timer: 3000,
         });
-        // setTimeout(() => {
-        //   navigate(0);
-        // }, 2000);
+        setTimeout(() => {
+          navigate(0);
+        }, 2000);
       }
     }
   };
