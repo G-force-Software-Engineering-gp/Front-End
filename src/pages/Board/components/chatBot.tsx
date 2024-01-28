@@ -8,22 +8,25 @@ import { cn } from '@/lib/utils'
 import { ScrollArea } from '@radix-ui/react-scroll-area'
 import { BaseURL } from '@/pages/baseURL'
 import { useParams } from 'react-router'
+import AuthContext from '@/contexts/AuthContext'
 
 
 const ChatBot = () => {
+  let authTokens = useContext(AuthContext)?.authTokens;
 
   const { boardId } = useParams();
-  // useEffect(() => {
-  //   const buildCSV = async () => {
-  //     const response = await fetch(BaseURL + `csvbuild/${boardId}`, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       }
-  //     });
-  //     const data = await response.json();
-  //   }
-  // }, [])
+  useEffect(() => {
+    const buildCSV = async () => {
+      const response = await fetch(BaseURL + `tascrum/csvbuild/${boardId}/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `JWT ${authTokens.access}`
+        }
+      });
+    }
+    buildCSV()
+  }, [])
 
 
   const [messages, setMessages] = useState([
@@ -46,12 +49,13 @@ const ChatBot = () => {
         content: userMessage
       }
     ])
-    const response = await fetch(BaseURL + `chatbot/${boardId}`, {
+    const response = await fetch(BaseURL + `tascrum/chatbot/${boardId}/`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `JWT ${authTokens.access}`,
       },
-      body: JSON.stringify({ request_messsage: userMessage })
+      body: JSON.stringify({ request_message: userMessage })
     })
     const data = await response.json();
     setMessages((prevMessages) => [
@@ -65,7 +69,7 @@ const ChatBot = () => {
   }
 
   return (
-    <Card>
+    <Card className='max-w-[400px]'>
       <CardHeader className="flex flex-row items-center">
         <div className="flex items-center space-x-2">
           <Avatar className='bg-muted p-1 flex justify-center items-center'>
