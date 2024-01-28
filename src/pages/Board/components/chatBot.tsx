@@ -46,7 +46,7 @@ const ChatBot = () => {
         content: userMessage
       }
     ])
-    const response = await fetch(BaseURL + `chatbot/${boardId}`, {
+    const response = await fetch(BaseURL + `tascrum/chatbot/${boardId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
