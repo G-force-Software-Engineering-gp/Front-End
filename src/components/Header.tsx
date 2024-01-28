@@ -13,9 +13,21 @@ import { BaseURL } from '@/pages/baseURL';
 import AddWorkSapceHeader from '@/pages/HomePage/components/AddWorkSapceHeader';
 import { useRecentlyViewed } from '@/pages/HomePage/hooks/useRecentlyViewed';
 import axios from 'axios';
-import { BellDot, Calendar, CalendarDays, CheckCircle, ClipboardList, GanttChartSquare, HelpCircle, Layers, LineChart, User2 } from 'lucide-react';
+import {
+  BellDot,
+  Calendar,
+  CalendarDays,
+  CheckCircle,
+  ClipboardList,
+  GanttChartSquare,
+  HelpCircle,
+  Layers,
+  LineChart,
+  User2,
+} from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Search from './Search';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Button } from './ui/button';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from './ui/hover-card';
@@ -252,19 +264,21 @@ const Header = () => {
                 </>
               </div>
               <div className="flex items-center space-x-2">
-                <Input type="text" placeholder="Search" />
                 <ModeToggle data-testid="mode-toggle11" />
+                <Search />
                 {/* <BellDot className="h-9 w-9" /> */}
 
                 <HoverCard>
                   <HoverCardTrigger asChild>
-                    <HelpCircle className="h-9 w-12 cursor-pointer rounded-md px-[6px] transition-colors hover:bg-accent" />
+                    <HelpCircle className="h-9 w-9 cursor-pointer rounded-md px-[6px] transition-colors hover:bg-accent" />
                   </HoverCardTrigger>
                   <HoverCardContent className="mr-10 grid w-[40vw] grid-cols-2">
                     <div className="mb-4 flex justify-between space-x-4">
                       <Avatar>
                         <AvatarImage src="https://github.com/vercel.png1" />
-                        <AvatarFallback><Layers /></AvatarFallback>
+                        <AvatarFallback>
+                          <Layers />
+                        </AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <h4 className="text-sm font-semibold">Workspace Management</h4>
@@ -277,7 +291,9 @@ const Header = () => {
                     <div className="mb-4 flex justify-between space-x-4">
                       <Avatar>
                         <AvatarImage src="https://github.com/vercel.png1" />
-                        <AvatarFallback><ClipboardList /></AvatarFallback>
+                        <AvatarFallback>
+                          <ClipboardList />
+                        </AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <h4 className="text-sm font-semibold">Interactive Boards</h4>
@@ -290,7 +306,9 @@ const Header = () => {
                     <div className="mb-4 flex justify-between space-x-4">
                       <Avatar>
                         <AvatarImage src="https://github.com/vercel.png1" />
-                        <AvatarFallback><CheckCircle /></AvatarFallback>
+                        <AvatarFallback>
+                          <CheckCircle />
+                        </AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <h4 className="text-sm font-semibold">Task Assignment</h4>
@@ -303,7 +321,9 @@ const Header = () => {
                     <div className="mb-4 flex justify-between space-x-4">
                       <Avatar>
                         <AvatarImage src="https://github.com/vercel.png1" />
-                        <AvatarFallback><Calendar /></AvatarFallback>
+                        <AvatarFallback>
+                          <Calendar />
+                        </AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <h4 className="text-sm font-semibold">Calendar Integration</h4>
@@ -316,7 +336,9 @@ const Header = () => {
                     <div className="flex justify-between space-x-4">
                       <Avatar>
                         <AvatarImage src="https://github.com/vercel.png1" />
-                        <AvatarFallback><LineChart /></AvatarFallback>
+                        <AvatarFallback>
+                          <LineChart />
+                        </AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <h4 className="text-sm font-semibold">Burndown Chart</h4>
@@ -329,7 +351,9 @@ const Header = () => {
                     <div className="flex justify-between space-x-4">
                       <Avatar>
                         <AvatarImage src="https://github.com/vercel.png1" />
-                        <AvatarFallback><GanttChartSquare /></AvatarFallback>
+                        <AvatarFallback>
+                          <GanttChartSquare />
+                        </AvatarFallback>
                       </Avatar>
                       <div className="space-y-1">
                         <h4 className="text-sm font-semibold">Timeline View</h4>
@@ -343,7 +367,7 @@ const Header = () => {
                 </HoverCard>
                 <User2
                   data-testid="user-icon"
-                  className="h-9 w-12 cursor-pointer rounded-md px-[6px] transition-colors hover:bg-accent"
+                  className="h-9 w-9 cursor-pointer rounded-md px-[6px] transition-colors hover:bg-accent"
                   onClick={() => navigate('/settings')}
                 />
               </div>
