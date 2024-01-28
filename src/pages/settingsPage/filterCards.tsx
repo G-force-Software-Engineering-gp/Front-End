@@ -43,7 +43,7 @@ export function FilterCards({ labels, setLabels, myCards, setMyCards, selectedLa
             <div className="grid grid-cols-3 items-center gap-5">
               <Label className="col-span-3 text-xs font-semibold text-muted-foreground">Members</Label>
               <div className="col-span-3 ml-2 flex space-x-4 ">
-                <Checkbox id="terms" onClick={() => setMyCards(!myCards)} />
+                <Checkbox checked={myCards} id="terms" onClick={() => setMyCards(!myCards)} />
                 <label
                   htmlFor="terms"
                   className="text-sm  text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -54,23 +54,12 @@ export function FilterCards({ labels, setLabels, myCards, setMyCards, selectedLa
             </div>
             <div className="grid grid-cols-3 items-center gap-5">
               <Label className="col-span-3 text-xs font-semibold text-muted-foreground">Labels</Label>
-              <div className="col-span-3 ml-2 flex space-x-4">
-                <Checkbox id="terms" />
-                <div className="flex gap-2">
-                  <Tag className="h-4 w-4 text-muted-foreground" />
-                  <label
-                    htmlFor="terms"
-                    className="text-sm  text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    No labels
-                  </label>
-                </div>
-              </div>
+
               {labels.map((item: any) => (
                 <div key={item.id} className="col-span-3 ml-2 flex space-x-4">
                   {/* onCheckedChange={() => handleCheckChange(item.id)} */}
                   <Checkbox
-                    //checked={selectedLabels?.some((label: any) => label.id === item?.id)}
+                    checked={selectedLabels?.some((label: any) => label.id === item?.id)}
                     onClick={async () => {
                       const isItemInArray = selectedLabels.some((label: any) => label.id === item.id)
                       if (isItemInArray) {

@@ -69,7 +69,7 @@ const Cards = () => {
     const getFilteredCards = async () => {
       let labelFilterString = ''
       selectedLabels?.forEach((label: any) => {
-        labelFilterString += `&lable_ids=${label.id}`
+        labelFilterString += `&label_ids=${label.id}`
       })
       if (labelFilterString !== '') {
         labelFilterString = '?' + labelFilterString.substring(1)
