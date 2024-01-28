@@ -15,6 +15,7 @@ import AuthContext from "@/contexts/AuthContext";
 import { Toggle } from "@/components/ui/toggle";
 import { Button } from "@/components/ui/button";
 import { FilterCards } from "./filterCards";
+import { forEach } from "lodash";
 
 const formatDate = (datetimeString: any) => {
   let dayObject = new Date(datetimeString);
@@ -34,6 +35,9 @@ const formatDate = (datetimeString: any) => {
 
 
 const Cards = () => {
+  const [labels, setLabels] = useState([])
+  const [myCards, setMyCards] = useState(false)
+  const [selectedLabels, setSelectedLabels] = useState([])
   const [cards, setCards] = useState<any>()
   let authTokens = useContext(AuthContext)?.authTokens;
   useEffect(() => {
@@ -48,10 +52,55 @@ const Cards = () => {
       setCards(data)
     }
     getAllCards()
+    const getLabels = async () => {
+      const response = await fetch(BaseURL + `tascrum/user-labels`, {
+        method: 'GET',
+        headers: {
+          Authorization: `JWT ${authTokens.access}`
+        }
+      })
+      const data = await response.json();
+      setLabels(data)
+    }
+    getLabels()
   }, [])
+
+  useEffect(() => {
+    const getFilteredCards = async () => {
+      let labelFilterString = ''
+      selectedLabels?.forEach((label: any) => {
+        labelFilterString += `&label_ids=${label.id}`
+      })
+      if (labelFilterString !== '') {
+        labelFilterString = '?' + labelFilterString.substring(1)
+      }
+      if (myCards === true) {
+        const response = await fetch(BaseURL + 'tascrum/card-member/' + labelFilterString, {
+          method: 'GET',
+          headers: {
+            Authorization: `JWT ${authTokens.access}`
+          },
+        })
+        const data = await response.json();
+        setCards(data)
+      }
+      else {
+        const response = await fetch(BaseURL + 'tascrum/card-boards/' + labelFilterString, {
+          method: 'GET',
+          headers: {
+            Authorization: `JWT ${authTokens.access}`
+          },
+        })
+        const data = await response.json();
+        setCards(data)
+      }
+    }
+    getFilteredCards()
+  }, [selectedLabels, myCards])
+
   return (
     <>
-      <FilterCards />
+      <FilterCards labels={labels} setLabels={setLabels} myCards={myCards} setMyCards={setMyCards} selectedLabels={selectedLabels} setSelectedLabels={setSelectedLabels} />
       <div className="w-full flex justify-center flex-col">
         <Table>
           <TableCaption>Cards List</TableCaption>

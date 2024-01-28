@@ -17,27 +17,13 @@ import { CalendarDays, CircleUserRound, Clock4, ListFilter, Tag } from 'lucide-r
 import { useContext, useEffect, useState } from 'react';
 import { BaseURL } from '../baseURL';
 import AuthContext from '@/contexts/AuthContext';
+import { cw } from '@fullcalendar/core/internal-common';
 
 
 
-export function FilterCards() {
+export function FilterCards({ labels, setLabels, myCards, setMyCards, selectedLabels, setSelectedLabels }: any) {
 
   let authTokens = useContext(AuthContext)?.authTokens;
-  const [labels, setLabels] = useState([])
-
-  useEffect(() => {
-    const getLabels = async () => {
-      const response = await fetch(BaseURL + `user-labels`, {
-        method: 'GET',
-        headers: {
-          Authorization: `JWT ${authTokens.access}`
-        }
-      })
-      const data = await response.json();
-      setLabels(data)
-    }
-    getLabels()
-  }, [])
 
   return (
     <Popover>
@@ -57,7 +43,7 @@ export function FilterCards() {
             <div className="grid grid-cols-3 items-center gap-5">
               <Label className="col-span-3 text-xs font-semibold text-muted-foreground">Members</Label>
               <div className="col-span-3 ml-2 flex space-x-4 ">
-                <Checkbox id="terms" />
+                <Checkbox checked={myCards} id="terms" onClick={() => setMyCards(!myCards)} />
                 <label
                   htmlFor="terms"
                   className="text-sm  text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
@@ -68,25 +54,23 @@ export function FilterCards() {
             </div>
             <div className="grid grid-cols-3 items-center gap-5">
               <Label className="col-span-3 text-xs font-semibold text-muted-foreground">Labels</Label>
-              <div className="col-span-3 ml-2 flex space-x-4">
-                <Checkbox id="terms" />
-                <div className="flex gap-2">
-                  <Tag className="h-4 w-4 text-muted-foreground" />
-                  <label
-                    htmlFor="terms"
-                    className="text-sm  text-muted-foreground peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    No labels
-                  </label>
-                </div>
-              </div>
+
               {labels.map((item: any) => (
                 <div key={item.id} className="col-span-3 ml-2 flex space-x-4">
                   {/* onCheckedChange={() => handleCheckChange(item.id)} */}
                   <Checkbox
-                  // checked={assigndata?.labelcard?.some((assignedItem) => assignedItem.id === item?.id)}
-                  //   checked={item?.checked}
-                  //   onClick={() => handleCheckboxChange(item)}
+                    checked={selectedLabels?.some((label: any) => label.id === item?.id)}
+                    onClick={async () => {
+                      const isItemInArray = selectedLabels.some((label: any) => label.id === item.id)
+                      if (isItemInArray) {
+                        const updatedLabels = selectedLabels.filter((label: any) => label.id !== item.id)
+                        setSelectedLabels(updatedLabels)
+                      }
+                      else {
+                        const selectedItem = labels.find((label: any) => label.id === item.id)
+                        setSelectedLabels([...selectedLabels, selectedItem])
+                      }
+                    }}
                   />
 
                   <div
