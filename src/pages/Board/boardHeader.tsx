@@ -23,7 +23,7 @@ import {
   Bot
 } from 'lucide-react';
 import React, { createContext, useRef, useState } from 'react';
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { BoardSidebar } from './boardSidebar';
 import AddImage from './components/AddImage';
 import { FilterCard } from './components/filterCards';
@@ -32,6 +32,7 @@ import { useBoardLabels } from './hooks/useLabel';
 import { useMembers } from './hooks/useMembers';
 import { Toggle } from '@/components/ui/toggle';
 import { useContext } from 'react';
+import { useLocation } from 'react-router';
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -77,11 +78,8 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
   const { data: boardData } = useBoard(parseInt(boardId ? boardId : ''));
   const { isLoading: boardLabelLoading, data: boardLabelData } = useBoardLabels();
-
-  const { pathname } = useLocation();
-  const isCalendarRoute = pathname.includes('/calendar');
-  const isTimelineRoute = pathname.includes('/timeline');
-
+  const { pathname } = useLocation()
+  const BurndownRoute = pathname.includes(`/burndown`)
 
   return (
 
@@ -150,35 +148,31 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
                   </PopoverContent>
                 </Popover>
                 <AddImage />
-                <Button data-testid="star" variant="secondary" className="m-1 h-8 w-8 p-0">
-                  <LineChart className="h-4 w-4 " onClick={() => navigate(`burndown`)} />
+                <Button onClick={() => navigate(`/board/${boardId}/burndown`)} variant="secondary" className="h-8 w-8 p-0">
+                  <LineChart className="h-4 w-4 " />
                 </Button>
               </>
             </div>
           </div>
           <div className="flex items-center justify-end space-x-2">
-            <Toggle onClick={() => setAppearBot(!appearBot)} variant="outline" className='h-8 w-8 p-0 relative'>
-              <span className="absolute top-1 right-1 transform translate-y-[-50%] translate-x-[50%] flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
-              </span>
-              <Bot className=" h-4 w-4" />
-            </Toggle>
-            {(isCalendarRoute || isTimelineRoute) && (
-              <Button onClick={() => navigate(-1)} variant="secondary" className="h-8 w-8 p-0">
-                <Trello className="h-4 w-4" />
-              </Button>
+            {!BurndownRoute && (
+              <Toggle onClick={() => setAppearBot(!appearBot)} variant="outline" className='h-8 w-8 p-0 relative'>
+                <span className="absolute top-1 right-1 transform translate-y-[-50%] translate-x-[50%] flex h-3 w-3">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+                </span>
+                <Bot className=" h-4 w-4" />
+              </Toggle>
             )}
-            {!isCalendarRoute && (
-              <Button onClick={() => navigate(`calendar`)} variant="secondary" className="h-8 w-8 p-0">
-                <CalendarDays className="h-4 w-4" />
-              </Button>
-            )}
-            {!isTimelineRoute && (
-              <Button onClick={() => navigate(`timeline`)} variant="secondary" className="h-8 w-8 p-0">
-                <GanttChartSquare className="h-4 w-4" />
-              </Button>
-            )}
+            <Button onClick={() => navigate(`/board/${boardId}`)} variant="secondary" className="h-8 w-8 p-0">
+              <Trello className="h-4 w-4" />
+            </Button>
+            <Button onClick={() => navigate(`/board/${boardId}/calendar`)} variant="secondary" className="h-8 w-8 p-0">
+              <CalendarDays className="h-4 w-4" />
+            </Button>
+            <Button onClick={() => navigate(`/board/${boardId}/timeline`)} variant="secondary" className="h-8 w-8 p-0">
+              <GanttChartSquare className="h-4 w-4" />
+            </Button>
             {/* <Button data-testid="list filter" variant="secondary" className="h-8 w-8 p-0">
               <ListFilter className="h-4 w-4" />
             </Button> */}
