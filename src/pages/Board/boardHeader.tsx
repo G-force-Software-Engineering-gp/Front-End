@@ -6,32 +6,35 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Toggle } from '@/components/ui/toggle';
+import AuthContext from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import _, { create } from 'lodash';
 import {
+  Bot,
   CalendarDays,
   ChevronDown,
+  Copy,
   Eye,
   GanttChartSquare,
   LineChart,
   ListFilter,
   Menu,
   MoreHorizontal,
+  Pen,
   Star,
   Trello,
   UserPlus2,
-  Bot
 } from 'lucide-react';
-import React, { createContext, useRef, useState } from 'react';
+import React, { createContext, useContext, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { BaseURL } from '../baseURL';
 import { BoardSidebar } from './boardSidebar';
 import AddImage from './components/AddImage';
 import { FilterCard } from './components/filterCards';
 import { useBoard } from './hooks/useBoard';
 import { useBoardLabels } from './hooks/useLabel';
 import { useMembers } from './hooks/useMembers';
-import { Toggle } from '@/components/ui/toggle';
-import { useContext } from 'react';
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -69,9 +72,7 @@ ListItem.displayName = 'ListItem';
 //   profimage: string;
 // }
 
-
 const BoardHeader = ({ appearBot, setAppearBot }: any) => {
-
   const navigate = useNavigate();
   const { boardId } = useParams();
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
@@ -81,10 +82,31 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
   const { pathname } = useLocation();
   const isCalendarRoute = pathname.includes('/calendar');
   const isTimelineRoute = pathname.includes('/timeline');
-
-
+  function copyToClipboard() {
+    navigator.clipboard.writeText(
+      boardData?.invitation_link
+        ? 'http://localhost:3000/board/join/' + boardData?.invitation_link
+        : 'link is not provided'
+    );
+  }
+  let authTokens = useContext(AuthContext)?.authTokens;
+  function changeLink() {
+    fetch(BaseURL + `tascrum/board/${boardId}/reset/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `JWT ` + authTokens.access,
+      },
+      body: JSON.stringify({
+        title: '',
+        backgroundimage: null,
+        workspace: null,
+        has_star: false,
+        invitation_link: '',
+      }),
+    });
+  }
   return (
-
     <div className="backdrop-blur" data-testid="boardHeader">
       <>
         <div className="mt-4 flex flex-1 flex-col border-b-2 p-2 px-5 md:mt-0 md:flex-row md:items-center md:justify-between">
@@ -125,26 +147,25 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
                   <PopoverTrigger>
                     <Button data-testid="trello" variant="secondary" className="ml-1 h-8 w-fit px-2">
                       <Trello className="mr-2 h-4 w-4" />
-                      <span className="mr-1">Board</span>
+                      <span className="mr-1 ">Board Link</span>
                       <ChevronDown className="h-4 w-4 " />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-100">
                     <div className="grid gap-4">
-                      <div className="flex justify-center">
-                        <h4 className="font-medium leading-none">Upgrade For Views</h4>
-                      </div>
-                      <div className="grid gap-2">
-                        <h3 className="font-medium leading-none">See your work in new ways</h3>
-                        <div className="grid grid-cols-3 items-center gap-4">
-                          <Input id="maxWidth" defaultValue="300px" className="col-span-2 h-8" />
-                        </div>
-                        <div className="grid grid-cols-3 items-center gap-4">
-                          <Input id="height" defaultValue="25px" className="col-span-2 h-8" />
-                        </div>
-                        <div className="grid grid-cols-3 items-center gap-4">
-                          <Input id="maxHeight" defaultValue="none" className="col-span-2 h-8" />
-                        </div>
+                      <div className="flex justify-center gap-2">
+                        <input
+                          type="text"
+                          className="rounded-md border p-2 focus:outline-none"
+                          value={boardData?.invitation_link}
+                          readOnly
+                        />
+                        <Button onClick={copyToClipboard} variant="secondary" className="mt-2 h-8 w-8 p-0">
+                          <Copy className="h-4 w-4" />
+                        </Button>
+                        <Button onClick={changeLink} variant="secondary" className="mt-2 h-8 w-8 p-0">
+                          <Pen className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   </PopoverContent>
@@ -157,10 +178,10 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
             </div>
           </div>
           <div className="flex items-center justify-end space-x-2">
-            <Toggle onClick={() => setAppearBot(!appearBot)} variant="outline" className='h-8 w-8 p-0 relative'>
-              <span className="absolute top-1 right-1 transform translate-y-[-50%] translate-x-[50%] flex h-3 w-3">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-sky-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-sky-500"></span>
+            <Toggle onClick={() => setAppearBot(!appearBot)} variant="outline" className="relative h-8 w-8 p-0">
+              <span className="absolute right-1 top-1 flex h-3 w-3 translate-x-[50%] translate-y-[-50%] transform">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
+                <span className="relative inline-flex h-3 w-3 rounded-full bg-sky-500"></span>
               </span>
               <Bot className=" h-4 w-4" />
             </Toggle>
@@ -276,7 +297,6 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
         </div>
       </>
     </div>
-
   );
 };
 

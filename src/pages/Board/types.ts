@@ -7,6 +7,7 @@ export type Board = {
   workspace: number;
   list: List[];
   backgroundImage: any;
+  invitation_link: string;
 };
 
 export type List = {
