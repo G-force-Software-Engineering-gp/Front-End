@@ -6,33 +6,37 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Toggle } from '@/components/ui/toggle';
+import AuthContext from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 import _, { create } from 'lodash';
 import {
+  Bot,
   CalendarDays,
   ChevronDown,
+  Copy,
   Eye,
   GanttChartSquare,
   LineChart,
   ListFilter,
   Menu,
   MoreHorizontal,
+  Pen,
   Star,
   Trello,
   UserPlus2,
-  Bot
 } from 'lucide-react';
-import React, { createContext, useRef, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { BaseURL } from '../baseURL';
 import { BoardSidebar } from './boardSidebar';
 import AddImage from './components/AddImage';
 import { FilterCard } from './components/filterCards';
 import { useBoard } from './hooks/useBoard';
 import { useBoardLabels } from './hooks/useLabel';
 import { useMembers } from './hooks/useMembers';
-import { Toggle } from '@/components/ui/toggle';
-import { useContext } from 'react';
-import { useLocation } from 'react-router';
+
+
 
 const ListItem = React.forwardRef<React.ElementRef<'a'>, React.ComponentPropsWithoutRef<'a'>>(
   ({ className, title, children, ...props }, ref) => {
@@ -70,9 +74,7 @@ ListItem.displayName = 'ListItem';
 //   profimage: string;
 // }
 
-
 const BoardHeader = ({ appearBot, setAppearBot }: any) => {
-
   const navigate = useNavigate();
   const { boardId } = useParams();
   const { data: membersData } = useMembers(parseInt(boardId ? boardId : ''));
@@ -80,9 +82,43 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
   const { isLoading: boardLabelLoading, data: boardLabelData } = useBoardLabels();
   const { pathname } = useLocation()
   const BurndownRoute = pathname.includes(`/burndown`)
+  const [linkInput, setLinkInput] = useState(boardData?.invitation_link);
+  useEffect(() => {
+    setLinkInput(boardData?.invitation_link);
+  }, [boardData?.invitation_link]);
 
+  function copyToClipboard() {
+    navigator.clipboard.writeText(linkInput ? 'http://localhost:3000/board/join/' + linkInput : 'link is not provided');
+  }
+  let authTokens = useContext(AuthContext)?.authTokens;
+  function changeLink() {
+    console.log('changig the link');
+    fetch(BaseURL + `tascrum/board/${boardId}/reset/`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `JWT ` + authTokens.access,
+      },
+      body: JSON.stringify({
+        title: '',
+        backgroundimage: null,
+        workspace: null,
+        has_star: false,
+        invitation_link: '',
+      }),
+    })
+      .then((response) => response.json()) // Assuming the response is JSON; adjust if needed
+      .then((data) => {
+        console.log('Fetch result:', data);
+        setLinkInput(data?.new_invitation_link);
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
+        // Handle errors if any
+      });
+    console.log('links:', linkInput);
+  }
   return (
-
     <div className="backdrop-blur" data-testid="boardHeader">
       <>
         <div className="mt-4 flex flex-1 flex-col border-b-2 p-2 px-5 md:mt-0 md:flex-row md:items-center md:justify-between">
@@ -123,26 +159,25 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
                   <PopoverTrigger>
                     <Button data-testid="trello" variant="secondary" className="ml-1 h-8 w-fit px-2">
                       <Trello className="mr-2 h-4 w-4" />
-                      <span className="mr-1">Board</span>
+                      <span className="mr-1 ">Board Link</span>
                       <ChevronDown className="h-4 w-4 " />
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-100">
                     <div className="grid gap-4">
-                      <div className="flex justify-center">
-                        <h4 className="font-medium leading-none">Upgrade For Views</h4>
-                      </div>
-                      <div className="grid gap-2">
-                        <h3 className="font-medium leading-none">See your work in new ways</h3>
-                        <div className="grid grid-cols-3 items-center gap-4">
-                          <Input id="maxWidth" defaultValue="300px" className="col-span-2 h-8" />
-                        </div>
-                        <div className="grid grid-cols-3 items-center gap-4">
-                          <Input id="height" defaultValue="25px" className="col-span-2 h-8" />
-                        </div>
-                        <div className="grid grid-cols-3 items-center gap-4">
-                          <Input id="maxHeight" defaultValue="none" className="col-span-2 h-8" />
-                        </div>
+                      <div className="flex justify-center gap-2">
+                        <input
+                          type="text"
+                          className="rounded-md border p-2 focus:outline-none"
+                          value={linkInput}
+                          readOnly
+                        />
+                        <Button onClick={() => copyToClipboard()} variant="secondary" className="mt-2 h-8 w-8 p-0">
+                          <Copy className="h-4 w-4" />
+                        </Button>
+                        <Button onClick={() => changeLink()} variant="secondary" className="mt-2 h-8 w-8 p-0">
+                          <Pen className="h-4 w-4" />
+                        </Button>
                       </div>
                     </div>
                   </PopoverContent>
@@ -270,7 +305,6 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
         </div>
       </>
     </div>
-
   );
 };
 

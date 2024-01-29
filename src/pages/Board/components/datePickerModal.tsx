@@ -22,7 +22,6 @@ interface Props {
 }
 
 export function DatePickerModal({ mainDate, setMainDate, selectedValue, setSelectedValue }: Props) {
-
   return (
     <Popover>
       <PopoverTrigger asChild>
