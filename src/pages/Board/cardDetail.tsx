@@ -91,7 +91,7 @@ export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
     };
     return mergedData;
   }, [boardLabelData, assignLabelData]);
-
+  console.log(mainDate)
   let authTokens = useContext(AuthContext)?.authTokens;
   const queryClient = useQueryClient();
 
