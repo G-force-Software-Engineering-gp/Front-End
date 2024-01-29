@@ -24,7 +24,7 @@ const BoardCardSearch: React.FC<BoardCardProps> = ({ id, title, backgroundImage,
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `JWT ${authTokens.access}`,
+        Authorization: `JWT ${authTokens?.access}`,
       },
       body: JSON.stringify({
         has_star: !Star,

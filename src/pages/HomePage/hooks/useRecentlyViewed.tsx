@@ -11,7 +11,7 @@ export const useRecentlyViewed = () => {
       const response = await fetch(BaseURL + `tascrum/recentlyviewed/`, {
         method: 'GET',
         headers: {
-          Authorization: `JWT ` + authTokens.access,
+          Authorization: `JWT ` + authTokens?.access,
         },
       });
       const data = await response.json();

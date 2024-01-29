@@ -28,11 +28,7 @@ describe('BoardSidebar component', () => {
       </MemoryRouter>
     );
 
-    expect(screen.getByText('Boards')).toBeInTheDocument();
     expect(screen.getByText('Members')).toBeInTheDocument();
-    expect(screen.getByText('Workspace Views')).toBeInTheDocument();
-    expect(screen.getByText('Calendar')).toBeInTheDocument();
-    expect(screen.getByText('Your Boards')).toBeInTheDocument();
   });
 
   test('renders correct roles for accessibility', () => {

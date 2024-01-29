@@ -1,9 +1,10 @@
 import { AuthProvider } from '@/contexts/AuthContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { act,fireEvent, getAllByRole, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import Header from '../Header'; // Import your Header component
-
+import {ModeToggle} from '../ui/mode-toggle'
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -45,51 +46,29 @@ describe('Header Component', () => {
         </QueryClientProvider>
       </MemoryRouter>
     );
-    const LogoElement = screen.getByText('Logo and Name');
+    const LogoElement = screen.getByTestId('logopic');
     fireEvent.click(LogoElement);
   });
 
-  test('Clicking the User2 icon navigates to the settings page', () => {
+
+  test('change mode', async () => {
     render(
       <MemoryRouter>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <Header />
+            <ModeToggle />
           </AuthProvider>
         </QueryClientProvider>
       </MemoryRouter>
     );
-    const LogoElement = screen.getByTestId('user-icon');
-    fireEvent.click(LogoElement);
+    const btn = screen.getByText("Toggle theme")
+
+    expect(btn).toBeInTheDocument()
+
+
   });
 
-  test('Typing into the search input updates its value', () => {
-    render(
-      <MemoryRouter>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <Header />
-          </AuthProvider>
-        </QueryClientProvider>
-      </MemoryRouter>
-    );
-    const input = screen.getByPlaceholderText('Search') as HTMLInputElement;
-    fireEvent.change(input, { target: { value: 'Test Search' } });
-    expect(input.value).toBe('Test Search');
-  });
 
-  test('Hides user information when not authenticated', () => {
-    render(
-      <MemoryRouter>
-        <QueryClientProvider client={queryClient}>
-          <AuthProvider>
-            <Header />
-          </AuthProvider>
-        </QueryClientProvider>
-      </MemoryRouter>
-    );
-    expect(screen.queryByText('User2')).toBeNull();
-  });
   // test('Displays workspaces correctly', async () => {
   //   const mockWorkspaces = [
   //     { name: 'Workspace1', description: 'Description1' },

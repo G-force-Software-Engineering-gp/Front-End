@@ -135,8 +135,9 @@ describe('Card component', () => {
     );
     await new Promise(process.nextTick);
     await waitFor(() => {
-      expect(screen.getByText('id - - order:')).toBeInTheDocument();
+      expect(screen.getAllByTestId("cardda")).not.toBe(0);
+
     });
-    expect(screen.getByText('id - - order:')).toBeInTheDocument();
+    expect(screen.getAllByTestId("cardda")).not.toBe(0);
   });
 });

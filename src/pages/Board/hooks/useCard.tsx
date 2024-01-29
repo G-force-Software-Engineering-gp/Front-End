@@ -15,7 +15,7 @@ export const useCard = (cardId: number) => {
       const response = await fetch(BaseURL + `tascrum/card/${cardId}/?board=${parsedBoardId}`, {
         method: 'GET',
         headers: {
-          Authorization: `JWT ` + authTokens.access,
+          Authorization: `JWT ` + authTokens?.access,
         },
       });
       const data : Card = await response.json();

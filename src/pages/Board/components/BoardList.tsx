@@ -255,7 +255,7 @@ export const ListCard = ({ cardId, columns, listId, isOverlay }: CardProps) => {
       >
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
-            <p className=" text-lg">
+            <p className=" text-lg" data-testid="cardda">
               {/* {data?.title}:  */}
               id - {data?.id} - order:{data?.order}
             </p>
