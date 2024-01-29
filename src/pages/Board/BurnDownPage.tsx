@@ -6,9 +6,9 @@ import BurnDownChart from './components/BurnDownChart';
 const BurnDownPage = () => {
   return (
     <div className="h-[calc(100vh-8.5rem)">
-      <Header />
-      <HeaderResponsive />
-      <BoardHeader />
+      {/* <Header />
+      <HeaderResponsive /> */}
+      {/* <BoardHeader /> */}
       <div className="flex overflow-x-auto">
         <BurnDownChart />
       </div>

@@ -36,7 +36,7 @@ const WorkSpaceMembers = () => {
   const [workspaceMembers, setWorkspaceMembers] = useState<Member[]>();
   useEffect(() => {
     const fetchWorkspaceUsers = async () => {
-      const response = await fetch(BaseURL + `tascrum/workspaces/${workspaceId}/members/`, {
+      const response = await fetch(BaseURL + `tascrum/workspace-members/${workspaceId}/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ const WorkSpaceMembers = () => {
         },
       });
       const data = await response.json();
-      setWorkspaceMembers(data[0]?.members);
+      setWorkspaceMembers(data.members);
     };
     fetchWorkspaceUsers();
   }, [workspaceId]);
@@ -56,7 +56,7 @@ const WorkSpaceMembers = () => {
     <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-3">
       {workspaceMembers?.map((member) => (
         <div className="space-y-6">
-          <Card className="w-full">
+          <Card className="w-full pb-3">
             <CardHeader>
               <CardTitle className="flex flex-row items-center justify-between">
                 <div className="flex flex-row">
