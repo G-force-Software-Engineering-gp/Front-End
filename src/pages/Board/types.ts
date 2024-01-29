@@ -26,7 +26,7 @@ export type Card = {
   role?: Role[];
   labels?: LabelItem[];
   startdate?: null;
-  duedate?: '2023-10-29T00:00:00Z';
+  duedate?: '2025-01-29T00:00:00Z';
   reminder?: '1 Day before';
   storypoint?: number;
   setestimate?: number;

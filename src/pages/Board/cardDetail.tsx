@@ -59,11 +59,14 @@ interface Props {
   setModalOpen: any;
   data: Card;
 }
+const currentDate = new Date();
+const newdueDate = new Date();
+newdueDate.setDate(currentDate.getDate() + 10);
 
 export function CardDetail({ modalOpen, setModalOpen, data }: Props) {
   const [mainDate, setMainDate] = useState<DateRange | undefined>({
     from: data?.startdate ? new Date(data.startdate) : new Date(),
-    to: data?.duedate ? new Date(data.duedate) : new Date(),
+    to: data?.duedate ? new Date(data.duedate) : newdueDate,
   });
   const [selectedValue, setSelectedValue] = React.useState(data?.reminder ? data?.reminder : 'None');
   // set for story point
