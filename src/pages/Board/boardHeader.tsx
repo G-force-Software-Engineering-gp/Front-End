@@ -88,7 +88,7 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
   }, [boardData?.invitation_link]);
 
   function copyToClipboard() {
-    navigator.clipboard.writeText(linkInput ? 'http://localhost:3000/board/join/' + linkInput : 'link is not provided');
+    navigator.clipboard.writeText(linkInput ? 'tascrum.ir/board/join/' + linkInput : 'link is not provided');
   }
   let authTokens = useContext(AuthContext)?.authTokens;
   function changeLink() {
