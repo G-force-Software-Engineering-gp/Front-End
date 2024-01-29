@@ -1,5 +1,5 @@
 import AuthContext from '@/contexts/AuthContext';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
@@ -9,9 +9,10 @@ function JoinBoard() {
   const Navigate = useNavigate();
   const pathName = window.location.pathname;
   let authTokens = useContext(AuthContext)?.authTokens;
-  useEffect(() => {
+  useEffectOnce(() => {
     gettoken();
-  }, []);
+  });
+
   let gettoken = async () => {
     let response = await fetch(BaseURL + 'tascrum' + pathName, {
       method: 'GET',
@@ -57,7 +58,36 @@ function JoinBoard() {
       Navigate('/');
     }
   };
+  // const visibleTodos = useMemo(() => gettoken(), []);
   return <div>Loading</div>;
 }
 
 export default JoinBoard;
+
+export const useEffectOnce = (effect: any) => {
+  const destroyFunc = useRef<any>();
+  const effectCalled = useRef(false);
+  const renderAfterCalled = useRef(false);
+  const [val, setVal] = useState(0);
+
+  if (effectCalled.current) {
+    renderAfterCalled.current = true;
+  }
+
+  useEffect(() => {
+    if (!effectCalled.current) {
+      destroyFunc.current = effect();
+      effectCalled.current = true;
+    }
+    setVal((val) => val + 1);
+
+    return () => {
+      if (!renderAfterCalled.current) {
+        return;
+      }
+      if (destroyFunc.current) {
+        destroyFunc.current();
+      }
+    };
+  }, []);
+};

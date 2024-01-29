@@ -26,7 +26,7 @@ import {
   Trello,
   UserPlus2,
 } from 'lucide-react';
-import React, { createContext, useContext, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { BaseURL } from '../baseURL';
 import { BoardSidebar } from './boardSidebar';
@@ -82,15 +82,17 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
   const { pathname } = useLocation();
   const isCalendarRoute = pathname.includes('/calendar');
   const isTimelineRoute = pathname.includes('/timeline');
+  const [linkInput, setLinkInput] = useState(boardData?.invitation_link);
+  useEffect(() => {
+    setLinkInput(boardData?.invitation_link);
+  }, [boardData?.invitation_link]);
+
   function copyToClipboard() {
-    navigator.clipboard.writeText(
-      boardData?.invitation_link
-        ? 'http://localhost:3000/board/join/' + boardData?.invitation_link
-        : 'link is not provided'
-    );
+    navigator.clipboard.writeText(linkInput ? 'http://localhost:3000/board/join/' + linkInput : 'link is not provided');
   }
   let authTokens = useContext(AuthContext)?.authTokens;
   function changeLink() {
+    console.log('changig the link');
     fetch(BaseURL + `tascrum/board/${boardId}/reset/`, {
       method: 'POST',
       headers: {
@@ -104,7 +106,17 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
         has_star: false,
         invitation_link: '',
       }),
-    });
+    })
+      .then((response) => response.json()) // Assuming the response is JSON; adjust if needed
+      .then((data) => {
+        console.log('Fetch result:', data);
+        setLinkInput(data?.new_invitation_link);
+      })
+      .catch((error) => {
+        console.error('Fetch error:', error);
+        // Handle errors if any
+      });
+    console.log('links:', linkInput);
   }
   return (
     <div className="backdrop-blur" data-testid="boardHeader">
@@ -157,13 +169,13 @@ const BoardHeader = ({ appearBot, setAppearBot }: any) => {
                         <input
                           type="text"
                           className="rounded-md border p-2 focus:outline-none"
-                          value={boardData?.invitation_link}
+                          value={linkInput}
                           readOnly
                         />
-                        <Button onClick={copyToClipboard} variant="secondary" className="mt-2 h-8 w-8 p-0">
+                        <Button onClick={() => copyToClipboard()} variant="secondary" className="mt-2 h-8 w-8 p-0">
                           <Copy className="h-4 w-4" />
                         </Button>
-                        <Button onClick={changeLink} variant="secondary" className="mt-2 h-8 w-8 p-0">
+                        <Button onClick={() => changeLink()} variant="secondary" className="mt-2 h-8 w-8 p-0">
                           <Pen className="h-4 w-4" />
                         </Button>
                       </div>
