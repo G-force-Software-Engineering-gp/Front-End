@@ -23,7 +23,7 @@ const Search = () => {
   const [boards, setboards] = useState([]);
   const [open, setOpen] = useState(false);
   let authTokens = useContext(AuthContext)?.authTokens;
-  console.log(searchValue);
+  // console.log(searchValue);
   const gettingData = async () => {
     const { data } = await axios
       .get(BaseURL + `tascrum/board-search/?search=${searchValue}`, {
@@ -34,7 +34,7 @@ const Search = () => {
       .then((response) => response);
     setboards(data);
   };
-  console.log(boards);
+  // console.log(boards);
   const handleSearch = async (event: any) => {
     event.preventDefault();
     try {

@@ -8,6 +8,8 @@ import { useParams } from 'react-router';
 import { buildTimebar } from './builders';
 import { useTimeline } from './useTimeline';
 import { useTimelineEnd } from './useTimelineEnd';
+import { useTimelineLabel } from './useTimelineLabel';
+import { useTimelineList } from './useTimelineList';
 import { useTimelineStart } from './useTimelineStart';
 import { colourIsLight, fill, hexToRgb, nextColor } from './utils';
 
@@ -23,12 +25,16 @@ const MAX_ZOOM = 20;
 const BoardTimeline = () => {
   const { boardId } = useParams();
   const { data: TimelineData, isLoading: loadingTable } = useTimeline(boardId);
+  const { data: TimelineDataLabel, isLoading: loadingTableLabel } = useTimelineLabel(boardId);
+  const { data: TimelineDataList, isLoading: loadingTableList } = useTimelineList(boardId);
   const { data: TimelineDataStart, isLoading: loadingStart } = useTimelineStart(boardId);
   const { data: TimelineDataEnd, isLoading: loadingEnd } = useTimelineEnd(boardId);
+  const [selectedValue, setSelectedValue] = useState('Members');
   // Setting Arrays
+  console.log(TimelineDataLabel);
 
   useEffect(() => {
-    if (TimelineData) {
+    if (TimelineData && selectedValue === 'Members') {
       let members: any[] = [];
       for (let i = 0; i < TimelineData.members?.length; i++) {
         members.push(TimelineData?.members[i].user.username);
@@ -43,18 +49,57 @@ const BoardTimeline = () => {
 
       setTracks(Object.values(updatedTracks));
     }
+    if (TimelineDataList && selectedValue === 'Lists') {
+      let lists: any[] = [];
+      for (let i = 0; i < TimelineDataList.lists?.length; i++) {
+        lists.push(TimelineDataList?.lists[i].title);
+      }
+
+      // Rebuild tracks based on new data
+      const updatedTracks = fill(lists.length).reduce((acc: any, _, index) => {
+        const track = buildTrack(index + 1, lists[index]);
+        acc[track.id] = track;
+        return acc;
+      }, {});
+
+      setTracks(Object.values(updatedTracks));
+    }
+    if (TimelineDataLabel && selectedValue === 'Labels') {
+      let labels: any[] = [];
+      for (let i = 0; i < TimelineDataLabel.labels?.length; i++) {
+        labels.push(TimelineDataLabel?.labels[i].title);
+      }
+
+      // Rebuild tracks based on new data
+      const updatedTracks = fill(labels.length).reduce((acc: any, _, index) => {
+        const track = buildTrack(index + 1, labels[index]);
+        acc[track.id] = track;
+        return acc;
+      }, {});
+
+      setTracks(Object.values(updatedTracks));
+    }
     if (TimelineDataStart && TimelineDataEnd) {
-      const start1 = new Date(TimelineDataStart[0].startdate);
-      const end1 = new Date(TimelineDataEnd[0].duedate);
-      if (start1.getFullYear() === end1.getFullYear()) {
-        setstart(new Date(`${start1.getFullYear()}`));
-        setend(new Date(`${start1.getFullYear() + 1}`));
+      if (TimelineDataStart[0]?.startdate && TimelineDataEnd[0]?.duedate) {
+        console.log(TimelineDataStart[0].startdate);
+        const start1 = new Date(TimelineDataStart[0].startdate);
+        const end1 = new Date(TimelineDataEnd[0].duedate);
+
+        if (start1.getFullYear() === end1.getFullYear()) {
+          setstart(new Date(`${start1.getFullYear()}`));
+          setend(new Date(`${start1.getFullYear() + 1}`));
+        } else {
+          setstart(new Date(`${start1.getFullYear()}`));
+          setend(new Date(`${end1.getFullYear() + 1}`));
+        }
       } else {
-        setstart(new Date(`${start1.getFullYear()}`));
-        setend(new Date(`${end1.getFullYear() + 1}`));
+        // Handle the case when either start date or end date is null
+        // Set default values or handle it accordingly
+        setstart(new Date('2023-01-01')); // Default start date
+        setend(new Date('2024-01-01')); // Default end date
       }
     }
-  }, [TimelineData, TimelineDataStart, TimelineDataEnd]);
+  }, [TimelineData, TimelineDataStart, TimelineDataEnd, selectedValue]);
   // No Change
   const handleToggleOpen = () => {
     setOpen((prevOpen: any) => !prevOpen);
@@ -109,23 +154,63 @@ const BoardTimeline = () => {
   };
 
   const buildElements = (trackId: any, TimelineData: any) => {
-    console.log(trackId);
+    // console.log(trackId);
     const v: any[] = [];
-    const cards = TimelineData.members[trackId - 1].cards;
-    console.log(cards);
-    for (let i = 0; i < cards.length; i++) {
-      const start = new Date(cards[i].startdate);
-      const end = new Date(cards[i].duedate);
-      if (cards[i].startdate != null) {
-        v.push(
-          buildElement({
-            title: cards[i].title,
-            trackId,
-            start,
-            end,
-            i,
-          })
-        );
+    if (selectedValue === 'Members') {
+      const cards = TimelineData.members[trackId - 1].cards;
+      // console.log(cards);
+      for (let i = 0; i < cards.length; i++) {
+        const start = new Date(cards[i].startdate);
+        const end = new Date(cards[i].duedate);
+        if (cards[i].startdate != null) {
+          v.push(
+            buildElement({
+              title: cards[i].title,
+              trackId,
+              start,
+              end,
+              i,
+            })
+          );
+        }
+      }
+    }
+    if (selectedValue === 'Lists') {
+      const cards = TimelineDataList.lists[trackId - 1].cards;
+      console.log(cards);
+      for (let i = 0; i < cards.length; i++) {
+        const start = new Date(cards[i].startdate);
+        const end = new Date(cards[i].duedate);
+        if (cards[i].startdate != null) {
+          v.push(
+            buildElement({
+              title: cards[i].title,
+              trackId,
+              start,
+              end,
+              i,
+            })
+          );
+        }
+      }
+    }
+    if (selectedValue === 'Labels') {
+      const cards = TimelineDataList.labels[trackId - 1].cards;
+      console.log(cards);
+      for (let i = 0; i < cards.length; i++) {
+        const start = new Date(cards[i].startdate);
+        const end = new Date(cards[i].duedate);
+        if (cards[i].startdate != null) {
+          v.push(
+            buildElement({
+              title: cards[i].title,
+              trackId,
+              start,
+              end,
+              i,
+            })
+          );
+        }
       }
     }
     return v;
@@ -146,7 +231,6 @@ const BoardTimeline = () => {
 
   const [start, setstart] = useState(new Date(`${2022}`));
   const [end, setend] = useState(new Date(`${2028}`));
-  const [selectedValue, setSelectedValue] = useState('Members');
 
   const getRadio = (event: any) => {
     setSelectedValue(event.target.value);
