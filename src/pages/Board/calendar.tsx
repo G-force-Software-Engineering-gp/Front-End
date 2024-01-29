@@ -50,6 +50,7 @@ const Calendar = () => {
       let dayObject = new Date(data[event].duedate);
       let day: any = dayObject.getUTCDate();
       let month: any = dayObject.getUTCMonth();
+      month = month + 1
       if (month < 10) {
         month = '0' + month;
       }
