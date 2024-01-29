@@ -74,7 +74,10 @@ const Search = () => {
               </Button>
             </form>
           </div>
-          <div className="mb-8 mt-4 grid auto-rows-fr gap-2 sm:grid-cols-2 md:grid-cols-4">
+          <div
+            className="mb-8 mt-4 grid sm:auto-rows-fr gap-4 sm:gap-2 sm:grid-cols-2 md:grid-cols-4 h-[48vh]"
+            style={{ overflowY: 'auto' }}
+          >
             {boards ? (
               boards?.map((item1: { id: number; title: string; backgroundimage: any; has_star: boolean }) => (
                 <div
