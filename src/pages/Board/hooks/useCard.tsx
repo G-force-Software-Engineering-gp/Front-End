@@ -18,8 +18,10 @@ export const useCard = (cardId: number) => {
           Authorization: `JWT ` + authTokens.access,
         },
       });
-      const data = await response.json();
-
+      const data : Card = await response.json();
+      data.members?.forEach((assignee,index,array)=>{
+        array[index].deleteRole = data?.role?.at(index)?.id
+      })
       return data;
     },
   });

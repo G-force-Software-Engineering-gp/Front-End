@@ -50,6 +50,7 @@ export type Member = {
   user: User;
   profimage?: string;
   checked?: boolean;
+  deleteRole?:number;
 };
 
 export type User = {

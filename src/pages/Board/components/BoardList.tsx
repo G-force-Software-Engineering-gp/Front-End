@@ -40,7 +40,7 @@ import { CardDetail } from '../cardDetail';
 import { useCard } from '../hooks/useCard';
 import { useList } from '../hooks/useList';
 import { useMembers } from '../hooks/useMembers';
-import { Card as CardType, List, Members, User } from '../types';
+import {Card as CardType, List, Member, Members, User} from '../types';
 import CreateTaskModal from './CreateTaskModal';
 
 interface Props {
@@ -508,7 +508,7 @@ export const AssignmentSubmenu = ({ cardId, setOpen, cardData, cardRefetch }: As
                   if (cardData) {
                     if (cardData?.members !== undefined) {
                       if (cardData?.members?.filter((item) => item.id === member.id).length > 0) {
-                        deleteAssignee.mutate({ member: member.id, card: cardId, role: cardData.role?.at(index)?.id });
+                        deleteAssignee.mutate({ member: member.id, card: cardId, role: cardData?.members?.find((el:Member)=>el.id == member.id)?.deleteRole });
                       } else {
                         createAssignee.mutate({ member: member.id, card: cardId });
                       }
