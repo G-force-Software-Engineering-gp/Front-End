@@ -195,7 +195,7 @@ export const KanbanBoard = () => {
       cardId: number | undefined;
     }) => {
       // console.log(list, order, cardId);
-      return fetch(BaseURL + `tascrum/dnd/${cardId}/`, {
+      return fetch(BaseURL + `tascrum/boards/${cardId}/dnd/`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
